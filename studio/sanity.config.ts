@@ -62,6 +62,9 @@ const singletonTypes = new Set([
   'serviceAutomatePage',
   'academyIndexPage',
   'contactPage',
+  // Add the Code utility pages
+  'errorPage',
+  'offlinePage',
 ])
 
 /** Types hidden from the auto-generated list (singletons + collections die eigen views hebben) */
@@ -168,6 +171,14 @@ export default defineConfig({
                               .title('404 (niet gevonden)')
                               .icon(CloseCircleIcon)
                               .child(S.document().schemaType('notFoundPage').documentId('notFoundPage')),
+                            S.listItem()
+                              .title('500 (server error)')
+                              .icon(WarningOutlineIcon)
+                              .child(S.document().schemaType('errorPage').documentId('errorPage')),
+                            S.listItem()
+                              .title('Offline')
+                              .icon(WarningOutlineIcon)
+                              .child(S.document().schemaType('offlinePage').documentId('offlinePage')),
                             S.listItem()
                               .title('Thank you')
                               .icon(CheckmarkCircleIcon)

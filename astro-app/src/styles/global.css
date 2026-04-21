@@ -1,14 +1,182 @@
 /* ================================================================
-   FF Template CSS System
-   Foundation CSS for Astro + Sanity projects.
-   CSS convention: Client-First / Custom BEM
+   Add the Code — Global CSS
 
-   IMPORTANT: This CSS system uses rem as ~1px equivalent.
-   The fluid calc() on html scales everything proportionally.
-   Do NOT change rem values without understanding the full system.
-================================================================ */
+   CSS-conventie: Vanilla CSS + BEM + CSS Custom Properties.
+   Geen Tailwind, geen Client-First utility-system.
 
-/* ─── Screenreader-only utility ─────────────────────────── */
+   Volgorde:
+   1. Tokens (variables) → tokens.css
+   2. Reset
+   3. Base typography (komt uit tokens.css :root + element defaults)
+   4. Tonale-zone classes (paper / ink / claude — docs/03 §2.3)
+   5. BEM-utility classes (.is-*, .u-*)
+   6. Focus + selection
+   7. Astro View Transitions
+   8. Sanity Visual Editing overlay
+   ================================================================ */
+
+@import './tokens.css';
+
+/* ─── Reset ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  display: block;
+  height: auto;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+/* ─── Base typography (FK Display voor h1-h4, Suisse voor h5-h6+body) ─── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+  color: var(--fg-primary);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-h1); letter-spacing: var(--ls-display); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+h4 { font-size: var(--fs-h4); }
+
+h5, h6 {
+  font-family: var(--font-body);
+  font-weight: 500;
+  line-height: var(--lh-heading);
+}
+h5 { font-size: var(--fs-h5); }
+h6 { font-size: var(--fs-body); }
+
+p {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  text-wrap: pretty;
+}
+
+em, i {
+  font-style: italic;
+}
+
+a {
+  color: var(--link-default);
+  text-decoration: underline;
+  text-decoration-color: var(--atc-mid-gray);
+  text-underline-offset: 0.2em;
+  transition:
+    text-decoration-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+a:hover {
+  text-decoration-color: var(--link-hover);
+}
+
+code, kbd, samp, pre {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  line-height: var(--lh-mono);
+}
+
+hr {
+  border: 0;
+  border-top: var(--border-width) solid var(--border-default);
+  margin: var(--sp-6) 0;
+}
+
+::selection {
+  background: var(--atc-claude);
+  color: var(--atc-paper);
+}
+
+/* ─── Nav spacer (Universal Rule #6) ──────────────────────
+   Voorkomt dat content verdwijnt onder de fixed/sticky nav.
+   Hoogte komt uit --nav-height token. Pages zonder Nav (404, etc.)
+   krijgen geen spacer (Layout.astro skipt 'em). */
+
+.nav-spacer {
+  height: var(--nav-height);
+  width: 100%;
+}
+
+/* ─── Tonale-zone classes (docs/03 §2.3) ──────────────────
+   Worden door Section.astro toegepast op de root van een sectie.
+   Keuze in Sanity (block.tone enum: paper | ink | claude). */
+
+.tone-paper {
+  background: var(--atc-paper);
+  color: var(--fg-primary);
+}
+
+.tone-ink {
+  background: var(--atc-ink);
+  color: var(--fg-on-dark);
+}
+.tone-ink :where(h1, h2, h3, h4, h5, h6, p) {
+  color: var(--fg-on-dark);
+}
+.tone-ink :where(a) {
+  color: var(--fg-on-dark);
+  text-decoration-color: var(--atc-mid-gray);
+}
+
+.tone-claude {
+  background: var(--atc-claude);
+  color: var(--fg-primary);
+}
+.tone-claude :where(h1, h2, h3, h4, h5, h6, p) {
+  color: var(--fg-primary);
+}
+.tone-claude :where(a) {
+  text-decoration-color: var(--fg-primary);
+}
+
+/* ─── BEM-utility classes ──────────────────────────────────
+   Add the Code naming-conventie:
+   - State: `.is-active`, `.is-hidden`, `.is-loading`, `.is-error`
+   - Utility: `.u-visually-hidden`, `.u-screen-reader-only`, `.u-no-wrap`
+   ────────────────────────────────────────────────────────── */
+
+.is-hidden {
+  display: none !important;
+}
+
+.u-visually-hidden,
+.u-screen-reader-only,
 .sr-only {
   position: absolute;
   width: 1px;
@@ -21,351 +189,58 @@
   border-width: 0;
 }
 
-/* ─── @font-face ────────────────────────────────────────── */
-/* TODO: Replace with project fonts.
-   System font stack is used as fallback until custom fonts are added.
-
-   Example:
-   @font-face { font-family: 'YourFont'; src: url('/fonts/YourFont-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
-   @font-face { font-family: 'YourFont'; src: url('/fonts/YourFont-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
-   @font-face { font-family: 'YourFont'; src: url('/fonts/YourFont-SemiBold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
-   @font-face { font-family: 'YourFont'; src: url('/fonts/YourFont-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
-*/
-
-/* ─── Fluid base font-size ──────────────────────────────── */
-html {
-  font-size: calc(0.875rem + 0.20833333vw);
-}
-@media screen and (max-width: 1920px) {
-  html { font-size: calc(0.875rem + 0.20833333vw); }
-}
-@media screen and (max-width: 1440px) {
-  html { font-size: calc(0.9375rem + 0.10416667vw); }
-}
-@media screen and (max-width: 479px) {
-  html { font-size: calc(0.875rem + 0.41666667vw); }
+.u-no-wrap {
+  white-space: nowrap;
 }
 
-/* ─── CSS Custom Properties ─────────────────────────────── */
-:root {
-  /* Colors (replace with project colors) */
-  --black: #1a1a1a;
-  --white: #ffffff;
-  --accent: #3b82f6;
-  --grey: #6b7280;
-  --body-bg: #ffffff;
-  --selection-color: #bfdbfe;
-
-  /* Border radius */
-  --radius-r_main: 8px;
-
-  /* Typography (responsive) */
-  --_responsive---text-size--paragraaf: 1rem;
-  --_responsive---text-size--heading-1: 4.0625rem;
-  --_responsive---text-line-height--heading-1-line-height: 3.875rem;
-  --_responsive---text-letter-space--heading-1-space: -.125rem;
-  --_responsive---text-size--heading-2: 2.5rem;
-  --_responsive---text-line-height--heading-2-line-height: 2.5rem;
-  --_responsive---text-letter-space--heading-2-space: -.125rem;
-  --_responsive---text-size--heading-3: 2rem;
-  --_responsive---text-line-height--heading-3-line-height: 2rem;
-  --_responsive---text-letter-space--heading-3-space: -.0625rem;
-  --_responsive---text-size--heading-4: 1.75rem;
-  --_responsive---text-line-height--heading-4-line-height: 1.75rem;
-  --_responsive---text-letter-space--heading-4-space: -.04688rem;
-  --_responsive---text-size--heading-5: .875rem;
-  --_responsive---text-line-height--heading-5-line-height: 1.25rem;
-  --_responsive---text-letter-space--heading-5-space: -.01563rem;
-  --_responsive---text-letter-space--paragraaf: -.01563rem;
-  --_responsive---text-letter-space--queto-space: -2px;
-  --_responsive---text-size--queto: 1.75rem;
-
-  /* Layout */
-  --_responsive---layout--nav-bar-size: 4.5rem;
-  --_responsive---layout--padding-global: 1.875rem;
-  --_responsive---layout--main-width: 73.125rem;
-  --_responsive---layout--layout-gap: 1rem;
-  --_responsive---layout--padding-section-smal: 1.875rem;
-  --_responsive---layout--padding-section-large: 6.5rem;
-  --_responsive---layout--layout-space: 1.875rem;
-
-  /* Button radius */
-  --_responsive---button-radius--radius-none: 0px;
-  --_responsive---button-radius--radius-small: 1.4rem;
-  --_responsive---button-radius--radius-medium: 0px;
-  --_responsive---button-radius--radius-large: 0px;
+/* ─── Focus — first-class citizen (Signal-blue outline) ──── */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-/* ─── Global Reset ───────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+main:focus-visible {
+  outline: none;
 }
 
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-size-adjust: 100%;
+*:focus:not(:focus-visible) {
+  outline: none;
 }
 
-/* ─── Base Typography ───────────────────────────────────── */
-body {
-  background-color: var(--body-bg);
-  color: var(--black);
-  /* TODO: Replace with project font-family */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: var(--_responsive---text-size--paragraaf);
-  line-height: normal;
-  margin: 0;
-  min-height: 100vh;
+/* ─── Reduced motion (docs/04 §2.6) ──────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-h1 {
-  font-size: var(--_responsive---text-size--heading-1);
-  line-height: var(--_responsive---text-line-height--heading-1-line-height);
-  letter-spacing: var(--_responsive---text-letter-space--heading-1-space);
-  margin: 0;
-  font-weight: 600;
-}
-
-h2 {
-  font-size: var(--_responsive---text-size--heading-2);
-  line-height: var(--_responsive---text-line-height--heading-2-line-height);
-  letter-spacing: var(--_responsive---text-letter-space--heading-2-space);
-  margin: 0;
-  font-weight: 600;
-}
-
-h3 {
-  font-size: var(--_responsive---text-size--heading-3);
-  line-height: var(--_responsive---text-line-height--heading-3-line-height);
-  letter-spacing: var(--_responsive---text-letter-space--heading-3-space);
-  margin: 0;
-  font-weight: 400;
-}
-
-h4 {
-  font-size: var(--_responsive---text-size--heading-4);
-  line-height: var(--_responsive---text-line-height--heading-4-line-height);
-  letter-spacing: var(--_responsive---text-letter-space--heading-4-space);
-  margin: 0;
-  font-weight: 400;
-}
-
-h5 {
-  font-size: var(--_responsive---text-size--heading-5);
-  line-height: var(--_responsive---text-line-height--heading-5-line-height);
-  letter-spacing: var(--_responsive---text-letter-space--heading-5-space);
-  margin: 0;
-  font-weight: 400;
-}
-
-p {
-  letter-spacing: var(--_responsive---text-letter-space--paragraaf);
-  margin: 0 0 6px;
-  line-height: normal;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-  display: block;
-}
-
-img {
-  max-width: 100%;
-  display: inline-block;
-}
-
-/* ─── Selection ─────────────────────────────────────────── */
-::selection {
-  background-color: var(--selection-color);
-  color: var(--black);
-}
-
-/* ─── Layout Utilities ──────────────────────────────────── */
-.page-padding {
-  padding-right: var(--_responsive---layout--padding-global);
-  padding-left: var(--_responsive---layout--padding-global);
-  width: 100%;
-}
-
-.container {
-  flex: 1;
-  max-width: var(--_responsive---layout--main-width);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.container--large {
-  width: 100%;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-}
-
-.container-medium {
-  width: 100%;
-  max-width: 640px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.container-small {
-  width: 100%;
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ─── Section Padding Utilities ──────────────────────────── */
-.padding-section-small {
-  padding-top: var(--_responsive---layout--padding-section-smal);
-  padding-bottom: var(--_responsive---layout--padding-section-smal);
-}
-
-.padding-section-medium {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
-}
-
-.padding-section-large {
-  padding-top: var(--_responsive---layout--padding-section-large);
-  padding-bottom: var(--_responsive---layout--padding-section-large);
-}
-
-.padding-section-large.is-top {
-  padding-top: 0;
-}
-
-/* ─── Padding Utility Classes ───────────────────────────── */
-.padding-large { padding: 30px; }
-.padding-medium { padding: 20px; }
-.padding-small { padding: 10px; }
-.padding-huge { padding: 60px; }
-.padding-top.padding-small { padding-top: 10px; }
-
-.padding-vertical {
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.padding-horizontal {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.padding-global {
-  padding-right: var(--_responsive---layout--padding-global);
-  padding-left: var(--_responsive---layout--padding-global);
-}
-
-.padding-xhuge { padding: 80px; }
-.padding-bottom.padding-small { padding-bottom: 8px; }
-.padding-bottom-2.padding-small { padding-bottom: 8px; }
-
-/* ─── Dummy Section (nav spacer) ─────────────────────────── */
-.dummy-section {
-  height: var(--_responsive---layout--nav-bar-size);
-  width: 100%;
-  position: static;
-}
-
-/* ─── Heading Style Utility Classes ──────────────────────── */
-.heading-style-h3 {
-  font-size: var(--_responsive---text-size--heading-3);
-  line-height: var(--_responsive---text-size--heading-3);
-  letter-spacing: var(--_responsive---text-letter-space--heading-3-space);
-  font-weight: 700;
-}
-
-.heading-style-h2 {
-  font-size: var(--_responsive---text-size--heading-2);
-  line-height: var(--_responsive---text-line-height--heading-2-line-height);
-  letter-spacing: var(--_responsive---text-letter-space--heading-2-space);
-  font-weight: 700;
-  margin: 0;
-}
-
-/* ─── Text Utility Classes ───────────────────────────────── */
-.text-sub { opacity: .6; text-transform: uppercase; line-height: 22px; }
-.text-align-center { text-align: center; }
-.p--small { font-size: 14px; font-weight: 300; }
-.p--large { font-size: 20px; font-weight: 600; line-height: 150%; }
-.text-style-nowrap { white-space: nowrap; }
-
-/* ─── Margin Utilities ──────────────────────────────────── */
-.margin-left.margin-small { margin-left: 8px; }
-
-/* ─── Rich Text ──────────────────────────────────────────── */
-.rich-text h2 {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-.rich-text h3 {
-  margin-top: 1.5rem;
-  margin-bottom: .75rem;
-}
-
-.rich-text p {
-  margin-bottom: 1rem;
-}
-
-.rich-text ul,
-.rich-text ol {
-  margin-bottom: 1rem;
-  padding-left: 1.5rem;
-}
-
-.rich-text li {
-  margin-bottom: .25rem;
-}
-
-.rich-text img {
-  border-radius: .5rem;
-  margin: 1.5rem 0;
-}
-
-.rich-text__figure {
-  margin: 1.5rem 0;
-}
-
-.rich-text__figure figcaption {
-  font-size: .875rem;
-  opacity: .7;
-  margin-top: .5rem;
-}
-
-/* ─── Page Transitions (Astro View Transitions API) ──────── */
+/* ─── Astro View Transitions API (docs/04 §3.6) ──────────── */
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-
 @keyframes fade-out {
   from { opacity: 1; }
   to { opacity: 0; }
 }
 
 ::view-transition-old(root) {
-  animation: fade-out 0.9s ease forwards;
+  animation: fade-out var(--dur-slow) var(--ease-in-out) forwards;
 }
-
 ::view-transition-new(root) {
-  animation: fade-in 0.5s ease forwards;
+  animation: fade-in var(--dur-normal) var(--ease-out) forwards;
 }
 
-/* Persist nav + footer across transitions */
-.nav-section {
+/* Persist nav + footer over transitions */
+.nav-primary {
   view-transition-name: nav;
 }
-
-#footer {
+.footer-primary {
   view-transition-name: footer;
 }
 
@@ -376,206 +251,8 @@ img {
   animation: none;
 }
 
-/* ─── Accessibility: Focus-visible ──────────────────────── */
-main:focus-visible {
-  outline: none;
-}
-
-*:focus:not(:focus-visible) {
-  outline: none;
-}
-
-*:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
 /* ─── Sanity Visual Editing overlay ─────────────────────── */
 sanity-visual-editing,
 sanity-visual-editing * {
-  --card-focus-ring-color: #259D4D !important;
-}
-
-
-/* ═══════════════════════════════════════════════════════════
-   TABLET — 991px and down
-   ═══════════════════════════════════════════════════════════ */
-@media screen and (max-width: 991px) {
-
-  /* ─── Responsive CSS Custom Properties ─────────────────── */
-  body {
-    --_responsive---text-size--paragraaf: 1rem;
-    --_responsive---text-size--heading-1: 4.0625rem;
-    --_responsive---text-line-height--heading-1-line-height: 3.875rem;
-    --_responsive---text-letter-space--heading-1-space: -.125rem;
-    --_responsive---text-line-height--heading-2-line-height: 2.5rem;
-    --_responsive---text-letter-space--heading-2-space: -.125rem;
-    --_responsive---text-size--heading-3: 2rem;
-    --_responsive---text-line-height--heading-3-line-height: 2rem;
-    --_responsive---text-letter-space--heading-3-space: -.0625rem;
-    --_responsive---text-size--heading-4: 1.75rem;
-    --_responsive---text-line-height--heading-4-line-height: 1.75rem;
-    --_responsive---text-letter-space--heading-4-space: -.04688rem;
-    --_responsive---text-size--heading-5: .875rem;
-    --_responsive---text-line-height--heading-5-line-height: 1.25rem;
-    --_responsive---text-letter-space--heading-5-space: -.01563rem;
-    --_responsive---text-letter-space--paragraaf: -.01563rem;
-    --_responsive---layout--nav-bar-size: 4.5rem;
-    --_responsive---layout--padding-global: 1.875rem;
-    --_responsive---layout--main-width: 73.125rem;
-    --_responsive---text-size--heading-2: 2.5rem;
-    --_responsive---layout--layout-gap: 1rem;
-    --_responsive---layout--padding-section-smal: 1.875rem;
-    --_responsive---layout--padding-section-large: 6.5rem;
-    --_responsive---layout--layout-space: 1.875rem;
-    --_responsive---text-size--queto: 1.75rem;
-    --_responsive---text-styling--mob--mob-heading-h2: 4.5625rem;
-  }
-
-  /* ─── Typography ───────────────────────────────────────── */
-  h1 { margin-top: 0; margin-bottom: 0; font-size: 56px; }
-  h2 { margin-top: 0; margin-bottom: 0; font-size: 48px; line-height: 104%; }
-  h3 { font-size: 36px; line-height: 115%; }
-  h4 { font-size: 24px; }
-  h5 { font-size: 20px; }
-  p { margin-top: 0; }
-
-  /* ─── Padding Utilities ────────────────────────────────── */
-  .page-padding { padding-left: 40px; padding-right: 40px; }
-  .padding-section-medium { padding-top: 4px; padding-bottom: 4px; }
-  .padding-section-large { padding-top: 6px; padding-bottom: 6px; }
-  .padding-xxhuge { padding: 80px; }
-  .padding-xhuge { padding: 60px; }
-  .padding-xxlarge { padding: 40px; }
-  .padding-xlarge { padding: 30px; }
-  .padding-large { padding: 25px; }
-  .padding-huge { padding: 50px; }
-  .padding-medium { padding: 15px; }
-  .padding-left { padding-top: 0; padding-bottom: 0; padding-right: 0; }
-  .padding-right { padding-top: 0; padding-bottom: 0; padding-left: 0; }
-  .padding-bottom { padding-top: 0; padding-left: 0; padding-right: 0; }
-  .padding-top { padding-bottom: 0; padding-left: 0; padding-right: 0; }
-  .padding-horizontal { padding-top: 0; padding-bottom: 0; }
-  .padding-vertical { padding-left: 0; padding-right: 0; }
-  .padding-bottom-2 { padding-top: 0; padding-left: 0; padding-right: 0; }
-  .padding-bottom-3 { padding-top: 0; padding-left: 0; padding-right: 0; }
-
-  /* ─── Margin Utilities ─────────────────────────────────── */
-  .margin-xxhuge { margin: 80px; }
-  .margin-xhuge { margin: 60px; }
-  .margin-xxlarge { margin: 40px; }
-  .margin-xlarge { margin: 30px; }
-  .margin-large { margin: 25px; }
-  .margin-huge { margin: 50px; }
-  .margin-medium { margin: 1.5rem; }
-  .margin-horizontal { margin-top: 0; margin-bottom: 0; }
-  .margin-vertical { margin-left: 0; margin-right: 0; }
-  .margin-right { margin-top: 0; margin-bottom: 0; margin-left: 0; }
-  .margin-left { margin-top: 0; margin-bottom: 0; margin-right: 0; }
-  .margin-top { margin-bottom: 0; margin-left: 0; margin-right: 0; }
-  .margin-bottom { margin-top: 0; margin-left: 0; margin-right: 0; }
-
-  /* ─── Visibility ───────────────────────────────────────── */
-  .hide-tablet { display: none; }
-  .max-width-full-tablet { width: 100%; max-width: none; }
-
-  /* ─── Layout: Dummy section ────────────────────────────── */
-  .dummy-section { height: 52px; }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   MOBILE LANDSCAPE — 767px and down
-   ═══════════════════════════════════════════════════════════ */
-@media screen and (max-width: 767px) {
-
-  /* ─── Typography ───────────────────────────────────────── */
-  h1 { font-size: 48px; }
-  h2 { font-size: 40px; }
-  h3 { font-size: 32px; }
-  h4 { font-size: 24px; }
-  .heading-style-h2 { font-size: 20px; }
-  .heading-style-h4 { font-size: 10px; }
-  .heading-style-h5 { font-size: 8.75px; }
-  .heading-style-h6 { font-size: 7.5px; }
-  .text-size-large { font-size: 12.5px; }
-  .text-style-nowrap { white-space: normal; }
-
-  /* ─── Padding Utilities ────────────────────────────────── */
-  .page-padding { padding-left: 32px; padding-right: 32px; }
-  .padding-global { padding-left: 12.5px; padding-right: 12.5px; }
-  .padding-section-small { padding-top: 2rem; padding-bottom: 2rem; }
-  .padding-section-medium { padding-top: 3px; padding-bottom: 3px; }
-  .padding-section-large { padding-top: 4px; padding-bottom: 4px; }
-  .padding-xxhuge { padding: 45px; }
-  .padding-xhuge { padding: 40px; }
-  .padding-xxlarge { padding: 30px; }
-  .padding-xlarge { padding: 20px; }
-  .padding-large { padding: 15px; }
-  .padding-huge { padding: 35px; }
-  .padding-medium { padding: 12.5px; }
-  .padding-left { padding-top: 0; padding-bottom: 0; padding-right: 0; }
-  .padding-right { padding-top: 0; padding-bottom: 0; padding-left: 0; }
-  .padding-bottom { padding-top: 0; padding-left: 0; padding-right: 0; }
-  .padding-top { padding-bottom: 0; padding-left: 0; padding-right: 0; }
-  .padding-horizontal { padding-top: 0; padding-bottom: 0; }
-  .padding-vertical { padding-left: 0; padding-right: 0; }
-  .padding-bottom-2 { padding-top: 0; padding-left: 0; padding-right: 0; }
-  .padding-bottom-3 { padding-top: 0; padding-left: 0; padding-right: 0; }
-
-  /* ─── Margin Utilities ─────────────────────────────────── */
-  .margin-xxhuge { margin: 45px; }
-  .margin-xhuge { margin: 40px; }
-  .margin-xxlarge { margin: 30px; }
-  .margin-xlarge { margin: 20px; }
-  .margin-large { margin: 15px; }
-  .margin-huge { margin: 35px; }
-  .margin-medium { margin: 12.5px; }
-  .margin-horizontal { margin-top: 0; margin-bottom: 0; }
-  .margin-vertical { margin-left: 0; margin-right: 0; }
-  .margin-right { margin-top: 0; margin-bottom: 0; margin-left: 0; }
-  .margin-left { margin-top: 0; margin-bottom: 0; margin-right: 0; }
-  .margin-top { margin-bottom: 0; margin-left: 0; margin-right: 0; }
-  .margin-bottom { margin-top: 0; margin-left: 0; margin-right: 0; }
-
-  /* ─── Visibility ───────────────────────────────────────── */
-  .hide-mobile-landscape { display: none; }
-  .max-width-full-mobile-landscape { width: 100%; max-width: none; }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   MOBILE PORTRAIT — 479px and down
-   ═══════════════════════════════════════════════════════════ */
-@media screen and (max-width: 479px) {
-
-  /* ─── Typography ───────────────────────────────────────── */
-  h1 { font-size: 40px; }
-  h2 { font-size: 36px; }
-  h4 { line-height: 110%; }
-  h5 { margin-top: 0; margin-bottom: 0; font-size: 24px; font-weight: 400; line-height: 120%; }
-
-  /* ─── Padding Utilities ────────────────────────────────── */
-  .page-padding { padding-left: 24px; padding-right: 24px; }
-  .padding-left { padding-top: 0; padding-bottom: 0; padding-right: 0; }
-  .padding-right { padding-top: 0; padding-bottom: 0; padding-left: 0; }
-  .padding-bottom { padding-top: 0; padding-left: 0; padding-right: 0; }
-  .padding-top { padding-bottom: 0; padding-left: 0; padding-right: 0; }
-  .padding-horizontal { padding-top: 0; padding-bottom: 0; }
-  .padding-vertical { padding-left: 0; padding-right: 0; }
-  .padding-bottom-2 { padding-top: 0; padding-left: 0; padding-right: 0; }
-  .padding-bottom-3 { padding-top: 0; padding-left: 0; padding-right: 0; }
-
-  /* ─── Margin Utilities ─────────────────────────────────── */
-  .margin-horizontal { margin-top: 0; margin-bottom: 0; }
-  .margin-vertical { margin-left: 0; margin-right: 0; }
-  .margin-right { margin-top: 0; margin-bottom: 0; margin-left: 0; }
-  .margin-left { margin-top: 0; margin-bottom: 0; margin-right: 0; }
-  .margin-top { margin-bottom: 0; margin-left: 0; margin-right: 0; }
-  .margin-bottom { margin-top: 0; margin-left: 0; margin-right: 0; }
-
-  /* ─── Visibility ───────────────────────────────────────── */
-  .hide-mobile-portrait { display: none; }
-  .max-width-full-mobile-portrait { width: 100%; max-width: none; }
-
-  /* ─── Layout ───────────────────────────────────────────── */
-  .dummy-section { display: block; }
+  --card-focus-ring-color: var(--atc-signal) !important;
 }

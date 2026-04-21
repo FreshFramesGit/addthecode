@@ -1,0 +1,228 @@
+/* ================================================================
+   Add the Code — Design Tokens
+   Vanilla CSS + BEM. Framework-agnostic.
+
+   Bron: docs/03-design-system.md, docs/04-motion-spec.md
+   Adoptie van /reference/design files/addthecode/colors_and_type.css
+   met afwijkingen voor Add the Code production:
+     - Body: SuisseIntl (afwijking docs/03 die Söhne noemt)
+     - Mono: JetBrains Mono — locked, woff2 nog te downloaden
+     - Geen runtime Google Fonts imports — alles self-hosted
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   1. Fonts (self-hosted woff2 in /public/fonts/)
+   Display:  FK Display (Florian Karsten) — Regular + synthetic Italic
+   Body:     SuisseIntl (Swiss Typefaces) — Regular / Medium / Semibold
+   Mono:     JetBrains Mono — fallback to system mono tot woff2 geleverd
+   ---------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'FK Display';
+  src: url('/fonts/FKDisplay-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Synthetic italic tot FKDisplay-Italic.woff2 geleverd is.
+   Florian Karsten's italic heeft karakteristieke diagonale snedes —
+   deze approximation behoudt de slant maar is geen vervanging.
+   TODO: vervang zodra italic woff2 beschikbaar is. */
+@font-face {
+  font-family: 'FK Display';
+  src: url('/fonts/FKDisplay-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('/fonts/SuisseIntl-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('/fonts/SuisseIntl-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('/fonts/SuisseIntl-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* JetBrains Mono — locked maar woff2 nog te downloaden naar /public/fonts/.
+   Tot dan vallen pre-claims/meta/tags terug op systemmono via fallback-stack.
+   TODO Phase 2: download van https://www.jetbrains.com/lp/mono/ en plaats
+   JetBrainsMono-Regular.woff2 in astro-app/public/fonts/, dan deze block uncommenten:
+
+   @font-face {
+     font-family: 'JetBrains Mono';
+     src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+     font-weight: 400;
+     font-style: normal;
+     font-display: swap;
+   }
+*/
+
+:root {
+  /* ------------------------------------------------------------
+     2. Color — palette (definitief, docs/03 §2.1)
+     ------------------------------------------------------------ */
+
+  /* Primair */
+  --atc-ink:          #141413;  /* Anthropic donker. Body op licht, bg op donker. */
+  --atc-paper:        #faf9f5;  /* Anthropic licht. Default sectie-bg. */
+
+  /* Accents — elk een eigen rol, niet inwisselbaar */
+  --atc-claude:       #d97757;  /* Action + motief. Thinking Ring, primary CTA. */
+  --atc-signal:       #2491c4;  /* Navigatie + verwijzing. Links, focus, tabs. */
+  --atc-spark:        #fbca10;  /* Micro-data + nadruk. Stats, badges. */
+
+  /* Neutrals */
+  --atc-mid-gray:     #b0aea5;  /* Borders, meta-tekst, dividers. */
+  --atc-light-gray:   #e8e6dc;  /* Skeletons, rustige paneel-bg op Paper. */
+
+  /* Derived tints — voor alpha-overlays in Paper/Ink zones */
+  --atc-ink-80:       rgba(20, 20, 19, 0.80);
+  --atc-ink-70:       rgba(20, 20, 19, 0.70);
+  --atc-ink-60:       rgba(20, 20, 19, 0.60);
+  --atc-ink-40:       rgba(20, 20, 19, 0.40);
+  --atc-ink-15:       rgba(20, 20, 19, 0.15);
+  --atc-ink-10:       rgba(20, 20, 19, 0.10);
+
+  --atc-paper-70:     rgba(250, 249, 245, 0.70);
+  --atc-paper-10:     rgba(250, 249, 245, 0.10);
+
+  /* Semantische kleuren */
+  --fg-primary:       var(--atc-ink);
+  --fg-secondary:     var(--atc-ink-70);
+  --fg-meta:          var(--atc-ink-60);
+  --fg-on-dark:       var(--atc-paper);
+
+  --bg-primary:       var(--atc-paper);
+  --bg-dark:          var(--atc-ink);
+  --bg-accent:        var(--atc-claude);
+  --bg-quiet:         var(--atc-light-gray);
+
+  --border-default:   var(--atc-ink-15);
+  --border-mid:       var(--atc-mid-gray);
+  --border-focus:     var(--atc-signal);
+  --border-invalid:   var(--atc-claude);
+
+  --link-default:     var(--atc-ink);
+  --link-hover:       var(--atc-signal);
+
+  /* ------------------------------------------------------------
+     3. Typography — families
+     ------------------------------------------------------------ */
+
+  --font-display:     'FK Display', 'Times New Roman', Georgia, serif;
+  --font-body:        'Suisse Intl', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:        'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  /* ------------------------------------------------------------
+     4. Typography — schaal
+     Feel-based per docs/03 §3.2. Mobile scaling via clamp().
+     ------------------------------------------------------------ */
+
+  --fs-display:       clamp(3rem, 6vw + 1rem, 6rem);       /* Hero opener */
+  --fs-h1:            clamp(2.25rem, 4vw + 1rem, 3.75rem); /* Page opener */
+  --fs-h2:            clamp(1.75rem, 2vw + 1rem, 2.5rem);  /* Section opener */
+  --fs-h3:            clamp(1.25rem, 0.5vw + 1rem, 1.5rem);
+  --fs-h4:            1.125rem;
+  --fs-h5:            1.0625rem;
+  --fs-lead:          clamp(1.125rem, 0.5vw + 1rem, 1.375rem); /* Pitch/sub-hero */
+  --fs-body:          1rem;
+  --fs-body-small:    0.9375rem;
+  --fs-meta:          0.875rem;
+  --fs-mono:          0.875rem;
+  --fs-mono-small:    0.75rem;
+
+  /* Line-heights. Display tight, body genereus. */
+  --lh-display:       1.02;
+  --lh-heading:       1.1;
+  --lh-lead:          1.35;
+  --lh-body:          1.55;
+  --lh-mono:          1.45;
+
+  /* Letter-spacing — alleen display/h1 verstrakt, mono krijgt caps-spacing. */
+  --ls-display:       -0.02em;
+  --ls-heading:       -0.01em;
+  --ls-body:          0;
+  --ls-mono-caps:     0.08em;
+
+  /* ------------------------------------------------------------
+     5. Spacing — 8-step schaal (docs/03 §4.1)
+     ------------------------------------------------------------ */
+
+  --sp-1:   0.25rem;   /* 4px  — hairline, icon-label gap */
+  --sp-2:   0.5rem;    /* 8px  — chip padding, tag gap */
+  --sp-3:   0.75rem;   /* 12px — min text margin, button v-pad */
+  --sp-4:   1rem;      /* 16px — card inner, heading-to-body */
+  --sp-5:   1.5rem;    /* 24px — button h-pad, card row-gap */
+  --sp-6:   2rem;      /* 32px — intra-section group, footer gap */
+  --sp-7:   3rem;      /* 48px — large compositional pause */
+  --sp-8:   5rem;      /* 80px — hero stack, section ceiling */
+
+  /* Section verticals (docs/03 §4.2) */
+  --section-pad-small:    4rem;
+  --section-pad-main:     6rem;
+  --section-pad-large:    8rem;
+  --section-pad-top:      10rem;   /* alleen first-after-nav */
+
+  /* Containers (docs/03 §4.3) */
+  --container-small:      42rem;
+  --container-main:       72rem;
+  --container-full:       100%;
+  --container-gutter:     clamp(1.25rem, 4vw, 3rem);
+
+  /* ------------------------------------------------------------
+     6. Radius, shadow, border (docs/03 §5)
+     ------------------------------------------------------------ */
+
+  --radius-small:     4px;
+  --radius-main:      10px;
+  --radius-round:     999px;
+
+  --border-width:     1px;
+
+  /* Subtiel by design — geen cocoon (docs/03 §5.2) */
+  --shadow-resting:   0 1px 2px rgba(20, 20, 19, 0.04),
+                      0 2px 8px rgba(20, 20, 19, 0.04);
+  --shadow-raised:    0 2px 4px rgba(20, 20, 19, 0.06),
+                      0 8px 24px rgba(20, 20, 19, 0.08);
+
+  /* ------------------------------------------------------------
+     7. Motion — timing & easing (docs/04 §5)
+     ------------------------------------------------------------ */
+
+  --dur-instant:      80ms;     /* tap */
+  --dur-fast:         180ms;    /* color jumps, focus */
+  --dur-normal:       300ms;    /* button/card hover, ring→arrow morph */
+  --dur-slow:         500ms;    /* ring pulse, page transitions */
+  --dur-ring-cycle:   4s;       /* Thinking Ring breath */
+
+  --ease-out:         cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out:      cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ------------------------------------------------------------
+     8. Layout (nav, z-index)
+     ------------------------------------------------------------ */
+
+  --nav-height:       4.5rem;   /* Sticky nav-balk hoogte */
+  --z-nav:            100;
+  --z-overlay:        200;
+  --z-modal:          300;
+  --z-toast:          400;
+}

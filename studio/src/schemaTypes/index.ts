@@ -62,6 +62,10 @@ import { notFoundPage } from './singletons/not-found-page'
 import { thankYouPage } from './singletons/thank-you-page'
 import { componentDefaults } from './singletons/component-defaults'
 
+// Singletons (Add the Code — utility pages)
+import { errorPage } from './singletons/error-page'
+import { offlinePage } from './singletons/offline-page'
+
 // Singletons (Add the Code — pagina's)
 import { workIndexPage } from './singletons/work-index-page'
 import { teamPage } from './singletons/team-page'
@@ -146,6 +150,10 @@ export const schemaTypes = [
   notFoundPage,
   thankYouPage,
   componentDefaults,
+
+  // ─── Singletons (Add the Code utility pages) ───
+  errorPage,
+  offlinePage,
 
   // ─── Singletons (Add the Code pagina's) ───
   workIndexPage,

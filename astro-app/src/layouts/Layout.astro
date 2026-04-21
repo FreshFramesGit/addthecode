@@ -40,7 +40,7 @@ const {
   defaultTitle = settings?.defaultSeo?.title ?? siteName,
   defaultDescription = settings?.defaultSeo?.description ?? undefined,
   baseUrl = getBaseUrl(settings, Astro.url.origin),
-  lang = settings?.languageCode ?? "en",
+  lang = settings?.languageCode ?? "nl",
   seo = {},
   hideNav = false,
   hideFooter = false,
@@ -70,15 +70,32 @@ const visualEditingEnabled =
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href={settings?.faviconUrl ?? "/images/favicon.jpg"} type="image/x-icon" />
     <link rel="apple-touch-icon" href={settings?.webclipUrl ?? "/images/webclip.jpg"} />
+
+    {/* Font preloads — display + body voor eerste paint. Mono lazy. */}
+    <link
+      rel="preload"
+      href="/fonts/FKDisplay-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/SuisseIntl-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
     <ViewTransitions />
     <Seo {...seoProps} />
     <slot name="head" />
 
-    <!-- TODO: voeg tracking scripts toe (GTM, etc.) -->
+    {/* TODO Phase 4: tracking-keuze (Plausible aanbevolen, geen GA4) */}
   </head>
   <body>
     {!hideNav && <Nav />}
-    {!hideNav && <div id="dummy-section" class="dummy-section"></div>}
+    {!hideNav && <div class="nav-spacer" aria-hidden="true"></div>}
 
     <main class="main-content">
       <slot />

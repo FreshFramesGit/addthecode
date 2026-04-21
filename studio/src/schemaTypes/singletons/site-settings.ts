@@ -73,8 +73,8 @@ export const siteSettings = defineType({
       title: 'Language code',
       type: 'string',
       group: 'localization',
-      description: 'ISO 639-1 language code (e.g. "nl", "en", "de"). Used for the html lang attribute.',
-      initialValue: 'en',
+      description: 'ISO 639-1 language code (e.g. "nl", "en", "de"). Used for the html lang attribute. Add the Code = NL-first.',
+      initialValue: 'nl',
       validation: (r) => r.max(5),
     }),
     defineField({

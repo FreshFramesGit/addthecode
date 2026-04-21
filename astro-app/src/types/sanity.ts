@@ -419,6 +419,82 @@ export type WorkIndexPage = {
   content?: PageBuilder;
 };
 
+export type OfflinePage = {
+  _id: string;
+  _type: "offlinePage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  seo?: Seo;
+  heading?: string;
+  body?: BlockContent;
+  ctaLabel?: string;
+  ctaLink?: CmsLink;
+};
+
+export type CmsLink = {
+  _type: "cmsLink";
+  linkKind?: "internalPage" | "pageSection" | "external";
+  internalPage?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "homePage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "page";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "thankYouPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "notFoundPage";
+  };
+  pageSectionPage?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "homePage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "page";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "thankYouPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "notFoundPage";
+  };
+  anchorId?: string;
+  externalUrl?: string;
+  openInNewTab?: boolean;
+};
+
+export type ErrorPage = {
+  _id: string;
+  _type: "errorPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  seo?: Seo;
+  heading?: string;
+  body?: BlockContent;
+  ctaLabel?: string;
+  ctaLink?: CmsLink;
+};
+
 export type ComponentDefaults = {
   _id: string;
   _type: "componentDefaults";
@@ -476,56 +552,6 @@ export type ComponentDefaults = {
       _key: string;
     }>;
   };
-};
-
-export type CmsLink = {
-  _type: "cmsLink";
-  linkKind?: "internalPage" | "pageSection" | "external";
-  internalPage?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "homePage";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "page";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "thankYouPage";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "notFoundPage";
-  };
-  pageSectionPage?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "homePage";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "page";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "thankYouPage";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "notFoundPage";
-  };
-  anchorId?: string;
-  externalUrl?: string;
-  openInNewTab?: boolean;
 };
 
 export type Navigation = {
@@ -1414,18 +1440,30 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type AllSanitySchemaTypes = NewsletterSubscription | Inquiry | Recognition | SanityImageCrop | SanityImageHotspot | Essay | Seo | BlockContent | TeamMember | Slug | FormSubmission | ContactPage | PageBuilder | AcademyIndexPage | ServiceAutomatePage | ServiceBuildPage | ServiceDesignPage | ApproachPage | TeamPage | WorkIndexPage | ComponentDefaults | CmsLink | Navigation | SiteSettings | QuoteAttribution | Metric | Period | NotFoundPage | ThankYouPage | Page | HomePage | PreClaimBlock | TagStripBlock | CalloutBlock | ExpectationStepsBlock | DirectChannelsBlock | FaqBlock | NewsletterFormBlock | ContactFormBlock | NdaExplainerBlock | NextCaseBlock | Case | MetricsStripBlock | ArtifactGalleryBlock | MetaBlock | PhaseBlock | DecisionBlock | TimelineBlock | TeamGridBlock | EssayGridBlock | ProjectGridBlock | HeritageStripBlock | CtaRefreinBlock | QuoteClusterBlock | ServiceTriptychBlock | PitchOpeningBlock | HeroEssayBlock | HeroCaseBlock | HeroStandardBlock | HeroHomeBlock | ContactBlock | CtaBlock | ImageBlock | TextBlock | HeroBlock | MediaTag | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
+export type AllSanitySchemaTypes = NewsletterSubscription | Inquiry | Recognition | SanityImageCrop | SanityImageHotspot | Essay | Seo | BlockContent | TeamMember | Slug | FormSubmission | ContactPage | PageBuilder | AcademyIndexPage | ServiceAutomatePage | ServiceBuildPage | ServiceDesignPage | ApproachPage | TeamPage | WorkIndexPage | OfflinePage | CmsLink | ErrorPage | ComponentDefaults | Navigation | SiteSettings | QuoteAttribution | Metric | Period | NotFoundPage | ThankYouPage | Page | HomePage | PreClaimBlock | TagStripBlock | CalloutBlock | ExpectationStepsBlock | DirectChannelsBlock | FaqBlock | NewsletterFormBlock | ContactFormBlock | NdaExplainerBlock | NextCaseBlock | Case | MetricsStripBlock | ArtifactGalleryBlock | MetaBlock | PhaseBlock | DecisionBlock | TimelineBlock | TeamGridBlock | EssayGridBlock | ProjectGridBlock | HeritageStripBlock | CtaRefreinBlock | QuoteClusterBlock | ServiceTriptychBlock | PitchOpeningBlock | HeroEssayBlock | HeroCaseBlock | HeroStandardBlock | HeroHomeBlock | ContactBlock | CtaBlock | ImageBlock | TextBlock | HeroBlock | MediaTag | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ../astro-app/src/utils/sanity.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_type == "siteSettings"][0] {    siteName,    siteDescription,    languageCode,    phone, email, address,    "defaultSeo": defaultSeo { title, description, "ogImageUrl": ogImage.asset->url, noIndex },    "faviconUrl": favicon.asset->url,    "webclipUrl": webclip.asset->url,    globalCanonicalUrl,    googleSiteVerificationId,    llmsTxt,    socialLinks[] { _key, platform, url },    "logo": logo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop}  }
+// Query: *[_type == "siteSettings"][0] {    siteName,    siteDescription,    tagline,    languageCode,    timeZone,    phone, email, address, whatsapp,    studioAddress {      addressLine1,      postalCode,      city,      country,      openingHours,      visitingNote,      mapUrl    },    "defaultSeo": defaultSeo { title, description, "ogImageUrl": ogImage.asset->url, noIndex },    "faviconUrl": favicon.asset->url,    "webclipUrl": webclip.asset->url,    globalCanonicalUrl,    googleSiteVerificationId,    enableSitemap,    robotsDirectives,    llmsTxt,    socialLinks[] { _key, platform, url },    "logo": logo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  }
 export type SITE_SETTINGS_QUERYResult = {
   siteName: string | null;
   siteDescription: string | null;
+  tagline: string | null;
   languageCode: string | null;
+  timeZone: string | null;
   phone: string | null;
   email: string | null;
   address: string | null;
+  whatsapp: string | null;
+  studioAddress: {
+    addressLine1: string | null;
+    postalCode: string | null;
+    city: string | null;
+    country: string | null;
+    openingHours: string | null;
+    visitingNote: string | null;
+    mapUrl: string | null;
+  } | null;
   defaultSeo: {
     title: string | null;
     description: string | null;
@@ -1436,6 +1474,8 @@ export type SITE_SETTINGS_QUERYResult = {
   webclipUrl: string | null;
   globalCanonicalUrl: string | null;
   googleSiteVerificationId: string | null;
+  enableSitemap: boolean | null;
+  robotsDirectives: string | null;
   llmsTxt: string | null;
   socialLinks: Array<{
     _key: string;
@@ -1455,12 +1495,13 @@ export type SITE_SETTINGS_QUERYResult = {
       } | null;
     } | null;
     alt: string | null;
+    caption: null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
   } | null;
 } | null;
 // Variable: COMPONENT_DEFAULTS_QUERY
-// Query: *[_type == "componentDefaults"][0] {    cta {      heading, description, contactName, contactPhone, contactEmail,      buttonLabel,      "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},      "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop}    }  }
+// Query: *[_type == "componentDefaults"][0] {    cta {      heading, description, contactName, contactPhone, contactEmail,      buttonLabel,      "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},      "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    },    ctaRefreins[] {      _key,      key,      statement,      helperLine,      buttonLabel,      "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    },    newsletter {      intro,      placeholder,      buttonLabel,      buttonLabelSubmitting,      helperLine,      consentLabel,      successMessage,      errorMessage    },    expectationSteps {      heading,      steps[] {        _key,        stepNumber,        label,        description      }    }  }
 export type COMPONENT_DEFAULTS_QUERYResult = {
   cta: {
     heading: string | null;
@@ -1514,9 +1555,68 @@ export type COMPONENT_DEFAULTS_QUERYResult = {
         } | null;
       } | null;
       alt: string | null;
+      caption: null;
       hotspot: SanityImageHotspot | null;
       crop: SanityImageCrop | null;
     } | null;
+  } | null;
+  ctaRefreins: Array<{
+    _key: string;
+    key: string | null;
+    statement: string | null;
+    helperLine: string | null;
+    buttonLabel: string | null;
+    buttonLink: {
+      linkKind: "external" | "internalPage" | "pageSection" | null;
+      openInNewTab: boolean | null;
+      externalUrl: string | null;
+      anchorId: string | null;
+      internalPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+      pageSectionPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+    } | null;
+  }> | null;
+  newsletter: {
+    intro: string | null;
+    placeholder: string | null;
+    buttonLabel: string | null;
+    buttonLabelSubmitting: string | null;
+    helperLine: string | null;
+    consentLabel: string | null;
+    successMessage: string | null;
+    errorMessage: string | null;
+  } | null;
+  expectationSteps: {
+    heading: string | null;
+    steps: Array<{
+      _key: string;
+      stepNumber: string | null;
+      label: string | null;
+      description: string | null;
+    }> | null;
   } | null;
 } | null;
 // Variable: NAVIGATION_QUERY
@@ -1631,353 +1731,8 @@ export type NAVIGATION_QUERYResult = {
     } | null;
   }> | null;
 } | null;
-// Variable: HOME_PAGE_QUERY
-// Query: *[_type == "homePage" && _id == "homePage"][0] {    "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData},    content[enabled != false] {  _type,  _key,  _type == "heroBlock" => {    heading, subheading,    mediaType, videoUrl, overlay,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop},    "posterImage": posterImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop},    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "textBlock" => {    heading, body, maxWidth, dividerLine, backgroundStyle  },  _type == "imageBlock" => {    layout, caption,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop}  },  _type == "ctaBlock" => {    heading, description, contactName, contactPhone, contactEmail,    buttonLabel,    "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    backgroundStyle,    "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop}  },  _type == "contactBlock" => {    heading, description[], showContactInfo, ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "officeImage": officeImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop}  }}  }
-export type HOME_PAGE_QUERYResult = {
-  seo: {
-    title: string | null;
-    description: string | null;
-    ogImageUrl: string | null;
-    ogTitleMode: "custom" | "same" | null;
-    ogTitle: string | null;
-    ogDescriptionMode: "custom" | "same" | null;
-    ogDescription: string | null;
-    canonicalUrl: string | null;
-    noIndex: boolean | null;
-    structuredData: {
-      mode?: "auto" | "custom" | "disabled";
-      customJsonLd?: string;
-    } | null;
-  } | null;
-  content: Array<{
-    _type: "artifactGalleryBlock";
-    _key: string;
-  } | {
-    _type: "calloutBlock";
-    _key: string;
-  } | {
-    _type: "contactBlock";
-    _key: string;
-    heading: string | null;
-    description: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        href?: string;
-        blank?: boolean;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      caption?: string;
-      _type: "image";
-      _key: string;
-    }> | null;
-    showContactInfo: boolean | null;
-    ctaLabel: string | null;
-    ctaLink: {
-      linkKind: "external" | "internalPage" | "pageSection" | null;
-      openInNewTab: boolean | null;
-      externalUrl: string | null;
-      anchorId: string | null;
-      internalPage: {
-        _type: "homePage";
-        slug: null;
-      } | {
-        _type: "notFoundPage";
-        slug: null;
-      } | {
-        _type: "page";
-        slug: string | null;
-      } | {
-        _type: "thankYouPage";
-        slug: null;
-      } | null;
-      pageSectionPage: {
-        _type: "homePage";
-        slug: null;
-      } | {
-        _type: "notFoundPage";
-        slug: null;
-      } | {
-        _type: "page";
-        slug: string | null;
-      } | {
-        _type: "thankYouPage";
-        slug: null;
-      } | null;
-    } | null;
-    officeImage: {
-      asset: {
-        _id: string;
-        url: string | null;
-        metadata: {
-          lqip: string | null;
-          dimensions: {
-            width: number | null;
-            height: number | null;
-          } | null;
-        } | null;
-      } | null;
-      alt: string | null;
-      hotspot: SanityImageHotspot | null;
-      crop: SanityImageCrop | null;
-    } | null;
-  } | {
-    _type: "contactFormBlock";
-    _key: string;
-  } | {
-    _type: "ctaBlock";
-    _key: string;
-    heading: string | null;
-    description: string | null;
-    contactName: string | null;
-    contactPhone: string | null;
-    contactEmail: string | null;
-    buttonLabel: string | null;
-    buttonLink: {
-      linkKind: "external" | "internalPage" | "pageSection" | null;
-      openInNewTab: boolean | null;
-      externalUrl: string | null;
-      anchorId: string | null;
-      internalPage: {
-        _type: "homePage";
-        slug: null;
-      } | {
-        _type: "notFoundPage";
-        slug: null;
-      } | {
-        _type: "page";
-        slug: string | null;
-      } | {
-        _type: "thankYouPage";
-        slug: null;
-      } | null;
-      pageSectionPage: {
-        _type: "homePage";
-        slug: null;
-      } | {
-        _type: "notFoundPage";
-        slug: null;
-      } | {
-        _type: "page";
-        slug: string | null;
-      } | {
-        _type: "thankYouPage";
-        slug: null;
-      } | null;
-    } | null;
-    backgroundStyle: "dark" | "transparent" | "white" | null;
-    photo: {
-      asset: {
-        _id: string;
-        url: string | null;
-        metadata: {
-          lqip: string | null;
-          dimensions: {
-            width: number | null;
-            height: number | null;
-          } | null;
-        } | null;
-      } | null;
-      alt: string | null;
-      hotspot: SanityImageHotspot | null;
-      crop: SanityImageCrop | null;
-    } | null;
-  } | {
-    _type: "ctaRefreinBlock";
-    _key: string;
-  } | {
-    _type: "decisionBlock";
-    _key: string;
-  } | {
-    _type: "directChannelsBlock";
-    _key: string;
-  } | {
-    _type: "essayGridBlock";
-    _key: string;
-  } | {
-    _type: "expectationStepsBlock";
-    _key: string;
-  } | {
-    _type: "faqBlock";
-    _key: string;
-  } | {
-    _type: "heritageStripBlock";
-    _key: string;
-  } | {
-    _type: "heroBlock";
-    _key: string;
-    heading: string | null;
-    subheading: string | null;
-    mediaType: "image" | "none" | "video" | null;
-    videoUrl: string | null;
-    overlay: boolean | null;
-    image: {
-      asset: {
-        _id: string;
-        url: string | null;
-        metadata: {
-          lqip: string | null;
-          dimensions: {
-            width: number | null;
-            height: number | null;
-          } | null;
-        } | null;
-      } | null;
-      alt: string | null;
-      hotspot: SanityImageHotspot | null;
-      crop: SanityImageCrop | null;
-    } | null;
-    posterImage: {
-      asset: {
-        _id: string;
-        url: string | null;
-        metadata: {
-          lqip: string | null;
-          dimensions: {
-            width: number | null;
-            height: number | null;
-          } | null;
-        } | null;
-      } | null;
-      alt: string | null;
-      hotspot: SanityImageHotspot | null;
-      crop: SanityImageCrop | null;
-    } | null;
-    ctaLabel: string | null;
-    ctaLink: {
-      linkKind: "external" | "internalPage" | "pageSection" | null;
-      openInNewTab: boolean | null;
-      externalUrl: string | null;
-      anchorId: string | null;
-      internalPage: {
-        _type: "homePage";
-        slug: null;
-      } | {
-        _type: "notFoundPage";
-        slug: null;
-      } | {
-        _type: "page";
-        slug: string | null;
-      } | {
-        _type: "thankYouPage";
-        slug: null;
-      } | null;
-      pageSectionPage: {
-        _type: "homePage";
-        slug: null;
-      } | {
-        _type: "notFoundPage";
-        slug: null;
-      } | {
-        _type: "page";
-        slug: string | null;
-      } | {
-        _type: "thankYouPage";
-        slug: null;
-      } | null;
-    } | null;
-  } | {
-    _type: "heroHomeBlock";
-    _key: string;
-  } | {
-    _type: "heroStandardBlock";
-    _key: string;
-  } | {
-    _type: "imageBlock";
-    _key: string;
-    layout: "contained" | "fullWidth" | null;
-    caption: string | null;
-    image: {
-      asset: {
-        _id: string;
-        url: string | null;
-        metadata: {
-          lqip: string | null;
-          dimensions: {
-            width: number | null;
-            height: number | null;
-          } | null;
-        } | null;
-      } | null;
-      alt: string | null;
-      hotspot: SanityImageHotspot | null;
-      crop: SanityImageCrop | null;
-    } | null;
-  } | {
-    _type: "metaBlock";
-    _key: string;
-  } | {
-    _type: "metricsStripBlock";
-    _key: string;
-  } | {
-    _type: "ndaExplainerBlock";
-    _key: string;
-  } | {
-    _type: "newsletterFormBlock";
-    _key: string;
-  } | {
-    _type: "nextCaseBlock";
-    _key: string;
-  } | {
-    _type: "phaseBlock";
-    _key: string;
-  } | {
-    _type: "pitchOpeningBlock";
-    _key: string;
-  } | {
-    _type: "preClaimBlock";
-    _key: string;
-  } | {
-    _type: "projectGridBlock";
-    _key: string;
-  } | {
-    _type: "quoteClusterBlock";
-    _key: string;
-  } | {
-    _type: "serviceTriptychBlock";
-    _key: string;
-  } | {
-    _type: "tagStripBlock";
-    _key: string;
-  } | {
-    _type: "teamGridBlock";
-    _key: string;
-  } | {
-    _type: "textBlock";
-    _key: string;
-    heading: string | null;
-    body: BlockContent | null;
-    maxWidth: "full" | "medium" | "narrow" | "wide" | null;
-    dividerLine: boolean | null;
-    backgroundStyle: "dark" | "transparent" | "white" | null;
-  } | {
-    _type: "timelineBlock";
-    _key: string;
-  }> | null;
-} | null;
 // Variable: PAGE_BY_SLUG_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0] {    _id, title, "slug": slug.current,    "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData},    content[enabled != false] {  _type,  _key,  _type == "heroBlock" => {    heading, subheading,    mediaType, videoUrl, overlay,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop},    "posterImage": posterImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop},    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "textBlock" => {    heading, body, maxWidth, dividerLine, backgroundStyle  },  _type == "imageBlock" => {    layout, caption,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop}  },  _type == "ctaBlock" => {    heading, description, contactName, contactPhone, contactEmail,    buttonLabel,    "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    backgroundStyle,    "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop}  },  _type == "contactBlock" => {    heading, description[], showContactInfo, ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "officeImage": officeImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  hotspot,  crop}  }}  }
+// Query: *[_type == "page" && slug.current == $slug][0] {    _id, title, "slug": slug.current,    "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData},    content[enabled != false] {  _type,  _key,  enabled,  anchorId,  tone,  // ─── Hero's ───  _type == "heroHomeBlock" => {    preClaim,    headlineParts,    subClaim,    bodyText,    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    },    showThinkingRing  },  _type == "heroStandardBlock" => {    preClaim,    heading,    subheading,    layoutVariant,    "artifact": artifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Sections ───  _type == "pitchOpeningBlock" => {    preClaim,    body,    maxWidth  },  _type == "serviceTriptychBlock" => {    preClaim,    heading,    intro,    tiles[] {      _key,      title,      tagline,      description,      ctaLabel,      "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},      icon    }  },  _type == "quoteClusterBlock" => {    preClaim,    heading,    "primaryQuote": primaryQuote {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}},    "secondaryQuotes": secondaryQuotes[] {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}}  },  _type == "ctaRefreinBlock" => {    pageKey,    overrideStatement,    overrideButtonLabel,    "overrideButtonLink": overrideButtonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "heritageStripBlock" => {    preClaim,    heading,    items  },  _type == "projectGridBlock" => {    preClaim,    heading,    intro,    layerFilter,    maxItems,    showFilterChips,    cardLayoutVariant  },  _type == "essayGridBlock" => {    preClaim,    heading,    intro,    categoryFilter,    maxItems,    showFeaturedFirst,    showFilterChips  },  _type == "teamGridBlock" => {    preClaim,    heading,    coreOnly,    showQuotes  },  _type == "timelineBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      year,      label,      description,      highlight    },    orientation  },  // ─── Case-detail blocks ───  _type == "decisionBlock" => {    preClaim,    question,    options[] {      _key,      label,      pros,      cons,      chosen    },    conclusion  },  _type == "phaseBlock" => {    phaseNumber,    phaseName,    oneLiner,    body,    aiRole,    humanResponsibility,    deliverables,    duration  },  _type == "metaBlock" => {    heading,    items[] {      _key,      label,      value,      "href": href {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  _type == "artifactGalleryBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},      title,      caption    },    layoutVariant  },  _type == "metricsStripBlock" => {    preClaim,    heading,    "metrics": metrics[] {  label,  value,  source,  verifiedByAlex},    sourceNote  },  _type == "nextCaseBlock" => {    preClaim,    heading,    "recommendedCase": recommendedCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    },    recommendationReason,    "alternativeCase": alternativeCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    }  },  _type == "ndaExplainerBlock" => {    preClaim,    heading,    body,    expectedReleaseDate,    contactCta {      label,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Forms + utility ───  _type == "contactFormBlock" => {    preClaim,    heading,    intro,    topicOptions,    requireCompany,    submitLabel,    successMessage,    errorMessage  },  _type == "newsletterFormBlock" => {    preClaim,    overrideIntro,    overrideHelperLine,    source  },  _type == "faqBlock" => {    preClaim,    heading,    items[] {      _key,      question,      answer    },    enableJsonLd  },  _type == "directChannelsBlock" => {    preClaim,    heading,    channels[] {      _key,      kind,      label,      value,      helperLine    },    layoutVariant  },  _type == "expectationStepsBlock" => {    overrideHeading,    overrideSteps[] {      _key,      stepNumber,      label,      description    }  },  _type == "calloutBlock" => {    kind,    body,    attribution  },  _type == "tagStripBlock" => {    preClaim,    tags,    showAsLinks  },  _type == "preClaimBlock" => {    text,    showThinkingRing  },  // ─── Legacy template blocks (backwards-compat) ───  _type == "heroBlock" => {    heading, subheading,    mediaType, videoUrl, overlay,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    "posterImage": posterImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "textBlock" => {    heading, body, maxWidth, dividerLine, backgroundStyle  },  _type == "imageBlock" => {    layout, caption,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "ctaBlock" => {    heading, description, contactName, contactPhone, contactEmail,    buttonLabel,    "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    backgroundStyle,    "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "contactBlock" => {    heading, description[], showContactInfo, ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "officeImage": officeImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  }}  }
 export type PAGE_BY_SLUG_QUERYResult = {
   _id: string;
   title: string | null;
@@ -2000,12 +1755,50 @@ export type PAGE_BY_SLUG_QUERYResult = {
   content: Array<{
     _type: "artifactGalleryBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    items: Array<{
+      _key: string;
+      image: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+      title: string | null;
+      caption: string | null;
+    }> | null;
+    layoutVariant: "grid-2" | "grid-3" | "stack" | null;
   } | {
     _type: "calloutBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    kind: "diagram-text" | "pull-quote" | "side-note" | "warning" | null;
+    body: BlockContent | null;
+    attribution: string | null;
   } | {
     _type: "contactBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
     heading: string | null;
     description: Array<{
       children?: Array<{
@@ -2087,15 +1880,30 @@ export type PAGE_BY_SLUG_QUERYResult = {
         } | null;
       } | null;
       alt: string | null;
+      caption: null;
       hotspot: SanityImageHotspot | null;
       crop: SanityImageCrop | null;
     } | null;
   } | {
     _type: "contactFormBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: BlockContent | null;
+    topicOptions: Array<string> | null;
+    requireCompany: boolean | null;
+    submitLabel: string | null;
+    successMessage: string | null;
+    errorMessage: string | null;
   } | {
     _type: "ctaBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
     heading: string | null;
     description: string | null;
     contactName: string | null;
@@ -2148,33 +1956,138 @@ export type PAGE_BY_SLUG_QUERYResult = {
         } | null;
       } | null;
       alt: string | null;
+      caption: null;
       hotspot: SanityImageHotspot | null;
       crop: SanityImageCrop | null;
     } | null;
   } | {
     _type: "ctaRefreinBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    pageKey: "academy-index" | "approach" | "case-detail" | "essay-detail" | "primary" | "services-automate" | "services-build" | "services-design" | "team" | "work-index" | null;
+    overrideStatement: string | null;
+    overrideButtonLabel: string | null;
+    overrideButtonLink: {
+      linkKind: "external" | "internalPage" | "pageSection" | null;
+      openInNewTab: boolean | null;
+      externalUrl: string | null;
+      anchorId: string | null;
+      internalPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+      pageSectionPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+    } | null;
   } | {
     _type: "decisionBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    question: string | null;
+    options: Array<{
+      _key: string;
+      label: string | null;
+      pros: BlockContent | null;
+      cons: BlockContent | null;
+      chosen: boolean | null;
+    }> | null;
+    conclusion: BlockContent | null;
   } | {
     _type: "directChannelsBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    channels: Array<{
+      _key: string;
+      kind: "address" | "email" | "other" | "phone" | "whatsapp" | null;
+      label: string | null;
+      value: string | null;
+      helperLine: string | null;
+    }> | null;
+    layoutVariant: "grid-2x2" | "inline" | "stack" | null;
   } | {
     _type: "essayGridBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    categoryFilter: "all" | "analyse" | "featured" | "practice" | "principle" | null;
+    maxItems: number | null;
+    showFeaturedFirst: boolean | null;
+    showFilterChips: boolean | null;
   } | {
     _type: "expectationStepsBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    overrideHeading: string | null;
+    overrideSteps: Array<{
+      _key: string;
+      stepNumber: string | null;
+      label: string | null;
+      description: string | null;
+    }> | null;
   } | {
     _type: "faqBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    items: Array<{
+      _key: string;
+      question: string | null;
+      answer: BlockContent | null;
+    }> | null;
+    enableJsonLd: boolean | null;
   } | {
     _type: "heritageStripBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    items: Array<string> | null;
   } | {
     _type: "heroBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
     heading: string | null;
     subheading: string | null;
     mediaType: "image" | "none" | "video" | null;
@@ -2193,6 +2106,7 @@ export type PAGE_BY_SLUG_QUERYResult = {
         } | null;
       } | null;
       alt: string | null;
+      caption: null;
       hotspot: SanityImageHotspot | null;
       crop: SanityImageCrop | null;
     } | null;
@@ -2209,6 +2123,7 @@ export type PAGE_BY_SLUG_QUERYResult = {
         } | null;
       } | null;
       alt: string | null;
+      caption: null;
       hotspot: SanityImageHotspot | null;
       crop: SanityImageCrop | null;
     } | null;
@@ -2248,12 +2163,121 @@ export type PAGE_BY_SLUG_QUERYResult = {
   } | {
     _type: "heroHomeBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    headlineParts: Array<string> | null;
+    subClaim: string | null;
+    bodyText: null;
+    ctas: Array<{
+      _key: string;
+      label: string | null;
+      variant: "primary" | "secondary" | "tertiary" | null;
+      link: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+    }> | null;
+    showThinkingRing: boolean | null;
   } | {
     _type: "heroStandardBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    subheading: string | null;
+    layoutVariant: "split-50-50" | "text-only" | "with-artifact" | null;
+    artifact: {
+      asset: {
+        _id: string;
+        url: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt: string | null;
+      caption: string | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+    } | null;
+    ctas: Array<{
+      _key: string;
+      label: string | null;
+      variant: "primary" | "secondary" | "tertiary" | null;
+      link: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+    }> | null;
   } | {
     _type: "imageBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
     layout: "contained" | "fullWidth" | null;
     caption: string | null;
     image: {
@@ -2269,51 +2293,353 @@ export type PAGE_BY_SLUG_QUERYResult = {
         } | null;
       } | null;
       alt: string | null;
+      caption: null;
       hotspot: SanityImageHotspot | null;
       crop: SanityImageCrop | null;
     } | null;
   } | {
     _type: "metaBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    heading: string | null;
+    items: Array<{
+      _key: string;
+      label: string | null;
+      value: string | null;
+      href: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+    }> | null;
   } | {
     _type: "metricsStripBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    metrics: Array<{
+      label: string | null;
+      value: string | null;
+      source: string | null;
+      verifiedByAlex: boolean | null;
+    }> | null;
+    sourceNote: string | null;
   } | {
     _type: "ndaExplainerBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    body: BlockContent | null;
+    expectedReleaseDate: string | null;
+    contactCta: {
+      label: string | null;
+      link: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+    } | null;
   } | {
     _type: "newsletterFormBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    overrideIntro: string | null;
+    overrideHelperLine: string | null;
+    source: "academy" | "footer" | "other" | null;
   } | {
     _type: "nextCaseBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    recommendedCase: {
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      layer: "heritage" | "in-flight" | "launch" | null;
+      subtitle: string | null;
+      heroArtifact: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+    } | null;
+    recommendationReason: string | null;
+    alternativeCase: {
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      layer: "heritage" | "in-flight" | "launch" | null;
+      subtitle: string | null;
+      heroArtifact: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+    } | null;
   } | {
     _type: "phaseBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    phaseNumber: string | null;
+    phaseName: string | null;
+    oneLiner: string | null;
+    body: BlockContent | null;
+    aiRole: string | null;
+    humanResponsibility: string | null;
+    deliverables: Array<string> | null;
+    duration: string | null;
   } | {
     _type: "pitchOpeningBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    body: BlockContent | null;
+    maxWidth: "full" | "main" | "small" | null;
   } | {
     _type: "preClaimBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    text: string | null;
+    showThinkingRing: boolean | null;
   } | {
     _type: "projectGridBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    layerFilter: "all" | "featured" | "heritage" | "in-flight" | "launch" | null;
+    maxItems: number | null;
+    showFilterChips: boolean | null;
+    cardLayoutVariant: "auto" | "featured-60-40" | "grid-2" | "grid-3" | "list" | null;
   } | {
     _type: "quoteClusterBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    primaryQuote: {
+      quote: string | null;
+      name: string | null;
+      role: string | null;
+      company: string | null;
+      portrait: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+    } | null;
+    secondaryQuotes: Array<{
+      quote: string | null;
+      name: string | null;
+      role: string | null;
+      company: string | null;
+      portrait: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+    }> | null;
   } | {
     _type: "serviceTriptychBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    tiles: Array<{
+      _key: string;
+      title: string | null;
+      tagline: string | null;
+      description: string | null;
+      ctaLabel: string | null;
+      ctaLink: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+      icon: "automate" | "build" | "custom" | "design" | null;
+    }> | null;
   } | {
     _type: "tagStripBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    tags: Array<string> | null;
+    showAsLinks: boolean | null;
   } | {
     _type: "teamGridBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    coreOnly: boolean | null;
+    showQuotes: boolean | null;
   } | {
     _type: "textBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
     heading: string | null;
     body: BlockContent | null;
     maxWidth: "full" | "medium" | "narrow" | "wide" | null;
@@ -2322,11 +2648,197 @@ export type PAGE_BY_SLUG_QUERYResult = {
   } | {
     _type: "timelineBlock";
     _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    items: Array<{
+      _key: string;
+      year: string | null;
+      label: string | null;
+      description: string | null;
+      highlight: boolean | null;
+    }> | null;
+    orientation: "horizontal" | "vertical" | null;
   }> | null;
 } | null;
 // Variable: NOT_FOUND_PAGE_QUERY
 // Query: *[_type == "notFoundPage" && _id == "notFoundPage"][0] {    heading,    body[],    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData}  }
 export type NOT_FOUND_PAGE_QUERYResult = {
+  heading: string | null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      blank?: boolean;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }> | null;
+  ctaLabel: string | null;
+  ctaLink: {
+    linkKind: "external" | "internalPage" | "pageSection" | null;
+    openInNewTab: boolean | null;
+    externalUrl: string | null;
+    anchorId: string | null;
+    internalPage: {
+      _type: "homePage";
+      slug: null;
+    } | {
+      _type: "notFoundPage";
+      slug: null;
+    } | {
+      _type: "page";
+      slug: string | null;
+    } | {
+      _type: "thankYouPage";
+      slug: null;
+    } | null;
+    pageSectionPage: {
+      _type: "homePage";
+      slug: null;
+    } | {
+      _type: "notFoundPage";
+      slug: null;
+    } | {
+      _type: "page";
+      slug: string | null;
+    } | {
+      _type: "thankYouPage";
+      slug: null;
+    } | null;
+  } | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    ogImageUrl: string | null;
+    ogTitleMode: "custom" | "same" | null;
+    ogTitle: string | null;
+    ogDescriptionMode: "custom" | "same" | null;
+    ogDescription: string | null;
+    canonicalUrl: string | null;
+    noIndex: boolean | null;
+    structuredData: {
+      mode?: "auto" | "custom" | "disabled";
+      customJsonLd?: string;
+    } | null;
+  } | null;
+} | null;
+// Variable: ERROR_PAGE_QUERY
+// Query: *[_type == "errorPage" && _id == "errorPage"][0] {    heading,    body[],    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData}  }
+export type ERROR_PAGE_QUERYResult = {
+  heading: string | null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      blank?: boolean;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }> | null;
+  ctaLabel: string | null;
+  ctaLink: {
+    linkKind: "external" | "internalPage" | "pageSection" | null;
+    openInNewTab: boolean | null;
+    externalUrl: string | null;
+    anchorId: string | null;
+    internalPage: {
+      _type: "homePage";
+      slug: null;
+    } | {
+      _type: "notFoundPage";
+      slug: null;
+    } | {
+      _type: "page";
+      slug: string | null;
+    } | {
+      _type: "thankYouPage";
+      slug: null;
+    } | null;
+    pageSectionPage: {
+      _type: "homePage";
+      slug: null;
+    } | {
+      _type: "notFoundPage";
+      slug: null;
+    } | {
+      _type: "page";
+      slug: string | null;
+    } | {
+      _type: "thankYouPage";
+      slug: null;
+    } | null;
+  } | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    ogImageUrl: string | null;
+    ogTitleMode: "custom" | "same" | null;
+    ogTitle: string | null;
+    ogDescriptionMode: "custom" | "same" | null;
+    ogDescription: string | null;
+    canonicalUrl: string | null;
+    noIndex: boolean | null;
+    structuredData: {
+      mode?: "auto" | "custom" | "disabled";
+      customJsonLd?: string;
+    } | null;
+  } | null;
+} | null;
+// Variable: OFFLINE_PAGE_QUERY
+// Query: *[_type == "offlinePage" && _id == "offlinePage"][0] {    heading,    body[],    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData}  }
+export type OFFLINE_PAGE_QUERYResult = {
   heading: string | null;
   body: Array<{
     children?: Array<{
@@ -2496,15 +3008,1353 @@ export type THANK_YOU_PAGE_QUERYResult = {
     } | null;
   } | null;
 } | null;
+// Variable: CASES_BY_LAYER_QUERY
+// Query: *[_type == "case" && status == "live" && ($layer == "all" || layer == $layer)] | order(period.start desc) {  _id,  _updatedAt,  title,  "slug": slug.current,  layer,  ndaStatus,  status,  client,  "period": period {  start,  end,  isOngoing},  preClaim,  subtitle,  tags,  stack,  "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},  liveUrl}
+export type CASES_BY_LAYER_QUERYResult = Array<{
+  _id: string;
+  _updatedAt: string;
+  title: string | null;
+  slug: string | null;
+  layer: "heritage" | "in-flight" | "launch" | null;
+  ndaStatus: boolean | null;
+  status: "archived" | "draft" | "live" | null;
+  client: string | null;
+  period: {
+    start: string | null;
+    end: string | null;
+    isOngoing: boolean | null;
+  } | null;
+  preClaim: string | null;
+  subtitle: string | null;
+  tags: Array<string> | null;
+  stack: Array<string> | null;
+  heroArtifact: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    caption: null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+  liveUrl: string | null;
+}>;
+// Variable: CASE_BY_SLUG_QUERY
+// Query: *[_type == "case" && slug.current == $slug][0] {  _id,  _updatedAt,  language,  title,  "slug": slug.current,  layer,  ndaStatus,  status,  client,  role,  "period": period {  start,  end,  isOngoing},  preClaim,  subtitle,  tags,  stack,  liveUrl,  "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},  "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData},  content[enabled != false] {  _type,  _key,  enabled,  anchorId,  tone,  // ─── Hero's ───  _type == "heroHomeBlock" => {    preClaim,    headlineParts,    subClaim,    bodyText,    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    },    showThinkingRing  },  _type == "heroStandardBlock" => {    preClaim,    heading,    subheading,    layoutVariant,    "artifact": artifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Sections ───  _type == "pitchOpeningBlock" => {    preClaim,    body,    maxWidth  },  _type == "serviceTriptychBlock" => {    preClaim,    heading,    intro,    tiles[] {      _key,      title,      tagline,      description,      ctaLabel,      "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},      icon    }  },  _type == "quoteClusterBlock" => {    preClaim,    heading,    "primaryQuote": primaryQuote {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}},    "secondaryQuotes": secondaryQuotes[] {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}}  },  _type == "ctaRefreinBlock" => {    pageKey,    overrideStatement,    overrideButtonLabel,    "overrideButtonLink": overrideButtonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "heritageStripBlock" => {    preClaim,    heading,    items  },  _type == "projectGridBlock" => {    preClaim,    heading,    intro,    layerFilter,    maxItems,    showFilterChips,    cardLayoutVariant  },  _type == "essayGridBlock" => {    preClaim,    heading,    intro,    categoryFilter,    maxItems,    showFeaturedFirst,    showFilterChips  },  _type == "teamGridBlock" => {    preClaim,    heading,    coreOnly,    showQuotes  },  _type == "timelineBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      year,      label,      description,      highlight    },    orientation  },  // ─── Case-detail blocks ───  _type == "decisionBlock" => {    preClaim,    question,    options[] {      _key,      label,      pros,      cons,      chosen    },    conclusion  },  _type == "phaseBlock" => {    phaseNumber,    phaseName,    oneLiner,    body,    aiRole,    humanResponsibility,    deliverables,    duration  },  _type == "metaBlock" => {    heading,    items[] {      _key,      label,      value,      "href": href {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  _type == "artifactGalleryBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},      title,      caption    },    layoutVariant  },  _type == "metricsStripBlock" => {    preClaim,    heading,    "metrics": metrics[] {  label,  value,  source,  verifiedByAlex},    sourceNote  },  _type == "nextCaseBlock" => {    preClaim,    heading,    "recommendedCase": recommendedCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    },    recommendationReason,    "alternativeCase": alternativeCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    }  },  _type == "ndaExplainerBlock" => {    preClaim,    heading,    body,    expectedReleaseDate,    contactCta {      label,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Forms + utility ───  _type == "contactFormBlock" => {    preClaim,    heading,    intro,    topicOptions,    requireCompany,    submitLabel,    successMessage,    errorMessage  },  _type == "newsletterFormBlock" => {    preClaim,    overrideIntro,    overrideHelperLine,    source  },  _type == "faqBlock" => {    preClaim,    heading,    items[] {      _key,      question,      answer    },    enableJsonLd  },  _type == "directChannelsBlock" => {    preClaim,    heading,    channels[] {      _key,      kind,      label,      value,      helperLine    },    layoutVariant  },  _type == "expectationStepsBlock" => {    overrideHeading,    overrideSteps[] {      _key,      stepNumber,      label,      description    }  },  _type == "calloutBlock" => {    kind,    body,    attribution  },  _type == "tagStripBlock" => {    preClaim,    tags,    showAsLinks  },  _type == "preClaimBlock" => {    text,    showThinkingRing  },  // ─── Legacy template blocks (backwards-compat) ───  _type == "heroBlock" => {    heading, subheading,    mediaType, videoUrl, overlay,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    "posterImage": posterImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "textBlock" => {    heading, body, maxWidth, dividerLine, backgroundStyle  },  _type == "imageBlock" => {    layout, caption,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "ctaBlock" => {    heading, description, contactName, contactPhone, contactEmail,    buttonLabel,    "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    backgroundStyle,    "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "contactBlock" => {    heading, description[], showContactInfo, ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "officeImage": officeImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  }}}
+export type CASE_BY_SLUG_QUERYResult = {
+  _id: string;
+  _updatedAt: string;
+  language: "en" | "nl" | null;
+  title: string | null;
+  slug: string | null;
+  layer: "heritage" | "in-flight" | "launch" | null;
+  ndaStatus: boolean | null;
+  status: "archived" | "draft" | "live" | null;
+  client: string | null;
+  role: string | null;
+  period: {
+    start: string | null;
+    end: string | null;
+    isOngoing: boolean | null;
+  } | null;
+  preClaim: string | null;
+  subtitle: string | null;
+  tags: Array<string> | null;
+  stack: Array<string> | null;
+  liveUrl: string | null;
+  heroArtifact: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    caption: null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    ogImageUrl: string | null;
+    ogTitleMode: "custom" | "same" | null;
+    ogTitle: string | null;
+    ogDescriptionMode: "custom" | "same" | null;
+    ogDescription: string | null;
+    canonicalUrl: string | null;
+    noIndex: boolean | null;
+    structuredData: {
+      mode?: "auto" | "custom" | "disabled";
+      customJsonLd?: string;
+    } | null;
+  } | null;
+  content: Array<{
+    _type: "artifactGalleryBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    items: Array<{
+      _key: string;
+      image: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+      title: string | null;
+      caption: string | null;
+    }> | null;
+    layoutVariant: "grid-2" | "grid-3" | "stack" | null;
+  } | {
+    _type: "calloutBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    kind: "diagram-text" | "pull-quote" | "side-note" | "warning" | null;
+    body: BlockContent | null;
+    attribution: string | null;
+  } | {
+    _type: "contactBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
+    heading: string | null;
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "blockquote" | "h2" | "h3" | "h4" | "normal";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        href?: string;
+        blank?: boolean;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    } | {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      caption?: string;
+      _type: "image";
+      _key: string;
+    }> | null;
+    showContactInfo: boolean | null;
+    ctaLabel: string | null;
+    ctaLink: {
+      linkKind: "external" | "internalPage" | "pageSection" | null;
+      openInNewTab: boolean | null;
+      externalUrl: string | null;
+      anchorId: string | null;
+      internalPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+      pageSectionPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+    } | null;
+    officeImage: {
+      asset: {
+        _id: string;
+        url: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt: string | null;
+      caption: null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+    } | null;
+  } | {
+    _type: "contactFormBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: BlockContent | null;
+    topicOptions: Array<string> | null;
+    requireCompany: boolean | null;
+    submitLabel: string | null;
+    successMessage: string | null;
+    errorMessage: string | null;
+  } | {
+    _type: "ctaBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
+    heading: string | null;
+    description: string | null;
+    contactName: string | null;
+    contactPhone: string | null;
+    contactEmail: string | null;
+    buttonLabel: string | null;
+    buttonLink: {
+      linkKind: "external" | "internalPage" | "pageSection" | null;
+      openInNewTab: boolean | null;
+      externalUrl: string | null;
+      anchorId: string | null;
+      internalPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+      pageSectionPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+    } | null;
+    backgroundStyle: "dark" | "transparent" | "white" | null;
+    photo: {
+      asset: {
+        _id: string;
+        url: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt: string | null;
+      caption: null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+    } | null;
+  } | {
+    _type: "ctaRefreinBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    pageKey: "academy-index" | "approach" | "case-detail" | "essay-detail" | "primary" | "services-automate" | "services-build" | "services-design" | "team" | "work-index" | null;
+    overrideStatement: string | null;
+    overrideButtonLabel: string | null;
+    overrideButtonLink: {
+      linkKind: "external" | "internalPage" | "pageSection" | null;
+      openInNewTab: boolean | null;
+      externalUrl: string | null;
+      anchorId: string | null;
+      internalPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+      pageSectionPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+    } | null;
+  } | {
+    _type: "decisionBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    question: string | null;
+    options: Array<{
+      _key: string;
+      label: string | null;
+      pros: BlockContent | null;
+      cons: BlockContent | null;
+      chosen: boolean | null;
+    }> | null;
+    conclusion: BlockContent | null;
+  } | {
+    _type: "directChannelsBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    channels: Array<{
+      _key: string;
+      kind: "address" | "email" | "other" | "phone" | "whatsapp" | null;
+      label: string | null;
+      value: string | null;
+      helperLine: string | null;
+    }> | null;
+    layoutVariant: "grid-2x2" | "inline" | "stack" | null;
+  } | {
+    _type: "essayGridBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    categoryFilter: "all" | "analyse" | "featured" | "practice" | "principle" | null;
+    maxItems: number | null;
+    showFeaturedFirst: boolean | null;
+    showFilterChips: boolean | null;
+  } | {
+    _type: "expectationStepsBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    overrideHeading: string | null;
+    overrideSteps: Array<{
+      _key: string;
+      stepNumber: string | null;
+      label: string | null;
+      description: string | null;
+    }> | null;
+  } | {
+    _type: "faqBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    items: Array<{
+      _key: string;
+      question: string | null;
+      answer: BlockContent | null;
+    }> | null;
+    enableJsonLd: boolean | null;
+  } | {
+    _type: "heritageStripBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    items: Array<string> | null;
+  } | {
+    _type: "heroBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
+    heading: string | null;
+    subheading: string | null;
+    mediaType: "image" | "none" | "video" | null;
+    videoUrl: string | null;
+    overlay: boolean | null;
+    image: {
+      asset: {
+        _id: string;
+        url: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt: string | null;
+      caption: null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+    } | null;
+    posterImage: {
+      asset: {
+        _id: string;
+        url: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt: string | null;
+      caption: null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+    } | null;
+    ctaLabel: string | null;
+    ctaLink: {
+      linkKind: "external" | "internalPage" | "pageSection" | null;
+      openInNewTab: boolean | null;
+      externalUrl: string | null;
+      anchorId: string | null;
+      internalPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+      pageSectionPage: {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | null;
+    } | null;
+  } | {
+    _type: "heroHomeBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    headlineParts: Array<string> | null;
+    subClaim: string | null;
+    bodyText: null;
+    ctas: Array<{
+      _key: string;
+      label: string | null;
+      variant: "primary" | "secondary" | "tertiary" | null;
+      link: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+    }> | null;
+    showThinkingRing: boolean | null;
+  } | {
+    _type: "heroStandardBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    subheading: string | null;
+    layoutVariant: "split-50-50" | "text-only" | "with-artifact" | null;
+    artifact: {
+      asset: {
+        _id: string;
+        url: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt: string | null;
+      caption: string | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+    } | null;
+    ctas: Array<{
+      _key: string;
+      label: string | null;
+      variant: "primary" | "secondary" | "tertiary" | null;
+      link: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+    }> | null;
+  } | {
+    _type: "imageBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
+    layout: "contained" | "fullWidth" | null;
+    caption: string | null;
+    image: {
+      asset: {
+        _id: string;
+        url: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt: string | null;
+      caption: null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+    } | null;
+  } | {
+    _type: "metaBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    heading: string | null;
+    items: Array<{
+      _key: string;
+      label: string | null;
+      value: string | null;
+      href: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+    }> | null;
+  } | {
+    _type: "metricsStripBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    metrics: Array<{
+      label: string | null;
+      value: string | null;
+      source: string | null;
+      verifiedByAlex: boolean | null;
+    }> | null;
+    sourceNote: string | null;
+  } | {
+    _type: "ndaExplainerBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    body: BlockContent | null;
+    expectedReleaseDate: string | null;
+    contactCta: {
+      label: string | null;
+      link: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+    } | null;
+  } | {
+    _type: "newsletterFormBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    overrideIntro: string | null;
+    overrideHelperLine: string | null;
+    source: "academy" | "footer" | "other" | null;
+  } | {
+    _type: "nextCaseBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    recommendedCase: {
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      layer: "heritage" | "in-flight" | "launch" | null;
+      subtitle: string | null;
+      heroArtifact: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+    } | null;
+    recommendationReason: string | null;
+    alternativeCase: {
+      _id: string;
+      title: string | null;
+      slug: string | null;
+      layer: "heritage" | "in-flight" | "launch" | null;
+      subtitle: string | null;
+      heroArtifact: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+    } | null;
+  } | {
+    _type: "phaseBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    phaseNumber: string | null;
+    phaseName: string | null;
+    oneLiner: string | null;
+    body: BlockContent | null;
+    aiRole: string | null;
+    humanResponsibility: string | null;
+    deliverables: Array<string> | null;
+    duration: string | null;
+  } | {
+    _type: "pitchOpeningBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    body: BlockContent | null;
+    maxWidth: "full" | "main" | "small" | null;
+  } | {
+    _type: "preClaimBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    text: string | null;
+    showThinkingRing: boolean | null;
+  } | {
+    _type: "projectGridBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    layerFilter: "all" | "featured" | "heritage" | "in-flight" | "launch" | null;
+    maxItems: number | null;
+    showFilterChips: boolean | null;
+    cardLayoutVariant: "auto" | "featured-60-40" | "grid-2" | "grid-3" | "list" | null;
+  } | {
+    _type: "quoteClusterBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    primaryQuote: {
+      quote: string | null;
+      name: string | null;
+      role: string | null;
+      company: string | null;
+      portrait: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+    } | null;
+    secondaryQuotes: Array<{
+      quote: string | null;
+      name: string | null;
+      role: string | null;
+      company: string | null;
+      portrait: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        caption: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
+    }> | null;
+  } | {
+    _type: "serviceTriptychBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    tiles: Array<{
+      _key: string;
+      title: string | null;
+      tagline: string | null;
+      description: string | null;
+      ctaLabel: string | null;
+      ctaLink: {
+        linkKind: "external" | "internalPage" | "pageSection" | null;
+        openInNewTab: boolean | null;
+        externalUrl: string | null;
+        anchorId: string | null;
+        internalPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+        pageSectionPage: {
+          _type: "homePage";
+          slug: null;
+        } | {
+          _type: "notFoundPage";
+          slug: null;
+        } | {
+          _type: "page";
+          slug: string | null;
+        } | {
+          _type: "thankYouPage";
+          slug: null;
+        } | null;
+      } | null;
+      icon: "automate" | "build" | "custom" | "design" | null;
+    }> | null;
+  } | {
+    _type: "tagStripBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    tags: Array<string> | null;
+    showAsLinks: boolean | null;
+  } | {
+    _type: "teamGridBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    coreOnly: boolean | null;
+    showQuotes: boolean | null;
+  } | {
+    _type: "textBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: null;
+    tone: null;
+    heading: string | null;
+    body: BlockContent | null;
+    maxWidth: "full" | "medium" | "narrow" | "wide" | null;
+    dividerLine: boolean | null;
+    backgroundStyle: "dark" | "transparent" | "white" | null;
+  } | {
+    _type: "timelineBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    items: Array<{
+      _key: string;
+      year: string | null;
+      label: string | null;
+      description: string | null;
+      highlight: boolean | null;
+    }> | null;
+    orientation: "horizontal" | "vertical" | null;
+  }> | null;
+} | null;
+// Variable: ALL_CASE_SLUGS_QUERY
+// Query: *[_type == "case" && status == "live" && defined(slug.current)] {    "slug": slug.current  }
+export type ALL_CASE_SLUGS_QUERYResult = Array<{
+  slug: string | null;
+}>;
+// Variable: ESSAYS_QUERY
+// Query: *[_type == "essay" && status == "live" && ($category == "all" || category == $category)] | order(publishedAt desc) {  _id,  _updatedAt,  title,  "slug": slug.current,  category,  featured,  publishedAt,  readTime,  preClaim,  dek,  "author": author->{ name, "slug": slug.current, role },  "featuredImage": featuredImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}}
+export type ESSAYS_QUERYResult = Array<{
+  _id: string;
+  _updatedAt: string;
+  title: string | null;
+  slug: string | null;
+  category: "analyse" | "practice" | "principle" | null;
+  featured: boolean | null;
+  publishedAt: string | null;
+  readTime: string | null;
+  preClaim: string | null;
+  dek: string | null;
+  author: {
+    name: string | null;
+    slug: string | null;
+    role: string | null;
+  } | null;
+  featuredImage: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    caption: null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+}>;
+// Variable: FEATURED_ESSAYS_QUERY
+// Query: *[_type == "essay" && status == "live" && featured == true] | order(publishedAt desc) {  _id,  _updatedAt,  title,  "slug": slug.current,  category,  featured,  publishedAt,  readTime,  preClaim,  dek,  "author": author->{ name, "slug": slug.current, role },  "featuredImage": featuredImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}}
+export type FEATURED_ESSAYS_QUERYResult = Array<{
+  _id: string;
+  _updatedAt: string;
+  title: string | null;
+  slug: string | null;
+  category: "analyse" | "practice" | "principle" | null;
+  featured: true;
+  publishedAt: string | null;
+  readTime: string | null;
+  preClaim: string | null;
+  dek: string | null;
+  author: {
+    name: string | null;
+    slug: string | null;
+    role: string | null;
+  } | null;
+  featuredImage: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    caption: null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+}>;
+// Variable: ESSAY_BY_SLUG_QUERY
+// Query: *[_type == "essay" && slug.current == $slug][0] {  _id,  _updatedAt,  language,  title,  "slug": slug.current,  category,  status,  featured,  publishedAt,  readTime,  preClaim,  dek,  tags,  "featuredImage": featuredImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},  "author": author->{ name, "slug": slug.current, role, "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop} },  "relatedEssays": relatedEssays[]-> {  _id,  _updatedAt,  title,  "slug": slug.current,  category,  featured,  publishedAt,  readTime,  preClaim,  dek,  "author": author->{ name, "slug": slug.current, role },  "featuredImage": featuredImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}},  body,  "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData}}
+export type ESSAY_BY_SLUG_QUERYResult = {
+  _id: string;
+  _updatedAt: string;
+  language: "en" | "nl" | null;
+  title: string | null;
+  slug: string | null;
+  category: "analyse" | "practice" | "principle" | null;
+  status: "archived" | "draft" | "live" | null;
+  featured: boolean | null;
+  publishedAt: string | null;
+  readTime: string | null;
+  preClaim: string | null;
+  dek: string | null;
+  tags: Array<string> | null;
+  featuredImage: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    caption: null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+  author: {
+    name: string | null;
+    slug: string | null;
+    role: string | null;
+    portrait: {
+      asset: {
+        _id: string;
+        url: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt: string | null;
+      caption: null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+    } | null;
+  } | null;
+  relatedEssays: Array<{
+    _id: string;
+    _updatedAt: string;
+    title: string | null;
+    slug: string | null;
+    category: "analyse" | "practice" | "principle" | null;
+    featured: boolean | null;
+    publishedAt: string | null;
+    readTime: string | null;
+    preClaim: string | null;
+    dek: string | null;
+    author: {
+      name: string | null;
+      slug: string | null;
+      role: string | null;
+    } | null;
+    featuredImage: {
+      asset: {
+        _id: string;
+        url: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt: string | null;
+      caption: null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+    } | null;
+  }> | null;
+  body: BlockContent | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    ogImageUrl: string | null;
+    ogTitleMode: "custom" | "same" | null;
+    ogTitle: string | null;
+    ogDescriptionMode: "custom" | "same" | null;
+    ogDescription: string | null;
+    canonicalUrl: string | null;
+    noIndex: boolean | null;
+    structuredData: {
+      mode?: "auto" | "custom" | "disabled";
+      customJsonLd?: string;
+    } | null;
+  } | null;
+} | null;
+// Variable: ALL_ESSAY_SLUGS_QUERY
+// Query: *[_type == "essay" && status == "live" && defined(slug.current)] {    "slug": slug.current  }
+export type ALL_ESSAY_SLUGS_QUERYResult = Array<{
+  slug: string | null;
+}>;
+// Variable: TEAM_MEMBERS_QUERY
+// Query: *[_type == "teamMember" && ($coreOnly == false || isCore == true)] | order(displayOrder asc) {  _id,  name,  "slug": slug.current,  role,  bio,  email,  isCore,  displayOrder,  quote,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},  links[] { _key, platform, url }}
+export type TEAM_MEMBERS_QUERYResult = Array<{
+  _id: string;
+  name: string | null;
+  slug: string | null;
+  role: string | null;
+  bio: BlockContent | null;
+  email: string | null;
+  isCore: boolean | null;
+  displayOrder: number | null;
+  quote: {
+    text?: string;
+    context?: string;
+  } | null;
+  portrait: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    caption: null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+  links: Array<{
+    _key: string;
+    platform: "GitHub" | "LinkedIn" | "Other" | "Personal site" | "X / Twitter" | null;
+    url: string | null;
+  }> | null;
+}>;
+// Variable: TEAM_MEMBER_BY_SLUG_QUERY
+// Query: *[_type == "teamMember" && slug.current == $slug][0] {  _id,  name,  "slug": slug.current,  role,  bio,  email,  isCore,  displayOrder,  quote,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},  links[] { _key, platform, url }}
+export type TEAM_MEMBER_BY_SLUG_QUERYResult = {
+  _id: string;
+  name: string | null;
+  slug: string | null;
+  role: string | null;
+  bio: BlockContent | null;
+  email: string | null;
+  isCore: boolean | null;
+  displayOrder: number | null;
+  quote: {
+    text?: string;
+    context?: string;
+  } | null;
+  portrait: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    caption: null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+  links: Array<{
+    _key: string;
+    platform: "GitHub" | "LinkedIn" | "Other" | "Personal site" | "X / Twitter" | null;
+    url: string | null;
+  }> | null;
+} | null;
+// Variable: RECOGNITION_QUERY
+// Query: *[_type == "recognition" && ($category == "all" || category == $category)] | order(year desc, displayOrder asc) {    _id,    category,    title,    year,    description,    url,    displayOrder,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  }
+export type RECOGNITION_QUERYResult = Array<{
+  _id: string;
+  category: "award" | "client" | "partner" | "talk" | null;
+  title: string | null;
+  year: number | null;
+  description: string | null;
+  url: string | null;
+  displayOrder: number | null;
+  image: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    caption: null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+}>;
 // Variable: SITEMAP_QUERY
-// Query: {  "singletons": *[_type in ["homePage"] && seo.noIndex != true] {    _type,    _updatedAt,    "href": select(      _type == "homePage" => "/"    )  },  "pages": *[_type == "page" && defined(slug.current) && seo.noIndex != true] {    _updatedAt,    "href": "/" + slug.current  }}
+// Query: {  "singletons": *[    _type in [      "homePage",      "workIndexPage",      "teamPage",      "approachPage",      "serviceDesignPage",      "serviceBuildPage",      "serviceAutomatePage",      "academyIndexPage",      "contactPage"    ] && seo.noIndex != true  ] {    _type,    _updatedAt,    "href": select(      _type == "homePage" => "/",      _type == "workIndexPage" => "/work",      _type == "teamPage" => "/team",      _type == "approachPage" => "/approach",      _type == "serviceDesignPage" => "/services/design",      _type == "serviceBuildPage" => "/services/build",      _type == "serviceAutomatePage" => "/services/automate",      _type == "academyIndexPage" => "/academy",      _type == "contactPage" => "/contact"    )  },  "pages": *[_type == "page" && defined(slug.current) && seo.noIndex != true] {    _updatedAt,    "href": "/" + slug.current  },  "cases": *[_type == "case" && status == "live" && defined(slug.current) && seo.noIndex != true] {    _updatedAt,    "href": "/work/" + slug.current  },  "essays": *[_type == "essay" && status == "live" && defined(slug.current) && seo.noIndex != true] {    _updatedAt,    "href": "/academy/" + slug.current  }}
 export type SITEMAP_QUERYResult = {
   singletons: Array<{
+    _type: "academyIndexPage";
+    _updatedAt: string;
+    href: "/academy";
+  } | {
+    _type: "approachPage";
+    _updatedAt: string;
+    href: "/approach";
+  } | {
+    _type: "contactPage";
+    _updatedAt: string;
+    href: "/contact";
+  } | {
     _type: "homePage";
     _updatedAt: string;
     href: "/";
+  } | {
+    _type: "serviceAutomatePage";
+    _updatedAt: string;
+    href: "/services/automate";
+  } | {
+    _type: "serviceBuildPage";
+    _updatedAt: string;
+    href: "/services/build";
+  } | {
+    _type: "serviceDesignPage";
+    _updatedAt: string;
+    href: "/services/design";
+  } | {
+    _type: "teamPage";
+    _updatedAt: string;
+    href: "/team";
+  } | {
+    _type: "workIndexPage";
+    _updatedAt: string;
+    href: "/work";
   }>;
   pages: Array<{
+    _updatedAt: string;
+    href: string | null;
+  }>;
+  cases: Array<{
+    _updatedAt: string;
+    href: string | null;
+  }>;
+  essays: Array<{
     _updatedAt: string;
     href: string | null;
   }>;
@@ -2514,13 +4364,24 @@ export type SITEMAP_QUERYResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "\n  *[_type == \"siteSettings\"][0] {\n    siteName,\n    siteDescription,\n    languageCode,\n    phone, email, address,\n    \"defaultSeo\": defaultSeo { title, description, \"ogImageUrl\": ogImage.asset->url, noIndex },\n    \"faviconUrl\": favicon.asset->url,\n    \"webclipUrl\": webclip.asset->url,\n    globalCanonicalUrl,\n    googleSiteVerificationId,\n    llmsTxt,\n    socialLinks[] { _key, platform, url },\n    \"logo\": logo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n}\n  }\n": SITE_SETTINGS_QUERYResult;
-    "\n  *[_type == \"componentDefaults\"][0] {\n    cta {\n      heading, description, contactName, contactPhone, contactEmail,\n      buttonLabel,\n      \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n}\n    }\n  }\n": COMPONENT_DEFAULTS_QUERYResult;
+    "\n  *[_type == \"siteSettings\"][0] {\n    siteName,\n    siteDescription,\n    tagline,\n    languageCode,\n    timeZone,\n    phone, email, address, whatsapp,\n    studioAddress {\n      addressLine1,\n      postalCode,\n      city,\n      country,\n      openingHours,\n      visitingNote,\n      mapUrl\n    },\n    \"defaultSeo\": defaultSeo { title, description, \"ogImageUrl\": ogImage.asset->url, noIndex },\n    \"faviconUrl\": favicon.asset->url,\n    \"webclipUrl\": webclip.asset->url,\n    globalCanonicalUrl,\n    googleSiteVerificationId,\n    enableSitemap,\n    robotsDirectives,\n    llmsTxt,\n    socialLinks[] { _key, platform, url },\n    \"logo\": logo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  }\n": SITE_SETTINGS_QUERYResult;
+    "\n  *[_type == \"componentDefaults\"][0] {\n    cta {\n      heading, description, contactName, contactPhone, contactEmail,\n      buttonLabel,\n      \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    },\n    ctaRefreins[] {\n      _key,\n      key,\n      statement,\n      helperLine,\n      buttonLabel,\n      \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    },\n    newsletter {\n      intro,\n      placeholder,\n      buttonLabel,\n      buttonLabelSubmitting,\n      helperLine,\n      consentLabel,\n      successMessage,\n      errorMessage\n    },\n    expectationSteps {\n      heading,\n      steps[] {\n        _key,\n        stepNumber,\n        label,\n        description\n      }\n    }\n  }\n": COMPONENT_DEFAULTS_QUERYResult;
     "\n  *[_type == \"navigation\"][0] {\n    mainNav[] {\n      _key,\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      children[] {\n        _key,\n        label,\n        \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n      }\n    },\n    footerNav[] {\n      _key,\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  }\n": NAVIGATION_QUERYResult;
-    "\n  *[_type == \"homePage\" && _id == \"homePage\"][0] {\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n},\n    content[enabled != false] {\n  _type,\n  _key,\n  _type == \"heroBlock\" => {\n    heading, subheading,\n    mediaType, videoUrl, overlay,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n},\n    \"posterImage\": posterImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n},\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"textBlock\" => {\n    heading, body, maxWidth, dividerLine, backgroundStyle\n  },\n  _type == \"imageBlock\" => {\n    layout, caption,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n}\n  },\n  _type == \"ctaBlock\" => {\n    heading, description, contactName, contactPhone, contactEmail,\n    buttonLabel,\n    \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    backgroundStyle,\n    \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n}\n  },\n  _type == \"contactBlock\" => {\n    heading, description[], showContactInfo, ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"officeImage\": officeImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n}\n  }\n}\n  }\n": HOME_PAGE_QUERYResult;
-    "\n  *[_type == \"page\" && slug.current == $slug][0] {\n    _id, title, \"slug\": slug.current,\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n},\n    content[enabled != false] {\n  _type,\n  _key,\n  _type == \"heroBlock\" => {\n    heading, subheading,\n    mediaType, videoUrl, overlay,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n},\n    \"posterImage\": posterImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n},\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"textBlock\" => {\n    heading, body, maxWidth, dividerLine, backgroundStyle\n  },\n  _type == \"imageBlock\" => {\n    layout, caption,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n}\n  },\n  _type == \"ctaBlock\" => {\n    heading, description, contactName, contactPhone, contactEmail,\n    buttonLabel,\n    \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    backgroundStyle,\n    \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n}\n  },\n  _type == \"contactBlock\" => {\n    heading, description[], showContactInfo, ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"officeImage\": officeImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  hotspot,\n  crop\n}\n  }\n}\n  }\n": PAGE_BY_SLUG_QUERYResult;
+    "\n  *[_type == \"page\" && slug.current == $slug][0] {\n    _id, title, \"slug\": slug.current,\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n},\n    content[enabled != false] {\n  _type,\n  _key,\n  enabled,\n  anchorId,\n  tone,\n\n  // \u2500\u2500\u2500 Hero's \u2500\u2500\u2500\n  _type == \"heroHomeBlock\" => {\n    preClaim,\n    headlineParts,\n    subClaim,\n    bodyText,\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    },\n    showThinkingRing\n  },\n  _type == \"heroStandardBlock\" => {\n    preClaim,\n    heading,\n    subheading,\n    layoutVariant,\n    \"artifact\": artifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Sections \u2500\u2500\u2500\n  _type == \"pitchOpeningBlock\" => {\n    preClaim,\n    body,\n    maxWidth\n  },\n  _type == \"serviceTriptychBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    tiles[] {\n      _key,\n      title,\n      tagline,\n      description,\n      ctaLabel,\n      \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      icon\n    }\n  },\n  _type == \"quoteClusterBlock\" => {\n    preClaim,\n    heading,\n    \"primaryQuote\": primaryQuote {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n},\n    \"secondaryQuotes\": secondaryQuotes[] {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n  },\n  _type == \"ctaRefreinBlock\" => {\n    pageKey,\n    overrideStatement,\n    overrideButtonLabel,\n    \"overrideButtonLink\": overrideButtonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"heritageStripBlock\" => {\n    preClaim,\n    heading,\n    items\n  },\n  _type == \"projectGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    layerFilter,\n    maxItems,\n    showFilterChips,\n    cardLayoutVariant\n  },\n  _type == \"essayGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    categoryFilter,\n    maxItems,\n    showFeaturedFirst,\n    showFilterChips\n  },\n  _type == \"teamGridBlock\" => {\n    preClaim,\n    heading,\n    coreOnly,\n    showQuotes\n  },\n  _type == \"timelineBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      year,\n      label,\n      description,\n      highlight\n    },\n    orientation\n  },\n\n  // \u2500\u2500\u2500 Case-detail blocks \u2500\u2500\u2500\n  _type == \"decisionBlock\" => {\n    preClaim,\n    question,\n    options[] {\n      _key,\n      label,\n      pros,\n      cons,\n      chosen\n    },\n    conclusion\n  },\n  _type == \"phaseBlock\" => {\n    phaseNumber,\n    phaseName,\n    oneLiner,\n    body,\n    aiRole,\n    humanResponsibility,\n    deliverables,\n    duration\n  },\n  _type == \"metaBlock\" => {\n    heading,\n    items[] {\n      _key,\n      label,\n      value,\n      \"href\": href {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n  _type == \"artifactGalleryBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n      title,\n      caption\n    },\n    layoutVariant\n  },\n  _type == \"metricsStripBlock\" => {\n    preClaim,\n    heading,\n    \"metrics\": metrics[] {\n  label,\n  value,\n  source,\n  verifiedByAlex\n},\n    sourceNote\n  },\n  _type == \"nextCaseBlock\" => {\n    preClaim,\n    heading,\n    \"recommendedCase\": recommendedCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    },\n    recommendationReason,\n    \"alternativeCase\": alternativeCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    }\n  },\n  _type == \"ndaExplainerBlock\" => {\n    preClaim,\n    heading,\n    body,\n    expectedReleaseDate,\n    contactCta {\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Forms + utility \u2500\u2500\u2500\n  _type == \"contactFormBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    topicOptions,\n    requireCompany,\n    submitLabel,\n    successMessage,\n    errorMessage\n  },\n  _type == \"newsletterFormBlock\" => {\n    preClaim,\n    overrideIntro,\n    overrideHelperLine,\n    source\n  },\n  _type == \"faqBlock\" => {\n    preClaim,\n    heading,\n    items[] {\n      _key,\n      question,\n      answer\n    },\n    enableJsonLd\n  },\n  _type == \"directChannelsBlock\" => {\n    preClaim,\n    heading,\n    channels[] {\n      _key,\n      kind,\n      label,\n      value,\n      helperLine\n    },\n    layoutVariant\n  },\n  _type == \"expectationStepsBlock\" => {\n    overrideHeading,\n    overrideSteps[] {\n      _key,\n      stepNumber,\n      label,\n      description\n    }\n  },\n  _type == \"calloutBlock\" => {\n    kind,\n    body,\n    attribution\n  },\n  _type == \"tagStripBlock\" => {\n    preClaim,\n    tags,\n    showAsLinks\n  },\n  _type == \"preClaimBlock\" => {\n    text,\n    showThinkingRing\n  },\n\n  // \u2500\u2500\u2500 Legacy template blocks (backwards-compat) \u2500\u2500\u2500\n  _type == \"heroBlock\" => {\n    heading, subheading,\n    mediaType, videoUrl, overlay,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    \"posterImage\": posterImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"textBlock\" => {\n    heading, body, maxWidth, dividerLine, backgroundStyle\n  },\n  _type == \"imageBlock\" => {\n    layout, caption,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"ctaBlock\" => {\n    heading, description, contactName, contactPhone, contactEmail,\n    buttonLabel,\n    \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    backgroundStyle,\n    \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"contactBlock\" => {\n    heading, description[], showContactInfo, ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"officeImage\": officeImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  }\n}\n  }\n": PAGE_BY_SLUG_QUERYResult;
     "\n  *[_type == \"notFoundPage\" && _id == \"notFoundPage\"][0] {\n    heading,\n    body[],\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n}\n  }\n": NOT_FOUND_PAGE_QUERYResult;
+    "\n  *[_type == \"errorPage\" && _id == \"errorPage\"][0] {\n    heading,\n    body[],\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n}\n  }\n": ERROR_PAGE_QUERYResult;
+    "\n  *[_type == \"offlinePage\" && _id == \"offlinePage\"][0] {\n    heading,\n    body[],\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n}\n  }\n": OFFLINE_PAGE_QUERYResult;
     "\n  *[_type == \"thankYouPage\" && _id == \"thankYouPage\"][0] {\n    heading,\n    body[],\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n}\n  }\n": THANK_YOU_PAGE_QUERYResult;
-    "{\n  \"singletons\": *[_type in [\"homePage\"] && seo.noIndex != true] {\n    _type,\n    _updatedAt,\n    \"href\": select(\n      _type == \"homePage\" => \"/\"\n    )\n  },\n  \"pages\": *[_type == \"page\" && defined(slug.current) && seo.noIndex != true] {\n    _updatedAt,\n    \"href\": \"/\" + slug.current\n  }\n}": SITEMAP_QUERYResult;
+    "\n  *[_type == \"case\" && status == \"live\" && ($layer == \"all\" || layer == $layer)] | order(period.start desc) {\n  _id,\n  _updatedAt,\n  title,\n  \"slug\": slug.current,\n  layer,\n  ndaStatus,\n  status,\n  client,\n  \"period\": period {\n  start,\n  end,\n  isOngoing\n},\n  preClaim,\n  subtitle,\n  tags,\n  stack,\n  \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n  liveUrl\n}\n": CASES_BY_LAYER_QUERYResult;
+    "\n  *[_type == \"case\" && slug.current == $slug][0] {\n  _id,\n  _updatedAt,\n  language,\n  title,\n  \"slug\": slug.current,\n  layer,\n  ndaStatus,\n  status,\n  client,\n  role,\n  \"period\": period {\n  start,\n  end,\n  isOngoing\n},\n  preClaim,\n  subtitle,\n  tags,\n  stack,\n  liveUrl,\n  \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n  \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n},\n  content[enabled != false] {\n  _type,\n  _key,\n  enabled,\n  anchorId,\n  tone,\n\n  // \u2500\u2500\u2500 Hero's \u2500\u2500\u2500\n  _type == \"heroHomeBlock\" => {\n    preClaim,\n    headlineParts,\n    subClaim,\n    bodyText,\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    },\n    showThinkingRing\n  },\n  _type == \"heroStandardBlock\" => {\n    preClaim,\n    heading,\n    subheading,\n    layoutVariant,\n    \"artifact\": artifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Sections \u2500\u2500\u2500\n  _type == \"pitchOpeningBlock\" => {\n    preClaim,\n    body,\n    maxWidth\n  },\n  _type == \"serviceTriptychBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    tiles[] {\n      _key,\n      title,\n      tagline,\n      description,\n      ctaLabel,\n      \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      icon\n    }\n  },\n  _type == \"quoteClusterBlock\" => {\n    preClaim,\n    heading,\n    \"primaryQuote\": primaryQuote {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n},\n    \"secondaryQuotes\": secondaryQuotes[] {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n  },\n  _type == \"ctaRefreinBlock\" => {\n    pageKey,\n    overrideStatement,\n    overrideButtonLabel,\n    \"overrideButtonLink\": overrideButtonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"heritageStripBlock\" => {\n    preClaim,\n    heading,\n    items\n  },\n  _type == \"projectGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    layerFilter,\n    maxItems,\n    showFilterChips,\n    cardLayoutVariant\n  },\n  _type == \"essayGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    categoryFilter,\n    maxItems,\n    showFeaturedFirst,\n    showFilterChips\n  },\n  _type == \"teamGridBlock\" => {\n    preClaim,\n    heading,\n    coreOnly,\n    showQuotes\n  },\n  _type == \"timelineBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      year,\n      label,\n      description,\n      highlight\n    },\n    orientation\n  },\n\n  // \u2500\u2500\u2500 Case-detail blocks \u2500\u2500\u2500\n  _type == \"decisionBlock\" => {\n    preClaim,\n    question,\n    options[] {\n      _key,\n      label,\n      pros,\n      cons,\n      chosen\n    },\n    conclusion\n  },\n  _type == \"phaseBlock\" => {\n    phaseNumber,\n    phaseName,\n    oneLiner,\n    body,\n    aiRole,\n    humanResponsibility,\n    deliverables,\n    duration\n  },\n  _type == \"metaBlock\" => {\n    heading,\n    items[] {\n      _key,\n      label,\n      value,\n      \"href\": href {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n  _type == \"artifactGalleryBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n      title,\n      caption\n    },\n    layoutVariant\n  },\n  _type == \"metricsStripBlock\" => {\n    preClaim,\n    heading,\n    \"metrics\": metrics[] {\n  label,\n  value,\n  source,\n  verifiedByAlex\n},\n    sourceNote\n  },\n  _type == \"nextCaseBlock\" => {\n    preClaim,\n    heading,\n    \"recommendedCase\": recommendedCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    },\n    recommendationReason,\n    \"alternativeCase\": alternativeCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    }\n  },\n  _type == \"ndaExplainerBlock\" => {\n    preClaim,\n    heading,\n    body,\n    expectedReleaseDate,\n    contactCta {\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Forms + utility \u2500\u2500\u2500\n  _type == \"contactFormBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    topicOptions,\n    requireCompany,\n    submitLabel,\n    successMessage,\n    errorMessage\n  },\n  _type == \"newsletterFormBlock\" => {\n    preClaim,\n    overrideIntro,\n    overrideHelperLine,\n    source\n  },\n  _type == \"faqBlock\" => {\n    preClaim,\n    heading,\n    items[] {\n      _key,\n      question,\n      answer\n    },\n    enableJsonLd\n  },\n  _type == \"directChannelsBlock\" => {\n    preClaim,\n    heading,\n    channels[] {\n      _key,\n      kind,\n      label,\n      value,\n      helperLine\n    },\n    layoutVariant\n  },\n  _type == \"expectationStepsBlock\" => {\n    overrideHeading,\n    overrideSteps[] {\n      _key,\n      stepNumber,\n      label,\n      description\n    }\n  },\n  _type == \"calloutBlock\" => {\n    kind,\n    body,\n    attribution\n  },\n  _type == \"tagStripBlock\" => {\n    preClaim,\n    tags,\n    showAsLinks\n  },\n  _type == \"preClaimBlock\" => {\n    text,\n    showThinkingRing\n  },\n\n  // \u2500\u2500\u2500 Legacy template blocks (backwards-compat) \u2500\u2500\u2500\n  _type == \"heroBlock\" => {\n    heading, subheading,\n    mediaType, videoUrl, overlay,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    \"posterImage\": posterImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"textBlock\" => {\n    heading, body, maxWidth, dividerLine, backgroundStyle\n  },\n  _type == \"imageBlock\" => {\n    layout, caption,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"ctaBlock\" => {\n    heading, description, contactName, contactPhone, contactEmail,\n    buttonLabel,\n    \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    backgroundStyle,\n    \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"contactBlock\" => {\n    heading, description[], showContactInfo, ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"officeImage\": officeImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  }\n}\n}\n": CASE_BY_SLUG_QUERYResult;
+    "\n  *[_type == \"case\" && status == \"live\" && defined(slug.current)] {\n    \"slug\": slug.current\n  }\n": ALL_CASE_SLUGS_QUERYResult;
+    "\n  *[_type == \"essay\" && status == \"live\" && ($category == \"all\" || category == $category)] | order(publishedAt desc) {\n  _id,\n  _updatedAt,\n  title,\n  \"slug\": slug.current,\n  category,\n  featured,\n  publishedAt,\n  readTime,\n  preClaim,\n  dek,\n  \"author\": author->{ name, \"slug\": slug.current, role },\n  \"featuredImage\": featuredImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n": ESSAYS_QUERYResult;
+    "\n  *[_type == \"essay\" && status == \"live\" && featured == true] | order(publishedAt desc) {\n  _id,\n  _updatedAt,\n  title,\n  \"slug\": slug.current,\n  category,\n  featured,\n  publishedAt,\n  readTime,\n  preClaim,\n  dek,\n  \"author\": author->{ name, \"slug\": slug.current, role },\n  \"featuredImage\": featuredImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n": FEATURED_ESSAYS_QUERYResult;
+    "\n  *[_type == \"essay\" && slug.current == $slug][0] {\n  _id,\n  _updatedAt,\n  language,\n  title,\n  \"slug\": slug.current,\n  category,\n  status,\n  featured,\n  publishedAt,\n  readTime,\n  preClaim,\n  dek,\n  tags,\n  \"featuredImage\": featuredImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n  \"author\": author->{ name, \"slug\": slug.current, role, \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n} },\n  \"relatedEssays\": relatedEssays[]-> {\n  _id,\n  _updatedAt,\n  title,\n  \"slug\": slug.current,\n  category,\n  featured,\n  publishedAt,\n  readTime,\n  preClaim,\n  dek,\n  \"author\": author->{ name, \"slug\": slug.current, role },\n  \"featuredImage\": featuredImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n},\n  body,\n  \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n}\n}\n": ESSAY_BY_SLUG_QUERYResult;
+    "\n  *[_type == \"essay\" && status == \"live\" && defined(slug.current)] {\n    \"slug\": slug.current\n  }\n": ALL_ESSAY_SLUGS_QUERYResult;
+    "\n  *[_type == \"teamMember\" && ($coreOnly == false || isCore == true)] | order(displayOrder asc) {\n  _id,\n  name,\n  \"slug\": slug.current,\n  role,\n  bio,\n  email,\n  isCore,\n  displayOrder,\n  quote,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n  links[] { _key, platform, url }\n}\n": TEAM_MEMBERS_QUERYResult;
+    "\n  *[_type == \"teamMember\" && slug.current == $slug][0] {\n  _id,\n  name,\n  \"slug\": slug.current,\n  role,\n  bio,\n  email,\n  isCore,\n  displayOrder,\n  quote,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n  links[] { _key, platform, url }\n}\n": TEAM_MEMBER_BY_SLUG_QUERYResult;
+    "\n  *[_type == \"recognition\" && ($category == \"all\" || category == $category)] | order(year desc, displayOrder asc) {\n    _id,\n    category,\n    title,\n    year,\n    description,\n    url,\n    displayOrder,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  }\n": RECOGNITION_QUERYResult;
+    "{\n  \"singletons\": *[\n    _type in [\n      \"homePage\",\n      \"workIndexPage\",\n      \"teamPage\",\n      \"approachPage\",\n      \"serviceDesignPage\",\n      \"serviceBuildPage\",\n      \"serviceAutomatePage\",\n      \"academyIndexPage\",\n      \"contactPage\"\n    ] && seo.noIndex != true\n  ] {\n    _type,\n    _updatedAt,\n    \"href\": select(\n      _type == \"homePage\" => \"/\",\n      _type == \"workIndexPage\" => \"/work\",\n      _type == \"teamPage\" => \"/team\",\n      _type == \"approachPage\" => \"/approach\",\n      _type == \"serviceDesignPage\" => \"/services/design\",\n      _type == \"serviceBuildPage\" => \"/services/build\",\n      _type == \"serviceAutomatePage\" => \"/services/automate\",\n      _type == \"academyIndexPage\" => \"/academy\",\n      _type == \"contactPage\" => \"/contact\"\n    )\n  },\n  \"pages\": *[_type == \"page\" && defined(slug.current) && seo.noIndex != true] {\n    _updatedAt,\n    \"href\": \"/\" + slug.current\n  },\n  \"cases\": *[_type == \"case\" && status == \"live\" && defined(slug.current) && seo.noIndex != true] {\n    _updatedAt,\n    \"href\": \"/work/\" + slug.current\n  },\n  \"essays\": *[_type == \"essay\" && status == \"live\" && defined(slug.current) && seo.noIndex != true] {\n    _updatedAt,\n    \"href\": \"/academy/\" + slug.current\n  }\n}": SITEMAP_QUERYResult;
   }
 }

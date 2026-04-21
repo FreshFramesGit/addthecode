@@ -1,0 +1,105 @@
+---
+/**
+ * PlaceholderSection — tijdelijke render voor block-types die nog geen
+ * eigen Astro-component hebben.
+ *
+ * Phase 1.5: alle 25 Add the Code blocks routeren naar deze placeholder
+ * tot Phase 2 echte components bouwt en de PageBuilder componentMap
+ * per block-type vervangt.
+ *
+ * Render:
+ * - DEV: visuele placeholder met block._type + key + JSON-dump van props
+ * - PROD: minimal `<section data-block-type>` zonder content (geen layout shift)
+ */
+
+interface Props {
+  _type?: string;
+  _key?: string;
+  enabled?: boolean;
+  [key: string]: any;
+}
+
+const { _type, _key, enabled, ...rest } = Astro.props;
+const isDev = import.meta.env.DEV;
+---
+
+{isDev ? (
+  <section
+    class="placeholder-section"
+    data-block-type={_type}
+    data-block-key={_key}
+    aria-label={`Placeholder voor block-type ${_type}`}
+  >
+    <div class="placeholder-section__inner">
+      <p class="placeholder-section__label">
+        <strong>Placeholder:</strong> <code>{_type}</code>
+        <span class="placeholder-section__key">key: {_key}</span>
+      </p>
+      <details class="placeholder-section__details">
+        <summary>Block props (klik om te tonen)</summary>
+        <pre class="placeholder-section__pre">{JSON.stringify(rest, null, 2)}</pre>
+      </details>
+    </div>
+  </section>
+) : (
+  <section data-block-type={_type} aria-hidden="true"></section>
+)}
+
+<style>
+  .placeholder-section {
+    margin: var(--sp-4) 0;
+    padding: var(--sp-5);
+    border: 2px dashed var(--atc-mid-gray);
+    border-radius: var(--radius-main);
+    background: var(--atc-light-gray);
+    color: var(--atc-ink);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+  }
+
+  .placeholder-section__inner {
+    max-width: var(--container-main);
+    margin: 0 auto;
+  }
+
+  .placeholder-section__label {
+    margin: 0 0 var(--sp-3);
+    line-height: 1.5;
+  }
+
+  .placeholder-section__label code {
+    color: var(--atc-claude);
+    background: var(--atc-paper);
+    padding: 0 var(--sp-2);
+    border-radius: var(--radius-small);
+  }
+
+  .placeholder-section__key {
+    margin-left: var(--sp-3);
+    color: var(--atc-ink-60);
+    font-size: var(--fs-mono-small);
+  }
+
+  .placeholder-section__details {
+    margin-top: var(--sp-3);
+  }
+
+  .placeholder-section__details summary {
+    cursor: pointer;
+    color: var(--atc-signal);
+    font-size: var(--fs-mono-small);
+    padding: var(--sp-2) 0;
+  }
+
+  .placeholder-section__pre {
+    margin-top: var(--sp-3);
+    padding: var(--sp-4);
+    background: var(--atc-paper);
+    border-radius: var(--radius-small);
+    overflow-x: auto;
+    font-size: var(--fs-mono-small);
+    line-height: var(--lh-mono);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+</style>
