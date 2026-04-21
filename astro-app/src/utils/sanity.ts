@@ -168,7 +168,15 @@ export async function getNavigation() {
 
 // ─── Page settings + Page Builder ──────────────────────────
 
-/** Shared SEO fragment with OG fallback logic */
+/**
+ * Shared SEO fragment.
+ *
+ * NOTE field-aliasing: Sanity-schema gebruikt `canonicalUrl` + `noIndex`
+ * (semantisch correcte naming), maar Astro Seo.astro consumeert `canonical`
+ * + `noindex` (HTML-conventie). We aliasen op GROQ-niveau zodat editor-
+ * ingestelde overrides correct doorkomen tot in <link rel="canonical"> en
+ * <meta name="robots">.
+ */
 const PAGE_SEO_FRAGMENT = /* groq */ `{
   title,
   description,
@@ -177,8 +185,8 @@ const PAGE_SEO_FRAGMENT = /* groq */ `{
   ogTitle,
   ogDescriptionMode,
   ogDescription,
-  canonicalUrl,
-  noIndex,
+  "canonical": canonicalUrl,
+  "noindex": noIndex,
   structuredData
 }`;
 
@@ -864,7 +872,15 @@ const SITEMAP_QUERY = defineQuery(`{
     _updatedAt,
     "href": "/" + slug.current
   },
-  "cases": *[_type == "case" && status == "live" && defined(slug.current) && seo.noIndex != true] {
+  // In-flight (NDA) cases krijgen runtime noindex via [slug].astro — sluit
+  // ze daarom ook hier uit zodat sitemap + runtime-meta synchroon zijn.
+  "cases": *[
+    _type == "case"
+      && status == "live"
+      && defined(slug.current)
+      && seo.noIndex != true
+      && !(layer == "in-flight" && ndaStatus == true)
+  ] {
     _updatedAt,
     "href": "/work/" + slug.current
   },

@@ -5,36 +5,48 @@ import RichText from '../components/content/RichText.astro'
 import CmsLink from '../components/content/CmsLink.astro'
 import { getErrorPage } from '../utils/sanity'
 
+/**
+ * 500 — Sanity-driven (Universal Rule #1).
+ * Zie 404.astro voor het pattern.
+ */
+
 const page = await getErrorPage()
 
-const heading = page?.heading ?? 'Er ging iets mis aan onze kant'
+const heading = page?.heading ?? null
 const body = page?.body
-const ctaLabel = page?.ctaLabel ?? 'Terug naar home'
-const ctaLink = page?.ctaLink ?? '/'
+const ctaLabel = page?.ctaLabel ?? null
+const ctaLink = page?.ctaLink ?? null
 const seo = page?.seo
+
+const isDev = import.meta.env.DEV
+const hasContent = Boolean(heading || body || ctaLabel)
 ---
 
-<Layout title={heading} seo={seo} noindex={true}>
+<Layout title={heading ?? undefined} seo={seo} noindex={true}>
   <Section padding="page-top" container="main">
-    <div class="error-page">
-      <h1>{heading}</h1>
-      {body ? (
-        <RichText value={body} />
-      ) : (
-        <p>
-          Ververs de pagina over een minuut. Blijft het misgaan? Mail ons op
-          <a href="mailto:hello@addthecode.nl">hello@addthecode.nl</a>.
-        </p>
-      )}
-      <div class="error-page__cta">
-        <CmsLink link={ctaLink} class="error-page__button">{ctaLabel}</CmsLink>
-      </div>
+    <div class="utility-page">
+      {hasContent ? (
+        <>
+          {heading && <h1 class="utility-page__heading">{heading}</h1>}
+          {body && <div class="utility-page__body"><RichText value={body} /></div>}
+          {ctaLabel && ctaLink && (
+            <div class="utility-page__cta">
+              <CmsLink link={ctaLink} class="utility-page__button">{ctaLabel}</CmsLink>
+            </div>
+          )}
+        </>
+      ) : isDev ? (
+        <div class="utility-page__dev-warning" role="alert">
+          <p><strong>500 page heeft geen Sanity-content.</strong></p>
+          <p>Run <code>scripts/seed-defaults.ts</code> of vul <code>errorPage</code> singleton in Studio.</p>
+        </div>
+      ) : null}
     </div>
   </Section>
 </Layout>
 
 <style>
-  .error-page {
+  .utility-page {
     text-align: center;
     min-height: 60vh;
     display: flex;
@@ -42,14 +54,17 @@ const seo = page?.seo
     justify-content: center;
     gap: var(--sp-4);
   }
-  .error-page h1 {
+  .utility-page__heading {
     font-family: var(--font-display);
     font-style: italic;
     font-size: var(--fs-display);
     margin: 0;
+    text-wrap: balance;
   }
-  .error-page__cta { margin-top: var(--sp-4); }
-  .error-page__button {
+  .utility-page__body { max-width: 50ch; margin-inline: auto; }
+  .utility-page__body :global(p) { color: var(--fg-secondary); line-height: var(--lh-body); }
+  .utility-page__cta { margin-top: var(--sp-4); }
+  .utility-page__button {
     display: inline-block;
     background: var(--atc-ink);
     color: var(--atc-paper);
@@ -57,8 +72,24 @@ const seo = page?.seo
     border-radius: var(--radius-main);
     text-decoration: none;
     font-weight: 500;
+    transition: background var(--dur-fast) var(--ease-out);
   }
-  .error-page__button:hover {
-    background: var(--atc-claude);
+  .utility-page__button:hover { background: var(--atc-claude); }
+  .utility-page__dev-warning {
+    padding: var(--sp-5);
+    border: 2px dashed var(--atc-claude);
+    border-radius: var(--radius-main);
+    background: rgba(217, 119, 87, 0.08);
+    color: var(--atc-ink);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    max-width: 50ch;
+    margin-inline: auto;
+    text-align: left;
+  }
+  .utility-page__dev-warning code {
+    background: var(--atc-paper);
+    padding: 0 var(--sp-2);
+    border-radius: var(--radius-small);
   }
 </style>

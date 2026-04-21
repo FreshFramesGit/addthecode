@@ -29,17 +29,40 @@ function globalLocation() {
   })
 }
 
+/**
+ * Visual Editing — Presentation tool location-resolvers.
+ *
+ * Bevat alle Add the Code pagina-singletons, utility-pages en collections.
+ * Toegevoegd 2026-04-21 (Phase 3 close-out): preview-routing voor de
+ * volledige site, niet alleen template-defaults.
+ */
 export const locations: DocumentLocationResolvers = {
-    // ─── Singletons ─────────────────────────────────────
+    // ─── Template singletons ─────────────────────────────
     homePage: singletonLocation('Home', '/'),
     notFoundPage: singletonLocation('404', '/404'),
     thankYouPage: singletonLocation('Thank you', '/thank-you'),
+
+    // ─── Add the Code pagina-singletons ──────────────────
+    workIndexPage: singletonLocation('Work (index)', '/work'),
+    teamPage: singletonLocation('Team', '/team'),
+    approachPage: singletonLocation('Approach', '/approach'),
+    serviceDesignPage: singletonLocation('Service · Design', '/services/design'),
+    serviceBuildPage: singletonLocation('Service · Build', '/services/build'),
+    serviceAutomatePage: singletonLocation('Service · Automate', '/services/automate'),
+    academyIndexPage: singletonLocation('Academy (index)', '/academy'),
+    contactPage: singletonLocation('Contact', '/contact'),
+
+    // ─── Add the Code utility singletons ─────────────────
+    errorPage: singletonLocation('500 (server error)', '/500'),
+    offlinePage: singletonLocation('Offline', '/offline'),
 
     // ─── Global documents ────────────────────────────────
     siteSettings: globalLocation(),
     navigation: globalLocation(),
     componentDefaults: globalLocation(),
 
-    // ─── Slug-based documents ────────────────────────────
+    // ─── Slug-based collections ──────────────────────────
     page: slugLocation(''),
+    case: slugLocation('/work'),
+    essay: slugLocation('/academy'),
 }

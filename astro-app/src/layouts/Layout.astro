@@ -87,6 +87,11 @@ const visualEditingEnabled =
       crossorigin="anonymous"
     />
 
+    {/* Google Search Console verification — alleen renderen als ID gezet is */}
+    {settings?.googleSiteVerificationId && (
+      <meta name="google-site-verification" content={settings.googleSiteVerificationId} />
+    )}
+
     <ViewTransitions />
     <Seo {...seoProps} />
     <slot name="head" />

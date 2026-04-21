@@ -3,18 +3,12 @@ import Layout from '../../layouts/Layout.astro'
 import HeroCaseSection from '../../components/sections/HeroCaseSection.astro'
 import PageBuilder from '../../components/PageBuilder.astro'
 import CtaRefreinSection from '../../components/sections/CtaRefreinSection.astro'
-import {
-  getCaseBySlug,
-  getAllCaseSlugs,
-  getSiteSettings,
-} from '../../utils/sanity'
+import { getCaseBySlug, getSiteSettings } from '../../utils/sanity'
 
-export async function getStaticPaths() {
-  const slugs = await getAllCaseSlugs()
-  return slugs.map((s: any) => ({ params: { slug: s.slug } }))
-}
-
-export const prerender = false // Server-rendered voor Visual Editing draft-mode
+// SSR — Visual Editing draft-mode + on-demand case publicatie zonder rebuild.
+// Sitemap (utils/sanity.ts SITEMAP_QUERY) levert de discoverability;
+// getStaticPaths is niet nodig zolang prerender=false (Astro skipt het).
+export const prerender = false
 
 const { slug } = Astro.params
 const caseDoc = slug ? await getCaseBySlug(slug) : null

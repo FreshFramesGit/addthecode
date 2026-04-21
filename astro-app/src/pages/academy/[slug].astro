@@ -5,17 +5,10 @@ import Section from '../../components/layout/Section.astro'
 import RichText from '../../components/content/RichText.astro'
 import EssayCard from '../../components/cards/EssayCard.astro'
 import CtaRefreinSection from '../../components/sections/CtaRefreinSection.astro'
-import {
-  getEssayBySlug,
-  getAllEssaySlugs,
-  getSiteSettings,
-} from '../../utils/sanity'
+import { getEssayBySlug, getSiteSettings } from '../../utils/sanity'
 
-export async function getStaticPaths() {
-  const slugs = await getAllEssaySlugs()
-  return slugs.map((s: any) => ({ params: { slug: s.slug } }))
-}
-
+// SSR — Visual Editing draft-mode + on-demand essay publicatie zonder rebuild.
+// Sitemap query levert de discoverability.
 export const prerender = false
 
 const { slug } = Astro.params
