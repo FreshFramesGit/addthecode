@@ -11,6 +11,7 @@ export const siteSettings = defineType({
     { name: 'icons', title: 'Icons' },
     { name: 'localization', title: 'Localization' },
     { name: 'contact', title: 'Contact' },
+    { name: 'studioAddress', title: 'Studio (Breda)' },
     { name: 'seo', title: 'SEO' },
     { name: 'social', title: 'Social' },
   ],
@@ -30,6 +31,14 @@ export const siteSettings = defineType({
       type: 'text',
       rows: 2,
       group: 'identity',
+    }),
+    defineField({
+      name: 'tagline',
+      title: 'Tagline',
+      type: 'string',
+      group: 'identity',
+      description:
+        'Korte merkbelofte die in footer, structured data, of OG-fallback gebruikt kan worden. Bv "Custom design. Custom code. AI-versnelde bouw."',
     }),
     defineField({
       name: 'logo',
@@ -105,11 +114,62 @@ export const siteSettings = defineType({
       group: 'contact',
       initialValue: '',
     }),
+    // ─── Studio (Breda) — adres + bezoek-info ───
     defineField({
-      name: 'calendlyUrl',
-      title: 'Calendly URL',
-      type: 'url',
-      group: 'contact',
+      name: 'studioAddress',
+      title: 'Studio adres',
+      type: 'object',
+      group: 'studioAddress',
+      description:
+        'Fysieke studio-locatie van Add the Code (Breda). Wordt getoond op /contact §4 en in footer + JSON-LD structured data.',
+      fields: [
+        defineField({
+          name: 'addressLine1',
+          title: 'Adresregel 1 (straat + nr)',
+          type: 'string',
+          initialValue: 'Nieuwe Prinsenkade 4',
+        }),
+        defineField({
+          name: 'postalCode',
+          title: 'Postcode',
+          type: 'string',
+          initialValue: '4811 VC',
+        }),
+        defineField({
+          name: 'city',
+          title: 'Stad',
+          type: 'string',
+          initialValue: 'Breda',
+        }),
+        defineField({
+          name: 'country',
+          title: 'Land',
+          type: 'string',
+          initialValue: 'Nederland',
+        }),
+        defineField({
+          name: 'openingHours',
+          title: 'Openingstijden',
+          type: 'string',
+          description: 'Bv. "werkdagen 9:00–17:30".',
+          initialValue: 'werkdagen 9:00–17:30',
+        }),
+        defineField({
+          name: 'visitingNote',
+          title: 'Bezoek-instructie',
+          type: 'text',
+          rows: 2,
+          description: 'Korte regel onder adres — bv "Op afspraak — loop niet zomaar binnen".',
+          initialValue:
+            'Op afspraak — loop niet zomaar binnen, dan zitten we meestal in iets wat we niet kunnen onderbreken.',
+        }),
+        defineField({
+          name: 'mapUrl',
+          title: 'Maps URL (optioneel)',
+          type: 'url',
+          description: 'Google Maps of OpenStreetMap link voor "Bekijk op kaart" knop.',
+        }),
+      ],
     }),
 
     // CTA defaults are managed in Settings → Component Defaults (componentDefaults singleton)
