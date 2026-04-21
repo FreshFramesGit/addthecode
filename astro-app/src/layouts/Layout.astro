@@ -1,0 +1,90 @@
+---
+import { ViewTransitions } from "astro:transitions";
+import Seo from "../components/seo/Seo.astro";
+import Nav from "../components/layout/Nav.astro";
+import Footer from "../components/layout/Footer.astro";
+import { VisualEditing } from "@sanity/astro/visual-editing";
+import { getSiteSettings } from "../utils/sanity";
+import { getBaseUrl } from "../utils/site-url";
+import "../styles/global.css";
+
+type SeoProps = {
+  title?: string | null;
+  description?: string | null;
+  canonical?: string | null;
+  ogImage?: string | null;
+  noindex?: boolean | null;
+  siteName?: string | null;
+  defaultTitle?: string | null;
+  defaultDescription?: string | null;
+  baseUrl?: string | null;
+};
+
+interface Props extends SeoProps {
+  lang?: string;
+  seo?: SeoProps;
+  hideNav?: boolean;
+  hideFooter?: boolean;
+}
+
+// Fetch siteSettings for defaults — cached per request by Sanity client
+const settings = await getSiteSettings();
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  noindex,
+  siteName = settings?.siteName ?? "My Site",
+  defaultTitle = settings?.defaultSeo?.title ?? siteName,
+  defaultDescription = settings?.defaultSeo?.description ?? undefined,
+  baseUrl = getBaseUrl(settings, Astro.url.origin),
+  lang = settings?.languageCode ?? "en",
+  seo = {},
+  hideNav = false,
+  hideFooter = false,
+} = Astro.props as Props;
+
+const seoProps: SeoProps = {
+  ...seo,
+  title: title ?? seo.title,
+  description: description ?? seo.description,
+  canonical: canonical ?? seo.canonical,
+  ogImage: ogImage ?? seo.ogImage ?? settings?.defaultSeo?.ogImageUrl,
+  noindex: noindex ?? seo.noindex,
+  siteName,
+  defaultTitle,
+  defaultDescription,
+  baseUrl,
+};
+
+const visualEditingEnabled =
+  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href={settings?.faviconUrl ?? "/images/favicon.jpg"} type="image/x-icon" />
+    <link rel="apple-touch-icon" href={settings?.webclipUrl ?? "/images/webclip.jpg"} />
+    <ViewTransitions />
+    <Seo {...seoProps} />
+    <slot name="head" />
+
+    <!-- TODO: voeg tracking scripts toe (GTM, etc.) -->
+  </head>
+  <body>
+    {!hideNav && <Nav />}
+    {!hideNav && <div id="dummy-section" class="dummy-section"></div>}
+
+    <main class="main-content">
+      <slot />
+    </main>
+
+    {!hideFooter && <Footer />}
+    <VisualEditing enabled={visualEditingEnabled} />
+  </body>
+</html>

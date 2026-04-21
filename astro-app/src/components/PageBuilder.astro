@@ -1,0 +1,52 @@
+---
+/**
+ * PageBuilder — routes pageBuilder blocks to the correct section components.
+ * Used by all pages that pull their content from the Sanity pageBuilder.
+ *
+ * Add project-specific section imports and componentMap entries
+ * when you create new block types.
+ */
+
+// Starter block components — replace/extend with project-specific sections
+import HeroSection from './sections/HeroSection.astro'
+import TextSection from './sections/TextSection.astro'
+import ImageSection from './sections/ImageSection.astro'
+import CtaSection from './sections/CtaSection.astro'
+import ContactSection from './sections/ContactSection.astro'
+
+interface Props {
+  blocks: Array<{ _type: string; _key: string; [key: string]: any }>
+}
+
+const { blocks } = Astro.props
+
+/**
+ * Resolve the correct component based on block type + layout variant.
+ * Add layout-variant routing when you have blocks with multiple layouts:
+ *   if (block._type === 'casesBlock' && block.layout === 'grid') return CasesGrid
+ *   if (block._type === 'casesBlock' && block.layout === 'slider') return CasesSlider
+ */
+function resolveComponent(block: { _type: string; layout?: string; [key: string]: any }) {
+  const componentMap: Record<string, any> = {
+    heroBlock: HeroSection,
+    textBlock: TextSection,
+    imageBlock: ImageSection,
+    ctaBlock: CtaSection,
+    contactBlock: ContactSection,
+  }
+
+  return componentMap[block._type] || null
+}
+---
+
+{blocks?.filter((b) => b.enabled !== false)?.map((block) => {
+  const Component = resolveComponent(block)
+  if (!Component) {
+    return import.meta.env.DEV
+      ? <div style="padding:1rem;background:#ff000020;border:1px solid red;margin:1rem 0;">
+          <strong>Unknown block type:</strong> {block._type}
+        </div>
+      : null
+  }
+  return <Component {...block} />
+})}

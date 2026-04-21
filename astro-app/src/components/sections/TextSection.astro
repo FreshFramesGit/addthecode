@@ -1,0 +1,26 @@
+---
+import Section from "../layout/Section.astro";
+import RichText from "../content/RichText.astro";
+
+interface Props {
+  heading?: string | null;
+  body?: any;
+  maxWidth?: string | null;
+  dividerLine?: boolean | null;
+  backgroundStyle?: string | null;
+  [key: string]: any;
+}
+
+const { heading, body, maxWidth, dividerLine, backgroundStyle } = Astro.props;
+
+const widthMap: Record<string, string> = { narrow: '640px', medium: '960px', wide: '1200px', full: '100%' };
+const maxWidthValue = maxWidth ? widthMap[maxWidth] ?? undefined : undefined;
+---
+
+<Section class={`text-section ${backgroundStyle ? `bg-${backgroundStyle}` : ''}`}>
+  <div style={maxWidthValue ? `max-width: ${maxWidthValue}` : undefined}>
+    {heading && <h2>{heading}</h2>}
+    {body && <RichText value={body} />}
+  </div>
+  {dividerLine && <hr class="text-section_divider" />}
+</Section>

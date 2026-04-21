@@ -1,0 +1,29 @@
+---
+/**
+ * Nav — Placeholder navigatie component.
+ * Vervang met projectspecifieke navigatie.
+ * Gebruik getNavigation() uit utils/sanity.ts voor de data.
+ */
+import { getNavigation } from "../../utils/sanity";
+import CmsLink from "../content/CmsLink.astro";
+
+const nav = await getNavigation();
+const mainNav = nav?.mainNav ?? [];
+---
+
+<nav class="nav-section">
+  <div class="page-padding">
+    <div class="container">
+      <div class="navigation">
+        <CmsLink href="/" class="nav_logo-link">Logo</CmsLink>
+        <div class="nav-menu">
+          {mainNav.map((item: any) => (
+            <CmsLink link={item.link ?? item.url} class="nav_link">
+              {item.label}
+            </CmsLink>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,44 @@
+---
+import Section from "../layout/Section.astro";
+import CmsLink from "../content/CmsLink.astro";
+import SanityImage from "../content/SanityImage.astro";
+
+interface Props {
+  heading?: string | null;
+  subheading?: string | null;
+  mediaType?: string | null;
+  videoUrl?: string | null;
+  image?: any;
+  posterImage?: any;
+  ctaLabel?: string | null;
+  ctaLink?: any;
+  [key: string]: any;
+}
+
+const { heading, subheading, mediaType, videoUrl, image, posterImage, ctaLabel, ctaLink } = Astro.props;
+---
+
+<Section class="hero-section" noContainer noPadding>
+  <div class="hero_wrapper">
+    {mediaType === "video" && videoUrl ? (
+      <video class="hero_video" autoplay muted loop playsinline
+        poster={posterImage?.asset?.url}>
+        <source src={videoUrl} type="video/mp4" />
+      </video>
+    ) : image?.asset ? (
+      <SanityImage image={image} width={1920} class="hero_image" />
+    ) : null}
+
+    <div class="hero_content">
+      <div class="page-padding">
+        <div class="container">
+          {heading && <h1>{heading}</h1>}
+          {subheading && <p class="hero_subtitle">{subheading}</p>}
+          {ctaLabel && ctaLink && (
+            <CmsLink link={ctaLink} class="button">{ctaLabel}</CmsLink>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</Section>

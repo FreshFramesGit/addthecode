@@ -1,0 +1,97 @@
+---
+/**
+ * JsonLd — Structured data component for Google Rich Results.
+ * Organization data comes from siteSettings singleton; site URL from settings or env.
+ */
+import { getSiteSettings } from "../../utils/sanity";
+import { getBaseUrl } from "../../utils/site-url";
+
+interface Props {
+  type: "LocalBusiness" | "CreativeWork" | "Service" | "FAQPage" | "BreadcrumbList";
+  data?: Record<string, any>;
+}
+
+const { type, data = {} } = Astro.props;
+const settings = await getSiteSettings();
+
+const SITE_URL = getBaseUrl(settings, Astro.url.origin);
+const orgName = settings?.siteName ?? "My Site";
+const orgDescription = settings?.siteDescription ?? "";
+const orgPhone = settings?.phone ?? "";
+const orgEmail = settings?.email ?? "";
+const orgAddress = settings?.address ?? "";
+
+// ─── LocalBusiness (homepage) ───────────────────────────────
+function buildLocalBusiness() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${SITE_URL}/#organization`,
+    name: orgName,
+    url: SITE_URL,
+    description: orgDescription,
+    ...(orgPhone && { telephone: orgPhone.replace(/\s/g, '') }),
+    ...(orgEmail && { email: orgEmail }),
+    ...data,
+  };
+}
+
+// ─── CreativeWork (case/project detail) ─────────────────────
+function buildCreativeWork() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    author: { "@type": "Organization", name: orgName, url: SITE_URL },
+    ...data,
+  };
+}
+
+// ─── Service (service detail) ───────────────────────────────
+function buildService() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    provider: { "@type": "Organization", name: orgName, "@id": `${SITE_URL}/#organization` },
+    ...data,
+  };
+}
+
+// ─── FAQPage ────────────────────────────────────────────────
+function buildFAQPage() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: data.questions?.map((q: any) => ({
+      "@type": "Question",
+      name: q.question,
+      acceptedAnswer: { "@type": "Answer", text: q.answer },
+    })) || [],
+  };
+}
+
+// ─── BreadcrumbList ─────────────────────────────────────────
+function buildBreadcrumbs() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: data.items?.map((item: any, i: number) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })) || [],
+  };
+}
+
+const builders: Record<string, () => Record<string, any>> = {
+  LocalBusiness: buildLocalBusiness,
+  CreativeWork: buildCreativeWork,
+  Service: buildService,
+  FAQPage: buildFAQPage,
+  BreadcrumbList: buildBreadcrumbs,
+};
+
+const schema = builders[type]?.() || {};
+---
+
+<Fragment set:html={`<script type="application/ld+json">${JSON.stringify(schema).replace(/</g, '\\u003c')}</script>`} />

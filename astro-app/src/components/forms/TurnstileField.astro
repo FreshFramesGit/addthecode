@@ -1,0 +1,89 @@
+---
+/**
+ * Reusable Cloudflare Turnstile mount + hidden token input.
+ * Safe to include early in forms; renders a passive note if the site key is not configured yet.
+ */
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
+---
+
+<div class="turnstile-field" data-turnstile-field data-sitekey={siteKey}>
+  <div class="turnstile-field_widget" data-turnstile-widget></div>
+  <input type="hidden" name="turnstileToken" data-turnstile-input />
+  {!siteKey && (
+    <p class="turnstile-field_note">
+      Beveiligingscontrole is nog niet geconfigureerd voor deze omgeving.
+    </p>
+  )}
+</div>
+
+<script>
+  function loadTurnstile() {
+    if (window.turnstile) return Promise.resolve(window.turnstile)
+    if (window.__ffTurnstileLoader) return window.__ffTurnstileLoader
+
+    window.__ffTurnstileLoader = new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-turnstile-script]')
+      if (existing) {
+        existing.addEventListener('load', () => resolve(window.turnstile), { once: true })
+        existing.addEventListener('error', reject, { once: true })
+        return
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+      script.async = true
+      script.defer = true
+      script.dataset.turnstileScript = 'true'
+      script.onload = () => resolve(window.turnstile)
+      script.onerror = reject
+      document.head.appendChild(script)
+    })
+
+    return window.__ffTurnstileLoader
+  }
+
+  async function initTurnstileFields(root = document) {
+    const fields = root.querySelectorAll('[data-turnstile-field]')
+    const pending = Array.from(fields).filter((field) => field.dataset.initialized !== 'true')
+    if (!pending.length) return
+
+    const siteKey = pending[0]?.dataset.sitekey ?? ''
+    if (!siteKey) {
+      pending.forEach((field) => {
+        field.dataset.initialized = 'true'
+      })
+      return
+    }
+
+    try {
+      await loadTurnstile()
+    } catch {
+      return
+    }
+
+    pending.forEach((field) => {
+      if (field.dataset.initialized === 'true') return
+
+      const widget = field.querySelector('[data-turnstile-widget]')
+      const input = field.querySelector('[data-turnstile-input]')
+      if (!widget || !input || !window.turnstile) return
+
+      field.dataset.initialized = 'true'
+      window.turnstile.render(widget, {
+        sitekey: field.dataset.sitekey ?? siteKey,
+        callback(token) {
+          input.value = token
+        },
+        'expired-callback'() {
+          input.value = ''
+        },
+        'error-callback'() {
+          input.value = ''
+        },
+      })
+    })
+  }
+
+  initTurnstileFields()
+  document.addEventListener('astro:page-load', () => initTurnstileFields())
+</script>

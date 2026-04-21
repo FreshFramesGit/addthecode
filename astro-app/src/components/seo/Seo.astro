@@ -1,0 +1,65 @@
+---
+import { stripTrailingSlash, toAbsoluteUrl } from "../../utils/site-url"
+
+type Props = {
+  title?: string | null
+  description?: string | null
+  canonical?: string | null
+  ogImage?: string | null
+  noindex?: boolean | null
+  siteName?: string | null
+  defaultTitle?: string | null
+  defaultDescription?: string | null
+  baseUrl?: string | null
+}
+
+const props = Astro.props;
+const title = props.title ?? undefined;
+const description = props.description ?? undefined;
+const canonical = props.canonical ?? undefined;
+const ogImage = props.ogImage ?? undefined;
+const noindex = props.noindex ?? false;
+const siteName = props.siteName ?? "My Site";
+const defaultTitle = props.defaultTitle ?? siteName;
+const defaultDescription = props.defaultDescription ?? undefined;
+const baseUrl = stripTrailingSlash(props.baseUrl ?? Astro.url.origin);
+
+const normalizedTitle = title?.trim()
+const normalizedSiteName = siteName.trim()
+const shouldAppendSiteName =
+  Boolean(normalizedTitle) &&
+  normalizedTitle!.toLowerCase() !== normalizedSiteName.toLowerCase() &&
+  !normalizedTitle!.toLowerCase().includes(normalizedSiteName.toLowerCase())
+
+const pageTitle = normalizedTitle
+  ? shouldAppendSiteName
+    ? `${normalizedTitle} | ${normalizedSiteName}`
+    : normalizedTitle
+  : defaultTitle
+const pageDescription = description ?? defaultDescription
+
+const path = Astro.url.pathname
+const canonicalUrl = canonical ?? toAbsoluteUrl(path, baseUrl)
+
+const og = ogImage ?? "/images/og-default.jpg"
+const ogUrl = toAbsoluteUrl(og, baseUrl)
+---
+
+<title>{pageTitle}</title>
+<meta name="description" content={pageDescription} />
+<link rel="canonical" href={canonicalUrl} />
+
+<meta property="og:site_name" content={siteName} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={pageDescription} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={ogUrl} />
+<meta property="og:type" content="website" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={pageDescription} />
+<meta name="twitter:image" content={ogUrl} />
+
+<meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+<slot />

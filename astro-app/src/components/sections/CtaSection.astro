@@ -1,0 +1,51 @@
+---
+import Section from "../layout/Section.astro";
+import CmsLink from "../content/CmsLink.astro";
+import SanityImage from "../content/SanityImage.astro";
+import { getComponentDefaults } from "../../utils/sanity";
+
+interface Props {
+  heading?: string | null;
+  description?: string | null;
+  contactName?: string | null;
+  contactPhone?: string | null;
+  contactEmail?: string | null;
+  buttonLabel?: string | null;
+  buttonLink?: any;
+  backgroundStyle?: string | null;
+  photo?: any;
+  [key: string]: any;
+}
+
+const defaults = await getComponentDefaults();
+const d = defaults?.cta;
+
+// 3-layer fallback: props → componentDefaults → emergency fallback
+const heading = Astro.props.heading ?? d?.heading ?? "Get in touch";
+const description = Astro.props.description ?? d?.description;
+const contactName = Astro.props.contactName ?? d?.contactName;
+const contactPhone = Astro.props.contactPhone ?? d?.contactPhone;
+const contactEmail = Astro.props.contactEmail ?? d?.contactEmail;
+const buttonLabel = Astro.props.buttonLabel ?? d?.buttonLabel ?? "Contact";
+const buttonLink = Astro.props.buttonLink ?? d?.buttonLink ?? "/contact";
+const photo = Astro.props.photo ?? d?.photo;
+const backgroundStyle = Astro.props.backgroundStyle;
+---
+
+<Section class={`cta-section ${backgroundStyle ? `bg-${backgroundStyle}` : ''}`}>
+  <div class="cta_wrapper">
+    <div class="cta_content">
+      <h2>{heading}</h2>
+      {description && <p>{description}</p>}
+      {contactName && <p class="cta_contact-name">{contactName}</p>}
+      {contactPhone && <a href={`tel:${contactPhone}`}>{contactPhone}</a>}
+      {contactEmail && <a href={`mailto:${contactEmail}`}>{contactEmail}</a>}
+      <CmsLink link={buttonLink} class="button">{buttonLabel}</CmsLink>
+    </div>
+    {photo?.asset && (
+      <div class="cta_photo-wrapper">
+        <SanityImage image={photo} width={400} class="cta_photo" />
+      </div>
+    )}
+  </div>
+</Section>

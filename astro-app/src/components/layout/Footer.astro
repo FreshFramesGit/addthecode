@@ -1,0 +1,32 @@
+---
+/**
+ * Footer — Placeholder footer component.
+ * Vervang met projectspecifieke footer.
+ * Gebruik getNavigation() en getSiteSettings() voor de data.
+ */
+import { getNavigation, getSiteSettings } from "../../utils/sanity";
+import CmsLink from "../content/CmsLink.astro";
+
+const nav = await getNavigation();
+const settings = await getSiteSettings();
+const footerNav = nav?.footerNav ?? [];
+---
+
+<footer id="footer">
+  <div class="page-padding">
+    <div class="container">
+      <div class="footer_layout">
+        <div class="footer_nav">
+          {footerNav.map((item: any) => (
+            <CmsLink link={item.link ?? item.url} class="footer__link">
+              {item.label}
+            </CmsLink>
+          ))}
+        </div>
+        <p class="footer_copyright">
+          &copy; {new Date().getFullYear()} {settings?.siteName ?? "My Site"}
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

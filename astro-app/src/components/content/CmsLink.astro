@@ -1,0 +1,32 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { resolveCmsHref, type CmsLinkInput } from "../../utils/cms-link";
+
+interface Props extends HTMLAttributes<"a"> {
+  link?: CmsLinkInput;
+  href?: string | null;
+  blank?: boolean;
+}
+
+const { link, href, blank = false, rel, target, ...rest } = Astro.props;
+
+const resolved = resolveCmsHref(link ?? href);
+
+const finalTarget =
+  target ?? (blank || resolved.openInNewTab ? "_blank" : undefined);
+
+const relTokens = new Set((rel ?? "").split(/\s+/).filter(Boolean));
+if (finalTarget === "_blank") {
+  relTokens.add("noopener");
+  relTokens.add("noreferrer");
+}
+const finalRel = relTokens.size > 0 ? [...relTokens].join(" ") : undefined;
+---
+
+{
+  resolved.href && (
+    <a href={resolved.href} target={finalTarget} rel={finalRel} {...rest}>
+      <slot />
+    </a>
+  )
+}

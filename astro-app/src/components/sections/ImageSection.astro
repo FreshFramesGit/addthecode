@@ -1,0 +1,23 @@
+---
+import Section from "../layout/Section.astro";
+import SanityImage from "../content/SanityImage.astro";
+
+interface Props {
+  image?: any;
+  caption?: string | null;
+  layout?: string | null;
+  [key: string]: any;
+}
+
+const { image, caption, layout } = Astro.props;
+const isFullWidth = layout === "fullWidth";
+---
+
+<Section class="image-section" noContainer={isFullWidth}>
+  {image?.asset && (
+    <figure>
+      <SanityImage image={image} width={isFullWidth ? 1920 : 1200} />
+      {caption && <figcaption>{caption}</figcaption>}
+    </figure>
+  )}
+</Section>

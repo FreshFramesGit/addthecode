@@ -1,0 +1,55 @@
+/**
+ * Custom Studio CSS — CMS pages paars accent (#c4afff)
+ *
+ * @sanity/icons SVGs gebruiken stroke="currentColor".
+ * We moeten de `color` CSS property forceren op de wrapper
+ * zodat `currentColor` onze kleur erft.
+ */
+
+/* ─── Switch toggle styling ────────── */
+
+/* Unchecked: grijs track, witte knop */
+[data-ui="Switch"] [data-name="representation"] {
+  --switch-bg-color: #8a8a8a !important;
+  --switch-fg-color: #fff !important;
+}
+
+/* Checked: blauw track, witte knop */
+[data-ui="Switch"] input:checked + [data-name="representation"] {
+  --switch-bg-color: #0066ff !important;
+  --switch-fg-color: #fff !important;
+}
+
+/* Hover unchecked: iets lichter grijs */
+@media (hover: hover) {
+  [data-ui="Switch"] input:not(:disabled):hover + [data-name="representation"] {
+    --switch-bg-color: #999 !important;
+    --switch-fg-color: #fff !important;
+  }
+
+  /* Hover checked: iets lichter blauw */
+  [data-ui="Switch"] input:not(:disabled):checked:hover + [data-name="representation"] {
+    --switch-bg-color: #2480ff !important;
+    --switch-fg-color: #fff !important;
+  }
+}
+
+/* De wrapper span die coloredIcon() maakt */
+[data-cms-icon] {
+  color: #c4afff !important;
+}
+
+/* De SVG zelf — forceer currentColor overname */
+[data-cms-icon] svg[data-sanity-icon] {
+  color: #c4afff !important;
+}
+
+/* Alle stroke-elementen in de SVG */
+[data-cms-icon] svg[data-sanity-icon] path,
+[data-cms-icon] svg[data-sanity-icon] circle,
+[data-cms-icon] svg[data-sanity-icon] ellipse,
+[data-cms-icon] svg[data-sanity-icon] line,
+[data-cms-icon] svg[data-sanity-icon] polyline,
+[data-cms-icon] svg[data-sanity-icon] rect {
+  stroke: #c4afff !important;
+}

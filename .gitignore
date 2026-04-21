@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+.vercel/
+.sanity/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# macOS
+.DS_Store
+
+# Claude Code lokale permissions (per machine, niet voor remote)
+.claude/settings.local.json
+
+# TypeScript
+*.tsbuildinfo
+
+# Lighthouse reports (large generated files)
+*.report.html
+*.report.json
+
+# Discovery screenshots (keep directory structure, ignore actual images)
+discovery/screenshots/*
+!discovery/screenshots/.gitkeep
+
+# Misc
+*.pem
+*.local
+coverage/
+
+# ─── Addthecode-specifiek (project-lokaal, niet in remote repo) ──
+# Strategie- en design-spec blijven lokaal — repo bevat alleen astro-app/ + studio/ + root config
+docs/
+discovery/
+reference/
+CLAUDE.md

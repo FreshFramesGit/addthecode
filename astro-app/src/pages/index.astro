@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageBuilder from "../components/PageBuilder.astro";
+import JsonLd from "../components/seo/JsonLd.astro";
+import { getHomePage, getSiteSettings } from "../utils/sanity";
+
+const page = await getHomePage();
+const settings = await getSiteSettings();
+
+const seo = page?.seo ?? {};
+const blocks = page?.content ?? [];
+---
+
+<Layout
+  seo={seo}
+  siteName={settings?.siteName}
+  ogImage={seo?.ogImageUrl ?? settings?.defaultSeo?.ogImageUrl}
+>
+  <Fragment slot="head">
+    <JsonLd
+      type="LocalBusiness"
+      data={seo?.structuredData?.mode === "custom"
+        ? JSON.parse(seo.structuredData.customJsonLd || "{}")
+        : undefined}
+    />
+  </Fragment>
+
+  <PageBuilder blocks={blocks} />
+</Layout>

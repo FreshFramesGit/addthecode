@@ -1,0 +1,25 @@
+---
+/**
+ * Section — Client-First layout wrapper.
+ * Verbergt de page-padding > container > padding-vertical structuur achter props.
+ */
+interface Props {
+  id?: string;
+  class?: string;
+  noPadding?: boolean;
+  noContainer?: boolean;
+}
+const { id, class: className = '', noPadding = false, noContainer = false } = Astro.props;
+---
+
+<section id={id} class={className}>
+  <div class="page-padding">
+    {noContainer ? (
+      noPadding ? <slot /> : <div class="padding-vertical"><slot /></div>
+    ) : (
+      <div class="container">
+        {noPadding ? <slot /> : <div class="padding-vertical"><slot /></div>}
+      </div>
+    )}
+  </div>
+</section>

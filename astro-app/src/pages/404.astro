@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Section from "../components/layout/Section.astro";
+import RichText from "../components/content/RichText.astro";
+import CmsLink from "../components/content/CmsLink.astro";
+import { getNotFoundPage } from "../utils/sanity";
+
+const page = await getNotFoundPage();
+
+const heading = page?.heading ?? "Page not found";
+const body = page?.body;
+const ctaLabel = page?.ctaLabel ?? "Back to home";
+const ctaLink = page?.ctaLink ?? "/";
+const seo = page?.seo;
+---
+
+<Layout title={heading} seo={seo} noindex={true}>
+  <Section>
+    <div style="text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center;">
+      <h1>{heading}</h1>
+      {body ? <RichText value={body} /> : <p>The page you're looking for doesn't exist.</p>}
+      <div style="margin-top: 2rem;">
+        <CmsLink link={ctaLink} class="button">{ctaLabel}</CmsLink>
+      </div>
+    </div>
+  </Section>
+</Layout>

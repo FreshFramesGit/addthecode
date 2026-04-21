@@ -1,0 +1,17 @@
+{
+  "name": "ff-astro-sanity-template",
+  "private": true,
+  "version": "1.2.0",
+  "description": "Fresh Frames — Astro + Sanity + Vercel starter template",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "cd astro-app && npm run dev",
+    "build": "cd astro-app && npm run build",
+    "studio": "cd studio && npm run dev",
+    "install:all": "cd astro-app && npm install && cd ../studio && npm install",
+    "dev:all": "npm run dev & npm run studio",
+    "typegen": "cd studio && npx sanity schema extract && npx sanity typegen generate"
+  }
+}

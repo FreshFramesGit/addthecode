@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageBuilder from "../components/PageBuilder.astro";
+import { getPageBySlug } from "../utils/sanity";
+
+const { slug } = Astro.params;
+const resolvedSlug = Array.isArray(slug) ? slug.join("/") : slug;
+
+if (!resolvedSlug) {
+  return Astro.redirect("/");
+}
+
+const page = await getPageBySlug(resolvedSlug);
+
+if (!page) {
+  return new Response(null, { status: 404, statusText: "Not found" });
+}
+
+const { title, seo, content } = page;
+---
+
+<Layout title={title} seo={seo}>
+  <PageBuilder blocks={content} />
+</Layout>

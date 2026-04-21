@@ -1,0 +1,47 @@
+---
+import Section from "../layout/Section.astro";
+import CmsLink from "../content/CmsLink.astro";
+import SanityImage from "../content/SanityImage.astro";
+import RichText from "../content/RichText.astro";
+import { getSiteSettings } from "../../utils/sanity";
+
+interface Props {
+  heading?: string | null;
+  description?: string | null;
+  showContactInfo?: boolean | null;
+  ctaLabel?: string | null;
+  ctaLink?: any;
+  officeImage?: any;
+  [key: string]: any;
+}
+
+const settings = await getSiteSettings();
+const { heading, description, showContactInfo, ctaLabel, ctaLink, officeImage } = Astro.props;
+---
+
+<Section class="contact-section">
+  <div class="contact_wrapper">
+    <div class="contact_content">
+      {heading && <h2>{heading}</h2>}
+      {description && <RichText value={description} />}
+
+      {(showContactInfo !== false) && (
+        <div class="contact_info">
+          {settings?.email && <a href={`mailto:${settings.email}`}>{settings.email}</a>}
+          {settings?.phone && <a href={`tel:${settings.phone}`}>{settings.phone}</a>}
+          {settings?.address && <p>{settings.address}</p>}
+        </div>
+      )}
+
+      {ctaLabel && ctaLink && (
+        <CmsLink link={ctaLink} class="button">{ctaLabel}</CmsLink>
+      )}
+    </div>
+
+    {officeImage?.asset && (
+      <div class="contact_image-wrapper">
+        <SanityImage image={officeImage} width={600} />
+      </div>
+    )}
+  </div>
+</Section>
