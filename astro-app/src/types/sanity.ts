@@ -89,6 +89,428 @@ export type SanityImageHotspot = {
   width?: number;
 };
 
+export type FormSubmission = {
+  _id: string;
+  _type: "formSubmission";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  source?: "contact" | "newsletter" | "other";
+  name?: string;
+  email?: string;
+  phone?: string;
+  organization?: string;
+  role?: string;
+  intent?: string;
+  project?: string;
+  budgetBucket?: string;
+  timing?: string;
+  utm?: {
+    source?: string;
+    medium?: string;
+    campaign?: string;
+    term?: string;
+    content?: string;
+    landingPage?: string;
+    referrer?: string;
+    gclid?: string;
+    fbclid?: string;
+  };
+  submittedAt?: string;
+  status?: "new" | "in progress" | "completed" | "spam";
+  notes?: string;
+};
+
+export type ComponentDefaults = {
+  _id: string;
+  _type: "componentDefaults";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  cta?: {
+    heading?: string;
+    description?: string;
+    contactName?: string;
+    contactPhone?: string;
+    contactEmail?: string;
+    buttonLabel?: string;
+    buttonLink?: CmsLink;
+    photo?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    };
+  };
+  ctaRefreins?: Array<{
+    key?: string;
+    statement?: string;
+    helperLine?: string;
+    buttonLabel?: string;
+    buttonLink?: CmsLink;
+    _type: "ctaRefreinVariant";
+    _key: string;
+  }>;
+  newsletter?: {
+    intro?: string;
+    placeholder?: string;
+    buttonLabel?: string;
+    buttonLabelSubmitting?: string;
+    helperLine?: string;
+    consentLabel?: string;
+    successMessage?: string;
+    errorMessage?: string;
+  };
+  expectationSteps?: {
+    heading?: string;
+    steps?: Array<{
+      stepNumber?: string;
+      label?: string;
+      description?: string;
+      _type: "expectationStep";
+      _key: string;
+    }>;
+  };
+};
+
+export type CmsLink = {
+  _type: "cmsLink";
+  linkKind?: "internalPage" | "pageSection" | "external";
+  internalPage?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "homePage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "page";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "thankYouPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "notFoundPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "workIndexPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "teamPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "approachPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "serviceDesignPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "serviceBuildPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "serviceAutomatePage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "academyIndexPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "contactPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "errorPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "offlinePage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "case";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "essay";
+  };
+  pageSectionPage?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "homePage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "page";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "thankYouPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "notFoundPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "workIndexPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "teamPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "approachPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "serviceDesignPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "serviceBuildPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "serviceAutomatePage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "academyIndexPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "contactPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "errorPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "offlinePage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "case";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "essay";
+  };
+  anchorId?: string;
+  externalUrl?: string;
+  openInNewTab?: boolean;
+};
+
+export type Navigation = {
+  _id: string;
+  _type: "navigation";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  mainNav?: Array<{
+    label?: string;
+    link?: CmsLink;
+    children?: Array<{
+      label?: string;
+      link?: CmsLink;
+      _key: string;
+    }>;
+    _key: string;
+  }>;
+  footerNav?: Array<{
+    label?: string;
+    link?: CmsLink;
+    _key: string;
+  }>;
+};
+
+export type SiteSettings = {
+  _id: string;
+  _type: "siteSettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  siteName?: string;
+  siteDescription?: string;
+  tagline?: string;
+  logo?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  favicon?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  webclip?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  languageCode?: string;
+  timeZone?: string;
+  phone?: string;
+  email?: string;
+  whatsapp?: string;
+  address?: string;
+  studioAddress?: {
+    addressLine1?: string;
+    postalCode?: string;
+    city?: string;
+    country?: string;
+    openingHours?: string;
+    visitingNote?: string;
+    mapUrl?: string;
+  };
+  defaultSeo?: Seo;
+  globalCanonicalUrl?: string;
+  googleSiteVerificationId?: string;
+  enableSitemap?: boolean;
+  robotsDirectives?: string;
+  llmsTxt?: string;
+  socialLinks?: Array<{
+    platform?: "LinkedIn" | "Instagram" | "YouTube" | "Twitter/X" | "Facebook" | "Other";
+    url?: string;
+    _key: string;
+  }>;
+};
+
+export type Seo = {
+  _type: "seo";
+  title?: string;
+  description?: string;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  ogTitleMode?: "same" | "custom";
+  ogTitle?: string;
+  ogDescriptionMode?: "same" | "custom";
+  ogDescription?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+  structuredData?: {
+    mode?: "auto" | "disabled" | "custom";
+    customJsonLd?: string;
+  };
+};
+
+export type QuoteAttribution = {
+  _type: "quoteAttribution";
+  quote?: string;
+  name?: string;
+  role?: string;
+  company?: string;
+  portrait?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+};
+
+export type Metric = {
+  _type: "metric";
+  label?: string;
+  value?: string;
+  source?: string;
+  verifiedByAlex?: boolean;
+};
+
+export type Period = {
+  _type: "period";
+  start?: string;
+  end?: string;
+  isOngoing?: boolean;
+};
+
 export type Essay = {
   _id: string;
   _type: "essay";
@@ -134,34 +556,6 @@ export type Essay = {
   }>;
   body?: BlockContent;
   seo?: Seo;
-};
-
-export type Seo = {
-  _type: "seo";
-  title?: string;
-  description?: string;
-  ogImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  ogTitleMode?: "same" | "custom";
-  ogTitle?: string;
-  ogDescriptionMode?: "same" | "custom";
-  ogDescription?: string;
-  canonicalUrl?: string;
-  noIndex?: boolean;
-  structuredData?: {
-    mode?: "auto" | "disabled" | "custom";
-    customJsonLd?: string;
-  };
 };
 
 export type BlockContent = Array<{
@@ -243,36 +637,30 @@ export type Slug = {
   source?: string;
 };
 
-export type FormSubmission = {
+export type OfflinePage = {
   _id: string;
-  _type: "formSubmission";
+  _type: "offlinePage";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  source?: "contact" | "newsletter" | "other";
-  name?: string;
-  email?: string;
-  phone?: string;
-  organization?: string;
-  role?: string;
-  intent?: string;
-  project?: string;
-  budgetBucket?: string;
-  timing?: string;
-  utm?: {
-    source?: string;
-    medium?: string;
-    campaign?: string;
-    term?: string;
-    content?: string;
-    landingPage?: string;
-    referrer?: string;
-    gclid?: string;
-    fbclid?: string;
-  };
-  submittedAt?: string;
-  status?: "new" | "in progress" | "completed" | "spam";
-  notes?: string;
+  seo?: Seo;
+  heading?: string;
+  body?: BlockContent;
+  ctaLabel?: string;
+  ctaLink?: CmsLink;
+};
+
+export type ErrorPage = {
+  _id: string;
+  _type: "errorPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  seo?: Seo;
+  heading?: string;
+  body?: BlockContent;
+  ctaLabel?: string;
+  ctaLink?: CmsLink;
 };
 
 export type ContactPage = {
@@ -306,6 +694,8 @@ export type PageBuilder = Array<{
 } & TeamGridBlock | {
   _key: string;
 } & TimelineBlock | {
+  _key: string;
+} & PrinciplesBlock | {
   _key: string;
 } & DecisionBlock | {
   _key: string;
@@ -417,274 +807,6 @@ export type WorkIndexPage = {
   _rev: string;
   seo?: Seo;
   content?: PageBuilder;
-};
-
-export type OfflinePage = {
-  _id: string;
-  _type: "offlinePage";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  seo?: Seo;
-  heading?: string;
-  body?: BlockContent;
-  ctaLabel?: string;
-  ctaLink?: CmsLink;
-};
-
-export type CmsLink = {
-  _type: "cmsLink";
-  linkKind?: "internalPage" | "pageSection" | "external";
-  internalPage?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "homePage";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "page";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "thankYouPage";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "notFoundPage";
-  };
-  pageSectionPage?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "homePage";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "page";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "thankYouPage";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "notFoundPage";
-  };
-  anchorId?: string;
-  externalUrl?: string;
-  openInNewTab?: boolean;
-};
-
-export type ErrorPage = {
-  _id: string;
-  _type: "errorPage";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  seo?: Seo;
-  heading?: string;
-  body?: BlockContent;
-  ctaLabel?: string;
-  ctaLink?: CmsLink;
-};
-
-export type ComponentDefaults = {
-  _id: string;
-  _type: "componentDefaults";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  cta?: {
-    heading?: string;
-    description?: string;
-    contactName?: string;
-    contactPhone?: string;
-    contactEmail?: string;
-    buttonLabel?: string;
-    buttonLink?: CmsLink;
-    photo?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-    };
-  };
-  ctaRefreins?: Array<{
-    key?: string;
-    statement?: string;
-    helperLine?: string;
-    buttonLabel?: string;
-    buttonLink?: CmsLink;
-    _type: "ctaRefreinVariant";
-    _key: string;
-  }>;
-  newsletter?: {
-    intro?: string;
-    placeholder?: string;
-    buttonLabel?: string;
-    buttonLabelSubmitting?: string;
-    helperLine?: string;
-    consentLabel?: string;
-    successMessage?: string;
-    errorMessage?: string;
-  };
-  expectationSteps?: {
-    heading?: string;
-    steps?: Array<{
-      stepNumber?: string;
-      label?: string;
-      description?: string;
-      _type: "expectationStep";
-      _key: string;
-    }>;
-  };
-};
-
-export type Navigation = {
-  _id: string;
-  _type: "navigation";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  mainNav?: Array<{
-    label?: string;
-    link?: CmsLink;
-    children?: Array<{
-      label?: string;
-      link?: CmsLink;
-      _key: string;
-    }>;
-    _key: string;
-  }>;
-  footerNav?: Array<{
-    label?: string;
-    link?: CmsLink;
-    _key: string;
-  }>;
-};
-
-export type SiteSettings = {
-  _id: string;
-  _type: "siteSettings";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  siteName?: string;
-  siteDescription?: string;
-  tagline?: string;
-  logo?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-  favicon?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  webclip?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  languageCode?: string;
-  timeZone?: string;
-  phone?: string;
-  email?: string;
-  whatsapp?: string;
-  address?: string;
-  studioAddress?: {
-    addressLine1?: string;
-    postalCode?: string;
-    city?: string;
-    country?: string;
-    openingHours?: string;
-    visitingNote?: string;
-    mapUrl?: string;
-  };
-  defaultSeo?: Seo;
-  globalCanonicalUrl?: string;
-  googleSiteVerificationId?: string;
-  enableSitemap?: boolean;
-  robotsDirectives?: string;
-  llmsTxt?: string;
-  socialLinks?: Array<{
-    platform?: "LinkedIn" | "Instagram" | "YouTube" | "Twitter/X" | "Facebook" | "Other";
-    url?: string;
-    _key: string;
-  }>;
-};
-
-export type QuoteAttribution = {
-  _type: "quoteAttribution";
-  quote?: string;
-  name?: string;
-  role?: string;
-  company?: string;
-  portrait?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-};
-
-export type Metric = {
-  _type: "metric";
-  label?: string;
-  value?: string;
-  source?: string;
-  verifiedByAlex?: boolean;
-};
-
-export type Period = {
-  _type: "period";
-  start?: string;
-  end?: string;
-  isOngoing?: boolean;
 };
 
 export type NotFoundPage = {
@@ -1003,6 +1125,23 @@ export type DecisionBlock = {
   anchorId?: string;
 };
 
+export type PrinciplesBlock = {
+  _type: "principlesBlock";
+  enabled?: boolean;
+  preClaim?: string;
+  heading?: string;
+  intro?: string;
+  principles?: Array<{
+    title?: string;
+    description?: string;
+    _type: "principleItem";
+    _key: string;
+  }>;
+  layoutVariant?: "stack" | "grid-2";
+  tone?: "paper" | "ink" | "claude";
+  anchorId?: string;
+};
+
 export type TimelineBlock = {
   _type: "timelineBlock";
   enabled?: boolean;
@@ -1119,7 +1258,10 @@ export type PitchOpeningBlock = {
   _type: "pitchOpeningBlock";
   enabled?: boolean;
   preClaim?: string;
+  heading?: string;
   body?: BlockContent;
+  ctaLabel?: string;
+  ctaLink?: CmsLink;
   maxWidth?: "small" | "main" | "full";
   tone?: "paper" | "ink" | "claude";
   anchorId?: string;
@@ -1440,7 +1582,7 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type AllSanitySchemaTypes = NewsletterSubscription | Inquiry | Recognition | SanityImageCrop | SanityImageHotspot | Essay | Seo | BlockContent | TeamMember | Slug | FormSubmission | ContactPage | PageBuilder | AcademyIndexPage | ServiceAutomatePage | ServiceBuildPage | ServiceDesignPage | ApproachPage | TeamPage | WorkIndexPage | OfflinePage | CmsLink | ErrorPage | ComponentDefaults | Navigation | SiteSettings | QuoteAttribution | Metric | Period | NotFoundPage | ThankYouPage | Page | HomePage | PreClaimBlock | TagStripBlock | CalloutBlock | ExpectationStepsBlock | DirectChannelsBlock | FaqBlock | NewsletterFormBlock | ContactFormBlock | NdaExplainerBlock | NextCaseBlock | Case | MetricsStripBlock | ArtifactGalleryBlock | MetaBlock | PhaseBlock | DecisionBlock | TimelineBlock | TeamGridBlock | EssayGridBlock | ProjectGridBlock | HeritageStripBlock | CtaRefreinBlock | QuoteClusterBlock | ServiceTriptychBlock | PitchOpeningBlock | HeroEssayBlock | HeroCaseBlock | HeroStandardBlock | HeroHomeBlock | ContactBlock | CtaBlock | ImageBlock | TextBlock | HeroBlock | MediaTag | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
+export type AllSanitySchemaTypes = NewsletterSubscription | Inquiry | Recognition | SanityImageCrop | SanityImageHotspot | FormSubmission | ComponentDefaults | CmsLink | Navigation | SiteSettings | Seo | QuoteAttribution | Metric | Period | Essay | BlockContent | TeamMember | Slug | OfflinePage | ErrorPage | ContactPage | PageBuilder | AcademyIndexPage | ServiceAutomatePage | ServiceBuildPage | ServiceDesignPage | ApproachPage | TeamPage | WorkIndexPage | NotFoundPage | ThankYouPage | Page | HomePage | PreClaimBlock | TagStripBlock | CalloutBlock | ExpectationStepsBlock | DirectChannelsBlock | FaqBlock | NewsletterFormBlock | ContactFormBlock | NdaExplainerBlock | NextCaseBlock | Case | MetricsStripBlock | ArtifactGalleryBlock | MetaBlock | PhaseBlock | DecisionBlock | PrinciplesBlock | TimelineBlock | TeamGridBlock | EssayGridBlock | ProjectGridBlock | HeritageStripBlock | CtaRefreinBlock | QuoteClusterBlock | ServiceTriptychBlock | PitchOpeningBlock | HeroEssayBlock | HeroCaseBlock | HeroStandardBlock | HeroHomeBlock | ContactBlock | CtaBlock | ImageBlock | TextBlock | HeroBlock | MediaTag | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ../astro-app/src/utils/sanity.ts
 // Variable: SITE_SETTINGS_QUERY
@@ -1516,29 +1658,101 @@ export type COMPONENT_DEFAULTS_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -1572,29 +1786,101 @@ export type COMPONENT_DEFAULTS_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -1631,29 +1917,101 @@ export type NAVIGATION_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -1666,29 +2024,101 @@ export type NAVIGATION_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -1703,36 +2133,108 @@ export type NAVIGATION_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
   }> | null;
 } | null;
 // Variable: PAGE_BY_SLUG_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0] {    _id, title, "slug": slug.current,    "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData},    content[enabled != false] {  _type,  _key,  enabled,  anchorId,  tone,  // ─── Hero's ───  _type == "heroHomeBlock" => {    preClaim,    headlineParts,    subClaim,    bodyText,    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    },    showThinkingRing  },  _type == "heroStandardBlock" => {    preClaim,    heading,    subheading,    layoutVariant,    "artifact": artifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Sections ───  _type == "pitchOpeningBlock" => {    preClaim,    body,    maxWidth  },  _type == "serviceTriptychBlock" => {    preClaim,    heading,    intro,    tiles[] {      _key,      title,      tagline,      description,      ctaLabel,      "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},      icon    }  },  _type == "quoteClusterBlock" => {    preClaim,    heading,    "primaryQuote": primaryQuote {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}},    "secondaryQuotes": secondaryQuotes[] {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}}  },  _type == "ctaRefreinBlock" => {    pageKey,    overrideStatement,    overrideButtonLabel,    "overrideButtonLink": overrideButtonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "heritageStripBlock" => {    preClaim,    heading,    items  },  _type == "projectGridBlock" => {    preClaim,    heading,    intro,    layerFilter,    maxItems,    showFilterChips,    cardLayoutVariant  },  _type == "essayGridBlock" => {    preClaim,    heading,    intro,    categoryFilter,    maxItems,    showFeaturedFirst,    showFilterChips  },  _type == "teamGridBlock" => {    preClaim,    heading,    coreOnly,    showQuotes  },  _type == "timelineBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      year,      label,      description,      highlight    },    orientation  },  // ─── Case-detail blocks ───  _type == "decisionBlock" => {    preClaim,    question,    options[] {      _key,      label,      pros,      cons,      chosen    },    conclusion  },  _type == "phaseBlock" => {    phaseNumber,    phaseName,    oneLiner,    body,    aiRole,    humanResponsibility,    deliverables,    duration  },  _type == "metaBlock" => {    heading,    items[] {      _key,      label,      value,      "href": href {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  _type == "artifactGalleryBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},      title,      caption    },    layoutVariant  },  _type == "metricsStripBlock" => {    preClaim,    heading,    "metrics": metrics[] {  label,  value,  source,  verifiedByAlex},    sourceNote  },  _type == "nextCaseBlock" => {    preClaim,    heading,    "recommendedCase": recommendedCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    },    recommendationReason,    "alternativeCase": alternativeCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    }  },  _type == "ndaExplainerBlock" => {    preClaim,    heading,    body,    expectedReleaseDate,    contactCta {      label,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Forms + utility ───  _type == "contactFormBlock" => {    preClaim,    heading,    intro,    topicOptions,    requireCompany,    submitLabel,    successMessage,    errorMessage  },  _type == "newsletterFormBlock" => {    preClaim,    overrideIntro,    overrideHelperLine,    source  },  _type == "faqBlock" => {    preClaim,    heading,    items[] {      _key,      question,      answer    },    enableJsonLd  },  _type == "directChannelsBlock" => {    preClaim,    heading,    channels[] {      _key,      kind,      label,      value,      helperLine    },    layoutVariant  },  _type == "expectationStepsBlock" => {    overrideHeading,    overrideSteps[] {      _key,      stepNumber,      label,      description    }  },  _type == "calloutBlock" => {    kind,    body,    attribution  },  _type == "tagStripBlock" => {    preClaim,    tags,    showAsLinks  },  _type == "preClaimBlock" => {    text,    showThinkingRing  },  // ─── Legacy template blocks (backwards-compat) ───  _type == "heroBlock" => {    heading, subheading,    mediaType, videoUrl, overlay,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    "posterImage": posterImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "textBlock" => {    heading, body, maxWidth, dividerLine, backgroundStyle  },  _type == "imageBlock" => {    layout, caption,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "ctaBlock" => {    heading, description, contactName, contactPhone, contactEmail,    buttonLabel,    "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    backgroundStyle,    "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "contactBlock" => {    heading, description[], showContactInfo, ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "officeImage": officeImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  }}  }
+// Query: *[_type == "page" && slug.current == $slug][0] {    _id, title, "slug": slug.current,    "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData},    content[enabled != false] {  _type,  _key,  enabled,  anchorId,  tone,  // ─── Hero's ───  _type == "heroHomeBlock" => {    preClaim,    headlineParts,    subClaim,    bodyText,    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    },    showThinkingRing  },  _type == "heroStandardBlock" => {    preClaim,    heading,    subheading,    layoutVariant,    "artifact": artifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Sections ───  _type == "pitchOpeningBlock" => {    preClaim,    heading,    body,    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    maxWidth  },  _type == "principlesBlock" => {    preClaim,    heading,    intro,    principles[] {      _key,      title,      description    },    layoutVariant  },  _type == "serviceTriptychBlock" => {    preClaim,    heading,    intro,    tiles[] {      _key,      title,      tagline,      description,      ctaLabel,      "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},      icon    }  },  _type == "quoteClusterBlock" => {    preClaim,    heading,    "primaryQuote": primaryQuote {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}},    "secondaryQuotes": secondaryQuotes[] {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}}  },  _type == "ctaRefreinBlock" => {    pageKey,    overrideStatement,    overrideButtonLabel,    "overrideButtonLink": overrideButtonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "heritageStripBlock" => {    preClaim,    heading,    items  },  _type == "projectGridBlock" => {    preClaim,    heading,    intro,    layerFilter,    maxItems,    showFilterChips,    cardLayoutVariant  },  _type == "essayGridBlock" => {    preClaim,    heading,    intro,    categoryFilter,    maxItems,    showFeaturedFirst,    showFilterChips  },  _type == "teamGridBlock" => {    preClaim,    heading,    coreOnly,    showQuotes  },  _type == "timelineBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      year,      label,      description,      highlight    },    orientation  },  // ─── Case-detail blocks ───  _type == "decisionBlock" => {    preClaim,    question,    options[] {      _key,      label,      pros,      cons,      chosen    },    conclusion  },  _type == "phaseBlock" => {    phaseNumber,    phaseName,    oneLiner,    body,    aiRole,    humanResponsibility,    deliverables,    duration  },  _type == "metaBlock" => {    heading,    items[] {      _key,      label,      value,      "href": href {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  _type == "artifactGalleryBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},      title,      caption    },    layoutVariant  },  _type == "metricsStripBlock" => {    preClaim,    heading,    "metrics": metrics[] {  label,  value,  source,  verifiedByAlex},    sourceNote  },  _type == "nextCaseBlock" => {    preClaim,    heading,    "recommendedCase": recommendedCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    },    recommendationReason,    "alternativeCase": alternativeCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    }  },  _type == "ndaExplainerBlock" => {    preClaim,    heading,    body,    expectedReleaseDate,    contactCta {      label,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Forms + utility ───  _type == "contactFormBlock" => {    preClaim,    heading,    intro,    topicOptions,    requireCompany,    submitLabel,    successMessage,    errorMessage  },  _type == "newsletterFormBlock" => {    preClaim,    overrideIntro,    overrideHelperLine,    source  },  _type == "faqBlock" => {    preClaim,    heading,    items[] {      _key,      question,      answer    },    enableJsonLd  },  _type == "directChannelsBlock" => {    preClaim,    heading,    channels[] {      _key,      kind,      label,      value,      helperLine    },    layoutVariant  },  _type == "expectationStepsBlock" => {    overrideHeading,    overrideSteps[] {      _key,      stepNumber,      label,      description    }  },  _type == "calloutBlock" => {    kind,    body,    attribution  },  _type == "tagStripBlock" => {    preClaim,    tags,    showAsLinks  },  _type == "preClaimBlock" => {    text,    showThinkingRing  },  // ─── Legacy template blocks (backwards-compat) ───  _type == "heroBlock" => {    heading, subheading,    mediaType, videoUrl, overlay,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    "posterImage": posterImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "textBlock" => {    heading, body, maxWidth, dividerLine, backgroundStyle  },  _type == "imageBlock" => {    layout, caption,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "ctaBlock" => {    heading, description, contactName, contactPhone, contactEmail,    buttonLabel,    "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    backgroundStyle,    "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "contactBlock" => {    heading, description[], showContactInfo, ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "officeImage": officeImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  }}  }
 export type PAGE_BY_SLUG_QUERYResult = {
   _id: string;
   title: string | null;
@@ -1841,29 +2343,101 @@ export type PAGE_BY_SLUG_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -1916,29 +2490,101 @@ export type PAGE_BY_SLUG_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -1975,29 +2621,101 @@ export type PAGE_BY_SLUG_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -2134,29 +2852,101 @@ export type PAGE_BY_SLUG_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -2180,29 +2970,101 @@ export type PAGE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -2245,29 +3107,101 @@ export type PAGE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -2314,29 +3248,101 @@ export type PAGE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -2374,29 +3380,101 @@ export type PAGE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -2489,7 +3567,113 @@ export type PAGE_BY_SLUG_QUERYResult = {
     anchorId: string | null;
     tone: "claude" | "ink" | "paper" | null;
     preClaim: string | null;
+    heading: string | null;
     body: BlockContent | null;
+    ctaLabel: string | null;
+    ctaLink: {
+      linkKind: "external" | "internalPage" | "pageSection" | null;
+      openInNewTab: boolean | null;
+      externalUrl: string | null;
+      anchorId: string | null;
+      internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
+        slug: null;
+      } | null;
+      pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
+        slug: null;
+      } | null;
+    } | null;
     maxWidth: "full" | "main" | "small" | null;
   } | {
     _type: "preClaimBlock";
@@ -2499,6 +3683,21 @@ export type PAGE_BY_SLUG_QUERYResult = {
     tone: "claude" | "ink" | "paper" | null;
     text: string | null;
     showThinkingRing: boolean | null;
+  } | {
+    _type: "principlesBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    principles: Array<{
+      _key: string;
+      title: string | null;
+      description: string | null;
+    }> | null;
+    layoutVariant: "grid-2" | "stack" | null;
   } | {
     _type: "projectGridBlock";
     _key: string;
@@ -2587,29 +3786,101 @@ export type PAGE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -2708,29 +3979,101 @@ export type NOT_FOUND_PAGE_QUERYResult = {
     externalUrl: string | null;
     anchorId: string | null;
     internalPage: {
+      _type: "academyIndexPage";
+      slug: null;
+    } | {
+      _type: "approachPage";
+      slug: null;
+    } | {
+      _type: "case";
+      slug: string | null;
+    } | {
+      _type: "contactPage";
+      slug: null;
+    } | {
+      _type: "errorPage";
+      slug: null;
+    } | {
+      _type: "essay";
+      slug: string | null;
+    } | {
       _type: "homePage";
       slug: null;
     } | {
       _type: "notFoundPage";
       slug: null;
     } | {
+      _type: "offlinePage";
+      slug: null;
+    } | {
       _type: "page";
       slug: string | null;
     } | {
+      _type: "serviceAutomatePage";
+      slug: null;
+    } | {
+      _type: "serviceBuildPage";
+      slug: null;
+    } | {
+      _type: "serviceDesignPage";
+      slug: null;
+    } | {
+      _type: "teamPage";
+      slug: null;
+    } | {
       _type: "thankYouPage";
+      slug: null;
+    } | {
+      _type: "workIndexPage";
       slug: null;
     } | null;
     pageSectionPage: {
+      _type: "academyIndexPage";
+      slug: null;
+    } | {
+      _type: "approachPage";
+      slug: null;
+    } | {
+      _type: "case";
+      slug: string | null;
+    } | {
+      _type: "contactPage";
+      slug: null;
+    } | {
+      _type: "errorPage";
+      slug: null;
+    } | {
+      _type: "essay";
+      slug: string | null;
+    } | {
       _type: "homePage";
       slug: null;
     } | {
       _type: "notFoundPage";
       slug: null;
     } | {
+      _type: "offlinePage";
+      slug: null;
+    } | {
       _type: "page";
       slug: string | null;
     } | {
+      _type: "serviceAutomatePage";
+      slug: null;
+    } | {
+      _type: "serviceBuildPage";
+      slug: null;
+    } | {
+      _type: "serviceDesignPage";
+      slug: null;
+    } | {
+      _type: "teamPage";
+      slug: null;
+    } | {
       _type: "thankYouPage";
+      slug: null;
+    } | {
+      _type: "workIndexPage";
       slug: null;
     } | null;
   } | null;
@@ -2794,29 +4137,101 @@ export type ERROR_PAGE_QUERYResult = {
     externalUrl: string | null;
     anchorId: string | null;
     internalPage: {
+      _type: "academyIndexPage";
+      slug: null;
+    } | {
+      _type: "approachPage";
+      slug: null;
+    } | {
+      _type: "case";
+      slug: string | null;
+    } | {
+      _type: "contactPage";
+      slug: null;
+    } | {
+      _type: "errorPage";
+      slug: null;
+    } | {
+      _type: "essay";
+      slug: string | null;
+    } | {
       _type: "homePage";
       slug: null;
     } | {
       _type: "notFoundPage";
       slug: null;
     } | {
+      _type: "offlinePage";
+      slug: null;
+    } | {
       _type: "page";
       slug: string | null;
     } | {
+      _type: "serviceAutomatePage";
+      slug: null;
+    } | {
+      _type: "serviceBuildPage";
+      slug: null;
+    } | {
+      _type: "serviceDesignPage";
+      slug: null;
+    } | {
+      _type: "teamPage";
+      slug: null;
+    } | {
       _type: "thankYouPage";
+      slug: null;
+    } | {
+      _type: "workIndexPage";
       slug: null;
     } | null;
     pageSectionPage: {
+      _type: "academyIndexPage";
+      slug: null;
+    } | {
+      _type: "approachPage";
+      slug: null;
+    } | {
+      _type: "case";
+      slug: string | null;
+    } | {
+      _type: "contactPage";
+      slug: null;
+    } | {
+      _type: "errorPage";
+      slug: null;
+    } | {
+      _type: "essay";
+      slug: string | null;
+    } | {
       _type: "homePage";
       slug: null;
     } | {
       _type: "notFoundPage";
       slug: null;
     } | {
+      _type: "offlinePage";
+      slug: null;
+    } | {
       _type: "page";
       slug: string | null;
     } | {
+      _type: "serviceAutomatePage";
+      slug: null;
+    } | {
+      _type: "serviceBuildPage";
+      slug: null;
+    } | {
+      _type: "serviceDesignPage";
+      slug: null;
+    } | {
+      _type: "teamPage";
+      slug: null;
+    } | {
       _type: "thankYouPage";
+      slug: null;
+    } | {
+      _type: "workIndexPage";
       slug: null;
     } | null;
   } | null;
@@ -2880,29 +4295,101 @@ export type OFFLINE_PAGE_QUERYResult = {
     externalUrl: string | null;
     anchorId: string | null;
     internalPage: {
+      _type: "academyIndexPage";
+      slug: null;
+    } | {
+      _type: "approachPage";
+      slug: null;
+    } | {
+      _type: "case";
+      slug: string | null;
+    } | {
+      _type: "contactPage";
+      slug: null;
+    } | {
+      _type: "errorPage";
+      slug: null;
+    } | {
+      _type: "essay";
+      slug: string | null;
+    } | {
       _type: "homePage";
       slug: null;
     } | {
       _type: "notFoundPage";
       slug: null;
     } | {
+      _type: "offlinePage";
+      slug: null;
+    } | {
       _type: "page";
       slug: string | null;
     } | {
+      _type: "serviceAutomatePage";
+      slug: null;
+    } | {
+      _type: "serviceBuildPage";
+      slug: null;
+    } | {
+      _type: "serviceDesignPage";
+      slug: null;
+    } | {
+      _type: "teamPage";
+      slug: null;
+    } | {
       _type: "thankYouPage";
+      slug: null;
+    } | {
+      _type: "workIndexPage";
       slug: null;
     } | null;
     pageSectionPage: {
+      _type: "academyIndexPage";
+      slug: null;
+    } | {
+      _type: "approachPage";
+      slug: null;
+    } | {
+      _type: "case";
+      slug: string | null;
+    } | {
+      _type: "contactPage";
+      slug: null;
+    } | {
+      _type: "errorPage";
+      slug: null;
+    } | {
+      _type: "essay";
+      slug: string | null;
+    } | {
       _type: "homePage";
       slug: null;
     } | {
       _type: "notFoundPage";
       slug: null;
     } | {
+      _type: "offlinePage";
+      slug: null;
+    } | {
       _type: "page";
       slug: string | null;
     } | {
+      _type: "serviceAutomatePage";
+      slug: null;
+    } | {
+      _type: "serviceBuildPage";
+      slug: null;
+    } | {
+      _type: "serviceDesignPage";
+      slug: null;
+    } | {
+      _type: "teamPage";
+      slug: null;
+    } | {
       _type: "thankYouPage";
+      slug: null;
+    } | {
+      _type: "workIndexPage";
       slug: null;
     } | null;
   } | null;
@@ -2966,29 +4453,101 @@ export type THANK_YOU_PAGE_QUERYResult = {
     externalUrl: string | null;
     anchorId: string | null;
     internalPage: {
+      _type: "academyIndexPage";
+      slug: null;
+    } | {
+      _type: "approachPage";
+      slug: null;
+    } | {
+      _type: "case";
+      slug: string | null;
+    } | {
+      _type: "contactPage";
+      slug: null;
+    } | {
+      _type: "errorPage";
+      slug: null;
+    } | {
+      _type: "essay";
+      slug: string | null;
+    } | {
       _type: "homePage";
       slug: null;
     } | {
       _type: "notFoundPage";
       slug: null;
     } | {
+      _type: "offlinePage";
+      slug: null;
+    } | {
       _type: "page";
       slug: string | null;
     } | {
+      _type: "serviceAutomatePage";
+      slug: null;
+    } | {
+      _type: "serviceBuildPage";
+      slug: null;
+    } | {
+      _type: "serviceDesignPage";
+      slug: null;
+    } | {
+      _type: "teamPage";
+      slug: null;
+    } | {
       _type: "thankYouPage";
+      slug: null;
+    } | {
+      _type: "workIndexPage";
       slug: null;
     } | null;
     pageSectionPage: {
+      _type: "academyIndexPage";
+      slug: null;
+    } | {
+      _type: "approachPage";
+      slug: null;
+    } | {
+      _type: "case";
+      slug: string | null;
+    } | {
+      _type: "contactPage";
+      slug: null;
+    } | {
+      _type: "errorPage";
+      slug: null;
+    } | {
+      _type: "essay";
+      slug: string | null;
+    } | {
       _type: "homePage";
       slug: null;
     } | {
       _type: "notFoundPage";
       slug: null;
     } | {
+      _type: "offlinePage";
+      slug: null;
+    } | {
       _type: "page";
       slug: string | null;
     } | {
+      _type: "serviceAutomatePage";
+      slug: null;
+    } | {
+      _type: "serviceBuildPage";
+      slug: null;
+    } | {
+      _type: "serviceDesignPage";
+      slug: null;
+    } | {
+      _type: "teamPage";
+      slug: null;
+    } | {
       _type: "thankYouPage";
+      slug: null;
+    } | {
+      _type: "workIndexPage";
       slug: null;
     } | null;
   } | null;
@@ -3048,7 +4607,7 @@ export type CASES_BY_LAYER_QUERYResult = Array<{
   liveUrl: string | null;
 }>;
 // Variable: CASE_BY_SLUG_QUERY
-// Query: *[_type == "case" && slug.current == $slug][0] {  _id,  _updatedAt,  language,  title,  "slug": slug.current,  layer,  ndaStatus,  status,  client,  role,  "period": period {  start,  end,  isOngoing},  preClaim,  subtitle,  tags,  stack,  liveUrl,  "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},  "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData},  content[enabled != false] {  _type,  _key,  enabled,  anchorId,  tone,  // ─── Hero's ───  _type == "heroHomeBlock" => {    preClaim,    headlineParts,    subClaim,    bodyText,    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    },    showThinkingRing  },  _type == "heroStandardBlock" => {    preClaim,    heading,    subheading,    layoutVariant,    "artifact": artifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Sections ───  _type == "pitchOpeningBlock" => {    preClaim,    body,    maxWidth  },  _type == "serviceTriptychBlock" => {    preClaim,    heading,    intro,    tiles[] {      _key,      title,      tagline,      description,      ctaLabel,      "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},      icon    }  },  _type == "quoteClusterBlock" => {    preClaim,    heading,    "primaryQuote": primaryQuote {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}},    "secondaryQuotes": secondaryQuotes[] {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}}  },  _type == "ctaRefreinBlock" => {    pageKey,    overrideStatement,    overrideButtonLabel,    "overrideButtonLink": overrideButtonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "heritageStripBlock" => {    preClaim,    heading,    items  },  _type == "projectGridBlock" => {    preClaim,    heading,    intro,    layerFilter,    maxItems,    showFilterChips,    cardLayoutVariant  },  _type == "essayGridBlock" => {    preClaim,    heading,    intro,    categoryFilter,    maxItems,    showFeaturedFirst,    showFilterChips  },  _type == "teamGridBlock" => {    preClaim,    heading,    coreOnly,    showQuotes  },  _type == "timelineBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      year,      label,      description,      highlight    },    orientation  },  // ─── Case-detail blocks ───  _type == "decisionBlock" => {    preClaim,    question,    options[] {      _key,      label,      pros,      cons,      chosen    },    conclusion  },  _type == "phaseBlock" => {    phaseNumber,    phaseName,    oneLiner,    body,    aiRole,    humanResponsibility,    deliverables,    duration  },  _type == "metaBlock" => {    heading,    items[] {      _key,      label,      value,      "href": href {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  _type == "artifactGalleryBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},      title,      caption    },    layoutVariant  },  _type == "metricsStripBlock" => {    preClaim,    heading,    "metrics": metrics[] {  label,  value,  source,  verifiedByAlex},    sourceNote  },  _type == "nextCaseBlock" => {    preClaim,    heading,    "recommendedCase": recommendedCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    },    recommendationReason,    "alternativeCase": alternativeCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    }  },  _type == "ndaExplainerBlock" => {    preClaim,    heading,    body,    expectedReleaseDate,    contactCta {      label,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Forms + utility ───  _type == "contactFormBlock" => {    preClaim,    heading,    intro,    topicOptions,    requireCompany,    submitLabel,    successMessage,    errorMessage  },  _type == "newsletterFormBlock" => {    preClaim,    overrideIntro,    overrideHelperLine,    source  },  _type == "faqBlock" => {    preClaim,    heading,    items[] {      _key,      question,      answer    },    enableJsonLd  },  _type == "directChannelsBlock" => {    preClaim,    heading,    channels[] {      _key,      kind,      label,      value,      helperLine    },    layoutVariant  },  _type == "expectationStepsBlock" => {    overrideHeading,    overrideSteps[] {      _key,      stepNumber,      label,      description    }  },  _type == "calloutBlock" => {    kind,    body,    attribution  },  _type == "tagStripBlock" => {    preClaim,    tags,    showAsLinks  },  _type == "preClaimBlock" => {    text,    showThinkingRing  },  // ─── Legacy template blocks (backwards-compat) ───  _type == "heroBlock" => {    heading, subheading,    mediaType, videoUrl, overlay,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    "posterImage": posterImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "textBlock" => {    heading, body, maxWidth, dividerLine, backgroundStyle  },  _type == "imageBlock" => {    layout, caption,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "ctaBlock" => {    heading, description, contactName, contactPhone, contactEmail,    buttonLabel,    "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    backgroundStyle,    "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "contactBlock" => {    heading, description[], showContactInfo, ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "officeImage": officeImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  }}}
+// Query: *[_type == "case" && slug.current == $slug][0] {  _id,  _updatedAt,  language,  title,  "slug": slug.current,  layer,  ndaStatus,  status,  client,  role,  "period": period {  start,  end,  isOngoing},  preClaim,  subtitle,  tags,  stack,  liveUrl,  "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},  "seo": seo {  title,  description,  "ogImageUrl": ogImage.asset->url,  ogTitleMode,  ogTitle,  ogDescriptionMode,  ogDescription,  canonicalUrl,  noIndex,  structuredData},  content[enabled != false] {  _type,  _key,  enabled,  anchorId,  tone,  // ─── Hero's ───  _type == "heroHomeBlock" => {    preClaim,    headlineParts,    subClaim,    bodyText,    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    },    showThinkingRing  },  _type == "heroStandardBlock" => {    preClaim,    heading,    subheading,    layoutVariant,    "artifact": artifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctas[] {      _key,      label,      variant,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Sections ───  _type == "pitchOpeningBlock" => {    preClaim,    heading,    body,    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    maxWidth  },  _type == "principlesBlock" => {    preClaim,    heading,    intro,    principles[] {      _key,      title,      description    },    layoutVariant  },  _type == "serviceTriptychBlock" => {    preClaim,    heading,    intro,    tiles[] {      _key,      title,      tagline,      description,      ctaLabel,      "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},      icon    }  },  _type == "quoteClusterBlock" => {    preClaim,    heading,    "primaryQuote": primaryQuote {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}},    "secondaryQuotes": secondaryQuotes[] {  quote,  name,  role,  company,  "portrait": portrait {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}}  },  _type == "ctaRefreinBlock" => {    pageKey,    overrideStatement,    overrideButtonLabel,    "overrideButtonLink": overrideButtonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "heritageStripBlock" => {    preClaim,    heading,    items  },  _type == "projectGridBlock" => {    preClaim,    heading,    intro,    layerFilter,    maxItems,    showFilterChips,    cardLayoutVariant  },  _type == "essayGridBlock" => {    preClaim,    heading,    intro,    categoryFilter,    maxItems,    showFeaturedFirst,    showFilterChips  },  _type == "teamGridBlock" => {    preClaim,    heading,    coreOnly,    showQuotes  },  _type == "timelineBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      year,      label,      description,      highlight    },    orientation  },  // ─── Case-detail blocks ───  _type == "decisionBlock" => {    preClaim,    question,    options[] {      _key,      label,      pros,      cons,      chosen    },    conclusion  },  _type == "phaseBlock" => {    phaseNumber,    phaseName,    oneLiner,    body,    aiRole,    humanResponsibility,    deliverables,    duration  },  _type == "metaBlock" => {    heading,    items[] {      _key,      label,      value,      "href": href {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  _type == "artifactGalleryBlock" => {    preClaim,    heading,    intro,    items[] {      _key,      "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},      title,      caption    },    layoutVariant  },  _type == "metricsStripBlock" => {    preClaim,    heading,    "metrics": metrics[] {  label,  value,  source,  verifiedByAlex},    sourceNote  },  _type == "nextCaseBlock" => {    preClaim,    heading,    "recommendedCase": recommendedCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    },    recommendationReason,    "alternativeCase": alternativeCase->{      _id, title, "slug": slug.current, layer, subtitle,      "heroArtifact": heroArtifact {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}    }  },  _type == "ndaExplainerBlock" => {    preClaim,    heading,    body,    expectedReleaseDate,    contactCta {      label,      "link": link {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}    }  },  // ─── Forms + utility ───  _type == "contactFormBlock" => {    preClaim,    heading,    intro,    topicOptions,    requireCompany,    submitLabel,    successMessage,    errorMessage  },  _type == "newsletterFormBlock" => {    preClaim,    overrideIntro,    overrideHelperLine,    source  },  _type == "faqBlock" => {    preClaim,    heading,    items[] {      _key,      question,      answer    },    enableJsonLd  },  _type == "directChannelsBlock" => {    preClaim,    heading,    channels[] {      _key,      kind,      label,      value,      helperLine    },    layoutVariant  },  _type == "expectationStepsBlock" => {    overrideHeading,    overrideSteps[] {      _key,      stepNumber,      label,      description    }  },  _type == "calloutBlock" => {    kind,    body,    attribution  },  _type == "tagStripBlock" => {    preClaim,    tags,    showAsLinks  },  _type == "preClaimBlock" => {    text,    showThinkingRing  },  // ─── Legacy template blocks (backwards-compat) ───  _type == "heroBlock" => {    heading, subheading,    mediaType, videoUrl, overlay,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    "posterImage": posterImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop},    ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }}  },  _type == "textBlock" => {    heading, body, maxWidth, dividerLine, backgroundStyle  },  _type == "imageBlock" => {    layout, caption,    "image": image {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "ctaBlock" => {    heading, description, contactName, contactPhone, contactEmail,    buttonLabel,    "buttonLink": buttonLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    backgroundStyle,    "photo": photo {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  },  _type == "contactBlock" => {    heading, description[], showContactInfo, ctaLabel,    "ctaLink": ctaLink {  linkKind,  openInNewTab,  externalUrl,  anchorId,  "internalPage": internalPage->{ _type, "slug": slug.current },  "pageSectionPage": pageSectionPage->{ _type, "slug": slug.current }},    "officeImage": officeImage {  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },  alt,  caption,  hotspot,  crop}  }}}
 export type CASE_BY_SLUG_QUERYResult = {
   _id: string;
   _updatedAt: string;
@@ -3191,29 +4750,101 @@ export type CASE_BY_SLUG_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -3266,29 +4897,101 @@ export type CASE_BY_SLUG_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -3325,29 +5028,101 @@ export type CASE_BY_SLUG_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -3484,29 +5259,101 @@ export type CASE_BY_SLUG_QUERYResult = {
       externalUrl: string | null;
       anchorId: string | null;
       internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
       pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
         _type: "homePage";
         slug: null;
       } | {
         _type: "notFoundPage";
         slug: null;
       } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
         _type: "page";
         slug: string | null;
       } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
         _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
         slug: null;
       } | null;
     } | null;
@@ -3530,29 +5377,101 @@ export type CASE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -3595,29 +5514,101 @@ export type CASE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -3664,29 +5655,101 @@ export type CASE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -3724,29 +5787,101 @@ export type CASE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -3839,7 +5974,113 @@ export type CASE_BY_SLUG_QUERYResult = {
     anchorId: string | null;
     tone: "claude" | "ink" | "paper" | null;
     preClaim: string | null;
+    heading: string | null;
     body: BlockContent | null;
+    ctaLabel: string | null;
+    ctaLink: {
+      linkKind: "external" | "internalPage" | "pageSection" | null;
+      openInNewTab: boolean | null;
+      externalUrl: string | null;
+      anchorId: string | null;
+      internalPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
+        slug: null;
+      } | null;
+      pageSectionPage: {
+        _type: "academyIndexPage";
+        slug: null;
+      } | {
+        _type: "approachPage";
+        slug: null;
+      } | {
+        _type: "case";
+        slug: string | null;
+      } | {
+        _type: "contactPage";
+        slug: null;
+      } | {
+        _type: "errorPage";
+        slug: null;
+      } | {
+        _type: "essay";
+        slug: string | null;
+      } | {
+        _type: "homePage";
+        slug: null;
+      } | {
+        _type: "notFoundPage";
+        slug: null;
+      } | {
+        _type: "offlinePage";
+        slug: null;
+      } | {
+        _type: "page";
+        slug: string | null;
+      } | {
+        _type: "serviceAutomatePage";
+        slug: null;
+      } | {
+        _type: "serviceBuildPage";
+        slug: null;
+      } | {
+        _type: "serviceDesignPage";
+        slug: null;
+      } | {
+        _type: "teamPage";
+        slug: null;
+      } | {
+        _type: "thankYouPage";
+        slug: null;
+      } | {
+        _type: "workIndexPage";
+        slug: null;
+      } | null;
+    } | null;
     maxWidth: "full" | "main" | "small" | null;
   } | {
     _type: "preClaimBlock";
@@ -3849,6 +6090,21 @@ export type CASE_BY_SLUG_QUERYResult = {
     tone: "claude" | "ink" | "paper" | null;
     text: string | null;
     showThinkingRing: boolean | null;
+  } | {
+    _type: "principlesBlock";
+    _key: string;
+    enabled: boolean | null;
+    anchorId: string | null;
+    tone: "claude" | "ink" | "paper" | null;
+    preClaim: string | null;
+    heading: string | null;
+    intro: string | null;
+    principles: Array<{
+      _key: string;
+      title: string | null;
+      description: string | null;
+    }> | null;
+    layoutVariant: "grid-2" | "stack" | null;
   } | {
     _type: "projectGridBlock";
     _key: string;
@@ -3937,29 +6193,101 @@ export type CASE_BY_SLUG_QUERYResult = {
         externalUrl: string | null;
         anchorId: string | null;
         internalPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
         pageSectionPage: {
+          _type: "academyIndexPage";
+          slug: null;
+        } | {
+          _type: "approachPage";
+          slug: null;
+        } | {
+          _type: "case";
+          slug: string | null;
+        } | {
+          _type: "contactPage";
+          slug: null;
+        } | {
+          _type: "errorPage";
+          slug: null;
+        } | {
+          _type: "essay";
+          slug: string | null;
+        } | {
           _type: "homePage";
           slug: null;
         } | {
           _type: "notFoundPage";
           slug: null;
         } | {
+          _type: "offlinePage";
+          slug: null;
+        } | {
           _type: "page";
           slug: string | null;
         } | {
+          _type: "serviceAutomatePage";
+          slug: null;
+        } | {
+          _type: "serviceBuildPage";
+          slug: null;
+        } | {
+          _type: "serviceDesignPage";
+          slug: null;
+        } | {
+          _type: "teamPage";
+          slug: null;
+        } | {
           _type: "thankYouPage";
+          slug: null;
+        } | {
+          _type: "workIndexPage";
           slug: null;
         } | null;
       } | null;
@@ -4367,13 +6695,13 @@ declare module "@sanity/client" {
     "\n  *[_type == \"siteSettings\"][0] {\n    siteName,\n    siteDescription,\n    tagline,\n    languageCode,\n    timeZone,\n    phone, email, address, whatsapp,\n    studioAddress {\n      addressLine1,\n      postalCode,\n      city,\n      country,\n      openingHours,\n      visitingNote,\n      mapUrl\n    },\n    \"defaultSeo\": defaultSeo { title, description, \"ogImageUrl\": ogImage.asset->url, noIndex },\n    \"faviconUrl\": favicon.asset->url,\n    \"webclipUrl\": webclip.asset->url,\n    globalCanonicalUrl,\n    googleSiteVerificationId,\n    enableSitemap,\n    robotsDirectives,\n    llmsTxt,\n    socialLinks[] { _key, platform, url },\n    \"logo\": logo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  }\n": SITE_SETTINGS_QUERYResult;
     "\n  *[_type == \"componentDefaults\"][0] {\n    cta {\n      heading, description, contactName, contactPhone, contactEmail,\n      buttonLabel,\n      \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    },\n    ctaRefreins[] {\n      _key,\n      key,\n      statement,\n      helperLine,\n      buttonLabel,\n      \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    },\n    newsletter {\n      intro,\n      placeholder,\n      buttonLabel,\n      buttonLabelSubmitting,\n      helperLine,\n      consentLabel,\n      successMessage,\n      errorMessage\n    },\n    expectationSteps {\n      heading,\n      steps[] {\n        _key,\n        stepNumber,\n        label,\n        description\n      }\n    }\n  }\n": COMPONENT_DEFAULTS_QUERYResult;
     "\n  *[_type == \"navigation\"][0] {\n    mainNav[] {\n      _key,\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      children[] {\n        _key,\n        label,\n        \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n      }\n    },\n    footerNav[] {\n      _key,\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  }\n": NAVIGATION_QUERYResult;
-    "\n  *[_type == \"page\" && slug.current == $slug][0] {\n    _id, title, \"slug\": slug.current,\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n},\n    content[enabled != false] {\n  _type,\n  _key,\n  enabled,\n  anchorId,\n  tone,\n\n  // \u2500\u2500\u2500 Hero's \u2500\u2500\u2500\n  _type == \"heroHomeBlock\" => {\n    preClaim,\n    headlineParts,\n    subClaim,\n    bodyText,\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    },\n    showThinkingRing\n  },\n  _type == \"heroStandardBlock\" => {\n    preClaim,\n    heading,\n    subheading,\n    layoutVariant,\n    \"artifact\": artifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Sections \u2500\u2500\u2500\n  _type == \"pitchOpeningBlock\" => {\n    preClaim,\n    body,\n    maxWidth\n  },\n  _type == \"serviceTriptychBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    tiles[] {\n      _key,\n      title,\n      tagline,\n      description,\n      ctaLabel,\n      \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      icon\n    }\n  },\n  _type == \"quoteClusterBlock\" => {\n    preClaim,\n    heading,\n    \"primaryQuote\": primaryQuote {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n},\n    \"secondaryQuotes\": secondaryQuotes[] {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n  },\n  _type == \"ctaRefreinBlock\" => {\n    pageKey,\n    overrideStatement,\n    overrideButtonLabel,\n    \"overrideButtonLink\": overrideButtonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"heritageStripBlock\" => {\n    preClaim,\n    heading,\n    items\n  },\n  _type == \"projectGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    layerFilter,\n    maxItems,\n    showFilterChips,\n    cardLayoutVariant\n  },\n  _type == \"essayGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    categoryFilter,\n    maxItems,\n    showFeaturedFirst,\n    showFilterChips\n  },\n  _type == \"teamGridBlock\" => {\n    preClaim,\n    heading,\n    coreOnly,\n    showQuotes\n  },\n  _type == \"timelineBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      year,\n      label,\n      description,\n      highlight\n    },\n    orientation\n  },\n\n  // \u2500\u2500\u2500 Case-detail blocks \u2500\u2500\u2500\n  _type == \"decisionBlock\" => {\n    preClaim,\n    question,\n    options[] {\n      _key,\n      label,\n      pros,\n      cons,\n      chosen\n    },\n    conclusion\n  },\n  _type == \"phaseBlock\" => {\n    phaseNumber,\n    phaseName,\n    oneLiner,\n    body,\n    aiRole,\n    humanResponsibility,\n    deliverables,\n    duration\n  },\n  _type == \"metaBlock\" => {\n    heading,\n    items[] {\n      _key,\n      label,\n      value,\n      \"href\": href {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n  _type == \"artifactGalleryBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n      title,\n      caption\n    },\n    layoutVariant\n  },\n  _type == \"metricsStripBlock\" => {\n    preClaim,\n    heading,\n    \"metrics\": metrics[] {\n  label,\n  value,\n  source,\n  verifiedByAlex\n},\n    sourceNote\n  },\n  _type == \"nextCaseBlock\" => {\n    preClaim,\n    heading,\n    \"recommendedCase\": recommendedCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    },\n    recommendationReason,\n    \"alternativeCase\": alternativeCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    }\n  },\n  _type == \"ndaExplainerBlock\" => {\n    preClaim,\n    heading,\n    body,\n    expectedReleaseDate,\n    contactCta {\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Forms + utility \u2500\u2500\u2500\n  _type == \"contactFormBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    topicOptions,\n    requireCompany,\n    submitLabel,\n    successMessage,\n    errorMessage\n  },\n  _type == \"newsletterFormBlock\" => {\n    preClaim,\n    overrideIntro,\n    overrideHelperLine,\n    source\n  },\n  _type == \"faqBlock\" => {\n    preClaim,\n    heading,\n    items[] {\n      _key,\n      question,\n      answer\n    },\n    enableJsonLd\n  },\n  _type == \"directChannelsBlock\" => {\n    preClaim,\n    heading,\n    channels[] {\n      _key,\n      kind,\n      label,\n      value,\n      helperLine\n    },\n    layoutVariant\n  },\n  _type == \"expectationStepsBlock\" => {\n    overrideHeading,\n    overrideSteps[] {\n      _key,\n      stepNumber,\n      label,\n      description\n    }\n  },\n  _type == \"calloutBlock\" => {\n    kind,\n    body,\n    attribution\n  },\n  _type == \"tagStripBlock\" => {\n    preClaim,\n    tags,\n    showAsLinks\n  },\n  _type == \"preClaimBlock\" => {\n    text,\n    showThinkingRing\n  },\n\n  // \u2500\u2500\u2500 Legacy template blocks (backwards-compat) \u2500\u2500\u2500\n  _type == \"heroBlock\" => {\n    heading, subheading,\n    mediaType, videoUrl, overlay,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    \"posterImage\": posterImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"textBlock\" => {\n    heading, body, maxWidth, dividerLine, backgroundStyle\n  },\n  _type == \"imageBlock\" => {\n    layout, caption,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"ctaBlock\" => {\n    heading, description, contactName, contactPhone, contactEmail,\n    buttonLabel,\n    \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    backgroundStyle,\n    \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"contactBlock\" => {\n    heading, description[], showContactInfo, ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"officeImage\": officeImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  }\n}\n  }\n": PAGE_BY_SLUG_QUERYResult;
+    "\n  *[_type == \"page\" && slug.current == $slug][0] {\n    _id, title, \"slug\": slug.current,\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n},\n    content[enabled != false] {\n  _type,\n  _key,\n  enabled,\n  anchorId,\n  tone,\n\n  // \u2500\u2500\u2500 Hero's \u2500\u2500\u2500\n  _type == \"heroHomeBlock\" => {\n    preClaim,\n    headlineParts,\n    subClaim,\n    bodyText,\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    },\n    showThinkingRing\n  },\n  _type == \"heroStandardBlock\" => {\n    preClaim,\n    heading,\n    subheading,\n    layoutVariant,\n    \"artifact\": artifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Sections \u2500\u2500\u2500\n  _type == \"pitchOpeningBlock\" => {\n    preClaim,\n    heading,\n    body,\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    maxWidth\n  },\n  _type == \"principlesBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    principles[] {\n      _key,\n      title,\n      description\n    },\n    layoutVariant\n  },\n  _type == \"serviceTriptychBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    tiles[] {\n      _key,\n      title,\n      tagline,\n      description,\n      ctaLabel,\n      \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      icon\n    }\n  },\n  _type == \"quoteClusterBlock\" => {\n    preClaim,\n    heading,\n    \"primaryQuote\": primaryQuote {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n},\n    \"secondaryQuotes\": secondaryQuotes[] {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n  },\n  _type == \"ctaRefreinBlock\" => {\n    pageKey,\n    overrideStatement,\n    overrideButtonLabel,\n    \"overrideButtonLink\": overrideButtonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"heritageStripBlock\" => {\n    preClaim,\n    heading,\n    items\n  },\n  _type == \"projectGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    layerFilter,\n    maxItems,\n    showFilterChips,\n    cardLayoutVariant\n  },\n  _type == \"essayGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    categoryFilter,\n    maxItems,\n    showFeaturedFirst,\n    showFilterChips\n  },\n  _type == \"teamGridBlock\" => {\n    preClaim,\n    heading,\n    coreOnly,\n    showQuotes\n  },\n  _type == \"timelineBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      year,\n      label,\n      description,\n      highlight\n    },\n    orientation\n  },\n\n  // \u2500\u2500\u2500 Case-detail blocks \u2500\u2500\u2500\n  _type == \"decisionBlock\" => {\n    preClaim,\n    question,\n    options[] {\n      _key,\n      label,\n      pros,\n      cons,\n      chosen\n    },\n    conclusion\n  },\n  _type == \"phaseBlock\" => {\n    phaseNumber,\n    phaseName,\n    oneLiner,\n    body,\n    aiRole,\n    humanResponsibility,\n    deliverables,\n    duration\n  },\n  _type == \"metaBlock\" => {\n    heading,\n    items[] {\n      _key,\n      label,\n      value,\n      \"href\": href {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n  _type == \"artifactGalleryBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n      title,\n      caption\n    },\n    layoutVariant\n  },\n  _type == \"metricsStripBlock\" => {\n    preClaim,\n    heading,\n    \"metrics\": metrics[] {\n  label,\n  value,\n  source,\n  verifiedByAlex\n},\n    sourceNote\n  },\n  _type == \"nextCaseBlock\" => {\n    preClaim,\n    heading,\n    \"recommendedCase\": recommendedCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    },\n    recommendationReason,\n    \"alternativeCase\": alternativeCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    }\n  },\n  _type == \"ndaExplainerBlock\" => {\n    preClaim,\n    heading,\n    body,\n    expectedReleaseDate,\n    contactCta {\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Forms + utility \u2500\u2500\u2500\n  _type == \"contactFormBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    topicOptions,\n    requireCompany,\n    submitLabel,\n    successMessage,\n    errorMessage\n  },\n  _type == \"newsletterFormBlock\" => {\n    preClaim,\n    overrideIntro,\n    overrideHelperLine,\n    source\n  },\n  _type == \"faqBlock\" => {\n    preClaim,\n    heading,\n    items[] {\n      _key,\n      question,\n      answer\n    },\n    enableJsonLd\n  },\n  _type == \"directChannelsBlock\" => {\n    preClaim,\n    heading,\n    channels[] {\n      _key,\n      kind,\n      label,\n      value,\n      helperLine\n    },\n    layoutVariant\n  },\n  _type == \"expectationStepsBlock\" => {\n    overrideHeading,\n    overrideSteps[] {\n      _key,\n      stepNumber,\n      label,\n      description\n    }\n  },\n  _type == \"calloutBlock\" => {\n    kind,\n    body,\n    attribution\n  },\n  _type == \"tagStripBlock\" => {\n    preClaim,\n    tags,\n    showAsLinks\n  },\n  _type == \"preClaimBlock\" => {\n    text,\n    showThinkingRing\n  },\n\n  // \u2500\u2500\u2500 Legacy template blocks (backwards-compat) \u2500\u2500\u2500\n  _type == \"heroBlock\" => {\n    heading, subheading,\n    mediaType, videoUrl, overlay,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    \"posterImage\": posterImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"textBlock\" => {\n    heading, body, maxWidth, dividerLine, backgroundStyle\n  },\n  _type == \"imageBlock\" => {\n    layout, caption,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"ctaBlock\" => {\n    heading, description, contactName, contactPhone, contactEmail,\n    buttonLabel,\n    \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    backgroundStyle,\n    \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"contactBlock\" => {\n    heading, description[], showContactInfo, ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"officeImage\": officeImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  }\n}\n  }\n": PAGE_BY_SLUG_QUERYResult;
     "\n  *[_type == \"notFoundPage\" && _id == \"notFoundPage\"][0] {\n    heading,\n    body[],\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n}\n  }\n": NOT_FOUND_PAGE_QUERYResult;
     "\n  *[_type == \"errorPage\" && _id == \"errorPage\"][0] {\n    heading,\n    body[],\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n}\n  }\n": ERROR_PAGE_QUERYResult;
     "\n  *[_type == \"offlinePage\" && _id == \"offlinePage\"][0] {\n    heading,\n    body[],\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n}\n  }\n": OFFLINE_PAGE_QUERYResult;
     "\n  *[_type == \"thankYouPage\" && _id == \"thankYouPage\"][0] {\n    heading,\n    body[],\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n}\n  }\n": THANK_YOU_PAGE_QUERYResult;
     "\n  *[_type == \"case\" && status == \"live\" && ($layer == \"all\" || layer == $layer)] | order(period.start desc) {\n  _id,\n  _updatedAt,\n  title,\n  \"slug\": slug.current,\n  layer,\n  ndaStatus,\n  status,\n  client,\n  \"period\": period {\n  start,\n  end,\n  isOngoing\n},\n  preClaim,\n  subtitle,\n  tags,\n  stack,\n  \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n  liveUrl\n}\n": CASES_BY_LAYER_QUERYResult;
-    "\n  *[_type == \"case\" && slug.current == $slug][0] {\n  _id,\n  _updatedAt,\n  language,\n  title,\n  \"slug\": slug.current,\n  layer,\n  ndaStatus,\n  status,\n  client,\n  role,\n  \"period\": period {\n  start,\n  end,\n  isOngoing\n},\n  preClaim,\n  subtitle,\n  tags,\n  stack,\n  liveUrl,\n  \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n  \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n},\n  content[enabled != false] {\n  _type,\n  _key,\n  enabled,\n  anchorId,\n  tone,\n\n  // \u2500\u2500\u2500 Hero's \u2500\u2500\u2500\n  _type == \"heroHomeBlock\" => {\n    preClaim,\n    headlineParts,\n    subClaim,\n    bodyText,\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    },\n    showThinkingRing\n  },\n  _type == \"heroStandardBlock\" => {\n    preClaim,\n    heading,\n    subheading,\n    layoutVariant,\n    \"artifact\": artifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Sections \u2500\u2500\u2500\n  _type == \"pitchOpeningBlock\" => {\n    preClaim,\n    body,\n    maxWidth\n  },\n  _type == \"serviceTriptychBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    tiles[] {\n      _key,\n      title,\n      tagline,\n      description,\n      ctaLabel,\n      \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      icon\n    }\n  },\n  _type == \"quoteClusterBlock\" => {\n    preClaim,\n    heading,\n    \"primaryQuote\": primaryQuote {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n},\n    \"secondaryQuotes\": secondaryQuotes[] {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n  },\n  _type == \"ctaRefreinBlock\" => {\n    pageKey,\n    overrideStatement,\n    overrideButtonLabel,\n    \"overrideButtonLink\": overrideButtonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"heritageStripBlock\" => {\n    preClaim,\n    heading,\n    items\n  },\n  _type == \"projectGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    layerFilter,\n    maxItems,\n    showFilterChips,\n    cardLayoutVariant\n  },\n  _type == \"essayGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    categoryFilter,\n    maxItems,\n    showFeaturedFirst,\n    showFilterChips\n  },\n  _type == \"teamGridBlock\" => {\n    preClaim,\n    heading,\n    coreOnly,\n    showQuotes\n  },\n  _type == \"timelineBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      year,\n      label,\n      description,\n      highlight\n    },\n    orientation\n  },\n\n  // \u2500\u2500\u2500 Case-detail blocks \u2500\u2500\u2500\n  _type == \"decisionBlock\" => {\n    preClaim,\n    question,\n    options[] {\n      _key,\n      label,\n      pros,\n      cons,\n      chosen\n    },\n    conclusion\n  },\n  _type == \"phaseBlock\" => {\n    phaseNumber,\n    phaseName,\n    oneLiner,\n    body,\n    aiRole,\n    humanResponsibility,\n    deliverables,\n    duration\n  },\n  _type == \"metaBlock\" => {\n    heading,\n    items[] {\n      _key,\n      label,\n      value,\n      \"href\": href {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n  _type == \"artifactGalleryBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n      title,\n      caption\n    },\n    layoutVariant\n  },\n  _type == \"metricsStripBlock\" => {\n    preClaim,\n    heading,\n    \"metrics\": metrics[] {\n  label,\n  value,\n  source,\n  verifiedByAlex\n},\n    sourceNote\n  },\n  _type == \"nextCaseBlock\" => {\n    preClaim,\n    heading,\n    \"recommendedCase\": recommendedCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    },\n    recommendationReason,\n    \"alternativeCase\": alternativeCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    }\n  },\n  _type == \"ndaExplainerBlock\" => {\n    preClaim,\n    heading,\n    body,\n    expectedReleaseDate,\n    contactCta {\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Forms + utility \u2500\u2500\u2500\n  _type == \"contactFormBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    topicOptions,\n    requireCompany,\n    submitLabel,\n    successMessage,\n    errorMessage\n  },\n  _type == \"newsletterFormBlock\" => {\n    preClaim,\n    overrideIntro,\n    overrideHelperLine,\n    source\n  },\n  _type == \"faqBlock\" => {\n    preClaim,\n    heading,\n    items[] {\n      _key,\n      question,\n      answer\n    },\n    enableJsonLd\n  },\n  _type == \"directChannelsBlock\" => {\n    preClaim,\n    heading,\n    channels[] {\n      _key,\n      kind,\n      label,\n      value,\n      helperLine\n    },\n    layoutVariant\n  },\n  _type == \"expectationStepsBlock\" => {\n    overrideHeading,\n    overrideSteps[] {\n      _key,\n      stepNumber,\n      label,\n      description\n    }\n  },\n  _type == \"calloutBlock\" => {\n    kind,\n    body,\n    attribution\n  },\n  _type == \"tagStripBlock\" => {\n    preClaim,\n    tags,\n    showAsLinks\n  },\n  _type == \"preClaimBlock\" => {\n    text,\n    showThinkingRing\n  },\n\n  // \u2500\u2500\u2500 Legacy template blocks (backwards-compat) \u2500\u2500\u2500\n  _type == \"heroBlock\" => {\n    heading, subheading,\n    mediaType, videoUrl, overlay,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    \"posterImage\": posterImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"textBlock\" => {\n    heading, body, maxWidth, dividerLine, backgroundStyle\n  },\n  _type == \"imageBlock\" => {\n    layout, caption,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"ctaBlock\" => {\n    heading, description, contactName, contactPhone, contactEmail,\n    buttonLabel,\n    \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    backgroundStyle,\n    \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"contactBlock\" => {\n    heading, description[], showContactInfo, ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"officeImage\": officeImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  }\n}\n}\n": CASE_BY_SLUG_QUERYResult;
+    "\n  *[_type == \"case\" && slug.current == $slug][0] {\n  _id,\n  _updatedAt,\n  language,\n  title,\n  \"slug\": slug.current,\n  layer,\n  ndaStatus,\n  status,\n  client,\n  role,\n  \"period\": period {\n  start,\n  end,\n  isOngoing\n},\n  preClaim,\n  subtitle,\n  tags,\n  stack,\n  liveUrl,\n  \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n  \"seo\": seo {\n  title,\n  description,\n  \"ogImageUrl\": ogImage.asset->url,\n  ogTitleMode,\n  ogTitle,\n  ogDescriptionMode,\n  ogDescription,\n  canonicalUrl,\n  noIndex,\n  structuredData\n},\n  content[enabled != false] {\n  _type,\n  _key,\n  enabled,\n  anchorId,\n  tone,\n\n  // \u2500\u2500\u2500 Hero's \u2500\u2500\u2500\n  _type == \"heroHomeBlock\" => {\n    preClaim,\n    headlineParts,\n    subClaim,\n    bodyText,\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    },\n    showThinkingRing\n  },\n  _type == \"heroStandardBlock\" => {\n    preClaim,\n    heading,\n    subheading,\n    layoutVariant,\n    \"artifact\": artifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctas[] {\n      _key,\n      label,\n      variant,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Sections \u2500\u2500\u2500\n  _type == \"pitchOpeningBlock\" => {\n    preClaim,\n    heading,\n    body,\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    maxWidth\n  },\n  _type == \"principlesBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    principles[] {\n      _key,\n      title,\n      description\n    },\n    layoutVariant\n  },\n  _type == \"serviceTriptychBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    tiles[] {\n      _key,\n      title,\n      tagline,\n      description,\n      ctaLabel,\n      \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n      icon\n    }\n  },\n  _type == \"quoteClusterBlock\" => {\n    preClaim,\n    heading,\n    \"primaryQuote\": primaryQuote {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n},\n    \"secondaryQuotes\": secondaryQuotes[] {\n  quote,\n  name,\n  role,\n  company,\n  \"portrait\": portrait {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n  },\n  _type == \"ctaRefreinBlock\" => {\n    pageKey,\n    overrideStatement,\n    overrideButtonLabel,\n    \"overrideButtonLink\": overrideButtonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"heritageStripBlock\" => {\n    preClaim,\n    heading,\n    items\n  },\n  _type == \"projectGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    layerFilter,\n    maxItems,\n    showFilterChips,\n    cardLayoutVariant\n  },\n  _type == \"essayGridBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    categoryFilter,\n    maxItems,\n    showFeaturedFirst,\n    showFilterChips\n  },\n  _type == \"teamGridBlock\" => {\n    preClaim,\n    heading,\n    coreOnly,\n    showQuotes\n  },\n  _type == \"timelineBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      year,\n      label,\n      description,\n      highlight\n    },\n    orientation\n  },\n\n  // \u2500\u2500\u2500 Case-detail blocks \u2500\u2500\u2500\n  _type == \"decisionBlock\" => {\n    preClaim,\n    question,\n    options[] {\n      _key,\n      label,\n      pros,\n      cons,\n      chosen\n    },\n    conclusion\n  },\n  _type == \"phaseBlock\" => {\n    phaseNumber,\n    phaseName,\n    oneLiner,\n    body,\n    aiRole,\n    humanResponsibility,\n    deliverables,\n    duration\n  },\n  _type == \"metaBlock\" => {\n    heading,\n    items[] {\n      _key,\n      label,\n      value,\n      \"href\": href {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n  _type == \"artifactGalleryBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    items[] {\n      _key,\n      \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n      title,\n      caption\n    },\n    layoutVariant\n  },\n  _type == \"metricsStripBlock\" => {\n    preClaim,\n    heading,\n    \"metrics\": metrics[] {\n  label,\n  value,\n  source,\n  verifiedByAlex\n},\n    sourceNote\n  },\n  _type == \"nextCaseBlock\" => {\n    preClaim,\n    heading,\n    \"recommendedCase\": recommendedCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    },\n    recommendationReason,\n    \"alternativeCase\": alternativeCase->{\n      _id, title, \"slug\": slug.current, layer, subtitle,\n      \"heroArtifact\": heroArtifact {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n    }\n  },\n  _type == \"ndaExplainerBlock\" => {\n    preClaim,\n    heading,\n    body,\n    expectedReleaseDate,\n    contactCta {\n      label,\n      \"link\": link {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n    }\n  },\n\n  // \u2500\u2500\u2500 Forms + utility \u2500\u2500\u2500\n  _type == \"contactFormBlock\" => {\n    preClaim,\n    heading,\n    intro,\n    topicOptions,\n    requireCompany,\n    submitLabel,\n    successMessage,\n    errorMessage\n  },\n  _type == \"newsletterFormBlock\" => {\n    preClaim,\n    overrideIntro,\n    overrideHelperLine,\n    source\n  },\n  _type == \"faqBlock\" => {\n    preClaim,\n    heading,\n    items[] {\n      _key,\n      question,\n      answer\n    },\n    enableJsonLd\n  },\n  _type == \"directChannelsBlock\" => {\n    preClaim,\n    heading,\n    channels[] {\n      _key,\n      kind,\n      label,\n      value,\n      helperLine\n    },\n    layoutVariant\n  },\n  _type == \"expectationStepsBlock\" => {\n    overrideHeading,\n    overrideSteps[] {\n      _key,\n      stepNumber,\n      label,\n      description\n    }\n  },\n  _type == \"calloutBlock\" => {\n    kind,\n    body,\n    attribution\n  },\n  _type == \"tagStripBlock\" => {\n    preClaim,\n    tags,\n    showAsLinks\n  },\n  _type == \"preClaimBlock\" => {\n    text,\n    showThinkingRing\n  },\n\n  // \u2500\u2500\u2500 Legacy template blocks (backwards-compat) \u2500\u2500\u2500\n  _type == \"heroBlock\" => {\n    heading, subheading,\n    mediaType, videoUrl, overlay,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    \"posterImage\": posterImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n},\n    ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n}\n  },\n  _type == \"textBlock\" => {\n    heading, body, maxWidth, dividerLine, backgroundStyle\n  },\n  _type == \"imageBlock\" => {\n    layout, caption,\n    \"image\": image {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"ctaBlock\" => {\n    heading, description, contactName, contactPhone, contactEmail,\n    buttonLabel,\n    \"buttonLink\": buttonLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    backgroundStyle,\n    \"photo\": photo {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  },\n  _type == \"contactBlock\" => {\n    heading, description[], showContactInfo, ctaLabel,\n    \"ctaLink\": ctaLink {\n  linkKind,\n  openInNewTab,\n  externalUrl,\n  anchorId,\n  \"internalPage\": internalPage->{ _type, \"slug\": slug.current },\n  \"pageSectionPage\": pageSectionPage->{ _type, \"slug\": slug.current }\n},\n    \"officeImage\": officeImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n  }\n}\n}\n": CASE_BY_SLUG_QUERYResult;
     "\n  *[_type == \"case\" && status == \"live\" && defined(slug.current)] {\n    \"slug\": slug.current\n  }\n": ALL_CASE_SLUGS_QUERYResult;
     "\n  *[_type == \"essay\" && status == \"live\" && ($category == \"all\" || category == $category)] | order(publishedAt desc) {\n  _id,\n  _updatedAt,\n  title,\n  \"slug\": slug.current,\n  category,\n  featured,\n  publishedAt,\n  readTime,\n  preClaim,\n  dek,\n  \"author\": author->{ name, \"slug\": slug.current, role },\n  \"featuredImage\": featuredImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n": ESSAYS_QUERYResult;
     "\n  *[_type == \"essay\" && status == \"live\" && featured == true] | order(publishedAt desc) {\n  _id,\n  _updatedAt,\n  title,\n  \"slug\": slug.current,\n  category,\n  featured,\n  publishedAt,\n  readTime,\n  preClaim,\n  dek,\n  \"author\": author->{ name, \"slug\": slug.current, role },\n  \"featuredImage\": featuredImage {\n  asset->{ _id, url, metadata { lqip, dimensions { width, height } } },\n  alt,\n  caption,\n  hotspot,\n  crop\n}\n}\n": FEATURED_ESSAYS_QUERYResult;

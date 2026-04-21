@@ -1,4 +1,13 @@
 ---
+/**
+ * CtaSection — legacy template-block.
+ *
+ * NOTE: Add the Code sites gebruiken `CtaRefreinSection` met defaults+override
+ * pattern. Dit component blijft voor backwards-compat (`ctaBlock` schema).
+ *
+ * Universal Rule #1: geen hardcoded visible strings. Render niets als Sanity
+ * geen content levert — geen emergency-fallback meer.
+ */
 import Section from "../layout/Section.astro";
 import CmsLink from "../content/CmsLink.astro";
 import SanityImage from "../content/SanityImage.astro";
@@ -20,32 +29,38 @@ interface Props {
 const defaults = await getComponentDefaults();
 const d = defaults?.cta;
 
-// 3-layer fallback: props → componentDefaults → emergency fallback
-const heading = Astro.props.heading ?? d?.heading ?? "Get in touch";
-const description = Astro.props.description ?? d?.description;
-const contactName = Astro.props.contactName ?? d?.contactName;
-const contactPhone = Astro.props.contactPhone ?? d?.contactPhone;
-const contactEmail = Astro.props.contactEmail ?? d?.contactEmail;
-const buttonLabel = Astro.props.buttonLabel ?? d?.buttonLabel ?? "Contact";
-const buttonLink = Astro.props.buttonLink ?? d?.buttonLink ?? "/contact";
+// 2-layer fallback: props → componentDefaults. Geen hardcoded fallback (Rule #1).
+const heading = Astro.props.heading ?? d?.heading ?? null;
+const description = Astro.props.description ?? d?.description ?? null;
+const contactName = Astro.props.contactName ?? d?.contactName ?? null;
+const contactPhone = Astro.props.contactPhone ?? d?.contactPhone ?? null;
+const contactEmail = Astro.props.contactEmail ?? d?.contactEmail ?? null;
+const buttonLabel = Astro.props.buttonLabel ?? d?.buttonLabel ?? null;
+const buttonLink = Astro.props.buttonLink ?? d?.buttonLink ?? null;
 const photo = Astro.props.photo ?? d?.photo;
 const backgroundStyle = Astro.props.backgroundStyle;
+
+const hasContent = Boolean(heading || description || contactEmail || buttonLabel);
 ---
 
-<Section class={`cta-section ${backgroundStyle ? `bg-${backgroundStyle}` : ''}`}>
-  <div class="cta_wrapper">
-    <div class="cta_content">
-      <h2>{heading}</h2>
-      {description && <p>{description}</p>}
-      {contactName && <p class="cta_contact-name">{contactName}</p>}
-      {contactPhone && <a href={`tel:${contactPhone}`}>{contactPhone}</a>}
-      {contactEmail && <a href={`mailto:${contactEmail}`}>{contactEmail}</a>}
-      <CmsLink link={buttonLink} class="button">{buttonLabel}</CmsLink>
-    </div>
-    {photo?.asset && (
-      <div class="cta_photo-wrapper">
-        <SanityImage image={photo} width={400} class="cta_photo" />
+{hasContent && (
+  <Section class={`cta-section ${backgroundStyle ? `bg-${backgroundStyle}` : ''}`}>
+    <div class="cta_wrapper">
+      <div class="cta_content">
+        {heading && <h2>{heading}</h2>}
+        {description && <p>{description}</p>}
+        {contactName && <p class="cta_contact-name">{contactName}</p>}
+        {contactPhone && <a href={`tel:${contactPhone}`}>{contactPhone}</a>}
+        {contactEmail && <a href={`mailto:${contactEmail}`}>{contactEmail}</a>}
+        {buttonLabel && buttonLink && (
+          <CmsLink link={buttonLink} class="button">{buttonLabel}</CmsLink>
+        )}
       </div>
-    )}
-  </div>
-</Section>
+      {photo?.asset && (
+        <div class="cta_photo-wrapper">
+          <SanityImage image={photo} width={400} class="cta_photo" />
+        </div>
+      )}
+    </div>
+  </Section>
+)}

@@ -228,8 +228,22 @@ const PAGE_BUILDER_FRAGMENT = /* groq */ `content[enabled != false] {
   // ─── Sections ───
   _type == "pitchOpeningBlock" => {
     preClaim,
+    heading,
     body,
+    ctaLabel,
+    "ctaLink": ctaLink ${CMS_LINK_FRAGMENT},
     maxWidth
+  },
+  _type == "principlesBlock" => {
+    preClaim,
+    heading,
+    intro,
+    principles[] {
+      _key,
+      title,
+      description
+    },
+    layoutVariant
   },
   _type == "serviceTriptychBlock" => {
     preClaim,

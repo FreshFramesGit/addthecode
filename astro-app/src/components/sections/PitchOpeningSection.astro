@@ -1,28 +1,39 @@
 ---
 /**
- * PitchOpeningSection — 1-2 alinea's positionering-tekst.
+ * PitchOpeningSection — 1-2 alinea's positionering-tekst, optioneel met CTA.
  *
- * Spec: docs/07a §2, docs/08 §3 (pitch-opening pattern).
+ * Spec: docs/07a §2 (home pitch), docs/07a §7 (approach-teaser-pattern),
+ *       docs/07e/f/g §2 (services intro), docs/08 §3 (pitch-opening pattern).
  * Schema: pitchOpeningBlock.
+ *
+ * CTA-pattern: `ctaLabel` + `ctaLink` zorgen samen voor een tertiary-link
+ * onder de body. Voor home §7 (approach-teaser) wordt het zo `Lees onze
+ * werkwijze →` met internalPage-ref naar approachPage.
  */
 
 import Section from '../layout/Section.astro'
 import PreClaim from '../content/PreClaim.astro'
 import RichText from '../content/RichText.astro'
+import CmsLink from '../content/CmsLink.astro'
+import ThinkingRing from '../media/ThinkingRing.astro'
 
 interface Props {
   enabled?: boolean
   preClaim?: string | null
+  heading?: string | null
   body?: any
+  ctaLabel?: string | null
+  ctaLink?: any
   maxWidth?: 'small' | 'main' | 'full' | null
   tone?: 'paper' | 'ink' | 'claude' | null
   anchorId?: string | null
 }
 
-const { preClaim, body, maxWidth, tone, anchorId } = Astro.props
+const { preClaim, heading, body, ctaLabel, ctaLink, maxWidth, tone, anchorId } = Astro.props
 
 const safeTone = tone ?? 'paper'
 const safeMaxWidth = maxWidth ?? 'main'
+const showCta = Boolean(ctaLabel && ctaLink)
 ---
 
 <Section
@@ -34,16 +45,46 @@ const safeMaxWidth = maxWidth ?? 'main'
 >
   {preClaim && <PreClaim text={preClaim} class="pitch-opening__pre" />}
 
+  {heading && <h2 class="pitch-opening__heading">{heading}</h2>}
+
   {body && (
     <div class="pitch-opening__body">
       <RichText value={body} />
     </div>
+  )}
+
+  {showCta && (
+    <p class="pitch-opening__cta-wrapper">
+      <CmsLink link={ctaLink} class="pitch-opening__cta">
+        <ThinkingRing
+          size="inline"
+          tone="claude"
+          motion="hover-rotate"
+          class="pitch-opening__cta-ring"
+        />
+        <span>{ctaLabel}</span>
+        <span class="pitch-opening__cta-arrow" aria-hidden="true">→</span>
+      </CmsLink>
+    </p>
   )}
 </Section>
 
 <style>
   .pitch-opening__pre {
     margin-bottom: var(--sp-4);
+  }
+
+  .pitch-opening__heading {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h2);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    margin: 0 0 var(--sp-4);
+    text-wrap: balance;
+  }
+  :global(.tone-ink) .pitch-opening__heading {
+    color: var(--fg-on-dark);
   }
 
   .pitch-opening__body :global(p) {
@@ -67,5 +108,36 @@ const safeMaxWidth = maxWidth ?? 'main'
 
   :global(.tone-ink) .pitch-opening__body :global(p) {
     color: var(--fg-on-dark);
+  }
+
+  /* CTA — tertiary-link styling */
+  .pitch-opening__cta-wrapper {
+    margin: var(--sp-5) 0 0;
+  }
+
+  .pitch-opening__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: var(--link-hover);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    text-decoration: none;
+    padding: var(--sp-2) 0;
+    transition: gap var(--dur-fast) var(--ease-out);
+  }
+  .pitch-opening__cta:hover {
+    gap: var(--sp-3);
+    text-decoration: none;
+  }
+  :global(.tone-ink) .pitch-opening__cta {
+    color: var(--fg-on-dark);
+  }
+
+  .pitch-opening__cta-arrow {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .pitch-opening__cta:hover .pitch-opening__cta-arrow {
+    transform: translateX(4px);
   }
 </style>

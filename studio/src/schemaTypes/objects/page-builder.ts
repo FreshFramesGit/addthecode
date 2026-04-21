@@ -31,6 +31,7 @@ export const pageBuilder = defineType({
     defineArrayMember({ type: 'essayGridBlock' }),
     defineArrayMember({ type: 'teamGridBlock' }),
     defineArrayMember({ type: 'timelineBlock' }),
+    defineArrayMember({ type: 'principlesBlock' }),
 
     // ─── Case-detail blocks ───
     defineArrayMember({ type: 'decisionBlock' }),

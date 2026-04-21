@@ -26,6 +26,7 @@ import { projectGridBlock } from './blocks/project-grid-block'
 import { essayGridBlock } from './blocks/essay-grid-block'
 import { teamGridBlock } from './blocks/team-grid-block'
 import { timelineBlock } from './blocks/timeline-block'
+import { principlesBlock } from './blocks/principles-block'
 
 // Blocks — Case-detail
 import { decisionBlock } from './blocks/decision-block'
@@ -115,6 +116,7 @@ export const schemaTypes = [
   essayGridBlock,
   teamGridBlock,
   timelineBlock,
+  principlesBlock,
 
   // ─── Blocks (Case-detail) ───
   decisionBlock,

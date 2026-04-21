@@ -1,8 +1,24 @@
 type RouteDocumentType =
+  // Template singletons
   | "homePage"
   | "page"
   | "thankYouPage"
-  | "notFoundPage";
+  | "notFoundPage"
+  // Add the Code pagina-singletons
+  | "workIndexPage"
+  | "teamPage"
+  | "approachPage"
+  | "serviceDesignPage"
+  | "serviceBuildPage"
+  | "serviceAutomatePage"
+  | "academyIndexPage"
+  | "contactPage"
+  // Add the Code utility singletons
+  | "errorPage"
+  | "offlinePage"
+  // Add the Code collections (slug-driven)
+  | "case"
+  | "essay";
 
 export interface CmsLinkTarget {
   _type?: RouteDocumentType | string | null;
@@ -59,6 +75,7 @@ function resolveDocumentPath(target: CmsLinkTarget | null | undefined): string |
   if (target.href) return normalizeInternalPath(target.href);
 
   switch (target._type) {
+    // Template singletons
     case "homePage":
       return "/";
     case "page":
@@ -67,6 +84,37 @@ function resolveDocumentPath(target: CmsLinkTarget | null | undefined): string |
       return "/thank-you";
     case "notFoundPage":
       return "/404";
+
+    // Add the Code pagina-singletons
+    case "workIndexPage":
+      return "/work";
+    case "teamPage":
+      return "/team";
+    case "approachPage":
+      return "/approach";
+    case "serviceDesignPage":
+      return "/services/design";
+    case "serviceBuildPage":
+      return "/services/build";
+    case "serviceAutomatePage":
+      return "/services/automate";
+    case "academyIndexPage":
+      return "/academy";
+    case "contactPage":
+      return "/contact";
+
+    // Add the Code utility singletons
+    case "errorPage":
+      return "/500";
+    case "offlinePage":
+      return "/offline";
+
+    // Add the Code collections (require slug)
+    case "case":
+      return target.slug ? `/work/${target.slug}` : null;
+    case "essay":
+      return target.slug ? `/academy/${target.slug}` : null;
+
     default:
       return null;
   }
