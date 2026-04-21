@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Section from '../components/layout/Section.astro'
+import RichText from '../components/content/RichText.astro'
+import CmsLink from '../components/content/CmsLink.astro'
+import { getOfflinePage } from '../utils/sanity'
+
+const page = await getOfflinePage()
+
+const heading = page?.heading ?? 'Geen verbinding'
+const body = page?.body
+const ctaLabel = page?.ctaLabel ?? 'Probeer opnieuw'
+const ctaLink = page?.ctaLink ?? '/'
+const seo = page?.seo
+---
+
+<Layout title={heading} seo={seo} noindex={true}>
+  <Section padding="page-top" container="main">
+    <div class="offline-page">
+      <h1>{heading}</h1>
+      {body ? (
+        <RichText value={body} />
+      ) : (
+        <p>Je lijkt offline. Zodra de verbinding terug is, kun je doorklikken.</p>
+      )}
+      <div class="offline-page__cta">
+        <CmsLink link={ctaLink} class="offline-page__button">{ctaLabel}</CmsLink>
+      </div>
+    </div>
+  </Section>
+</Layout>
+
+<style>
+  .offline-page {
+    text-align: center;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sp-4);
+  }
+  .offline-page h1 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-display);
+    margin: 0;
+  }
+  .offline-page__cta { margin-top: var(--sp-4); }
+  .offline-page__button {
+    display: inline-block;
+    background: var(--atc-ink);
+    color: var(--atc-paper);
+    padding: var(--sp-3) var(--sp-5);
+    border-radius: var(--radius-main);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .offline-page__button:hover {
+    background: var(--atc-claude);
+  }
+</style>

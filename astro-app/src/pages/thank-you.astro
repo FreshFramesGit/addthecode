@@ -7,9 +7,9 @@ import { getThankYouPage } from "../utils/sanity";
 
 const page = await getThankYouPage();
 
-const heading = page?.heading ?? "Thank you";
+const heading = page?.heading ?? "Bedankt — bericht ontvangen";
 const body = page?.body;
-const ctaLabel = page?.ctaLabel ?? "Back to home";
+const ctaLabel = page?.ctaLabel ?? "Terug naar home";
 const ctaLink = page?.ctaLink ?? "/";
 const seo = page?.seo;
 ---

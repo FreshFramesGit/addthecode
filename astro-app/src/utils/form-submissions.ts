@@ -168,6 +168,104 @@ export async function createFormSubmission(document: Record<string, any>) {
   });
 }
 
+/**
+ * Add the Code — inquiry (/contact form submission).
+ * Spec: docs/07j §2. Fields read-only in Studio, status + notes editable.
+ */
+export async function createInquiry(fields: {
+  name?: string;
+  email?: string;
+  company?: string;
+  topic?: string;
+  message?: string;
+  sourcePage?: string;
+}) {
+  const client = getWriteClient();
+  return client.create({
+    _type: "inquiry",
+    status: "new",
+    receivedAt: new Date().toISOString(),
+    ...fields,
+  });
+}
+
+/**
+ * Add the Code — newsletter subscription.
+ * Geschreven bij submit. Brevo-sync gebeurt apart (zie syncToBrevo).
+ */
+export async function createNewsletterSubscription(fields: {
+  email: string;
+  source: "footer" | "academy" | "other";
+}) {
+  const client = getWriteClient();
+  return client.create({
+    _type: "newsletterSubscription",
+    active: true,
+    subscribedAt: new Date().toISOString(),
+    brevoSyncStatus: "pending",
+    ...fields,
+  });
+}
+
+/**
+ * Brevo sync — POST naar Brevo contacts API.
+ * Vereist BREVO_API_KEY env-var. Faalt graceful: retourneert null en
+ * laat caller brevoSyncStatus op 'failed' zetten.
+ *
+ * Docs: https://developers.brevo.com/reference/createcontact
+ */
+export async function syncToBrevo(email: string, listId?: number | null) {
+  const apiKey = env("BREVO_API_KEY");
+  if (!apiKey) return { ok: false, reason: "no-api-key" as const };
+
+  try {
+    const response = await fetch("https://api.brevo.com/v3/contacts", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+        "api-key": apiKey,
+      },
+      body: JSON.stringify({
+        email,
+        listIds: listId ? [listId] : [],
+        updateEnabled: true,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => "");
+      return { ok: false, reason: "api-error" as const, detail: errorBody };
+    }
+
+    const result = (await response.json().catch(() => null)) as { id?: number } | null;
+    return { ok: true, brevoId: result?.id?.toString() ?? null };
+  } catch (error) {
+    console.error("Brevo sync failed:", error);
+    return { ok: false, reason: "network-error" as const };
+  }
+}
+
+/**
+ * Update een newsletterSubscription met Brevo sync-resultaat.
+ */
+export async function updateNewsletterBrevoStatus(
+  subscriptionId: string,
+  status: "synced" | "failed",
+  brevoId?: string | null,
+  errorMessage?: string,
+) {
+  const client = getWriteClient();
+  const patch: Record<string, any> = {
+    brevoSyncStatus: status,
+    lastSyncAttemptAt: new Date().toISOString(),
+  };
+  if (brevoId) patch.brevoSubscriberId = brevoId;
+  if (errorMessage) patch.syncErrorMessage = errorMessage;
+
+  return client.patch(subscriptionId).set(patch).commit();
+}
+
 export function buildAttribution(body: Record<string, string>) {
   return {
     source: sanitize(body.utm_source),

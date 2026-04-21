@@ -1,0 +1,130 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import HeroEssaySection from '../../components/sections/HeroEssaySection.astro'
+import Section from '../../components/layout/Section.astro'
+import RichText from '../../components/content/RichText.astro'
+import EssayCard from '../../components/cards/EssayCard.astro'
+import CtaRefreinSection from '../../components/sections/CtaRefreinSection.astro'
+import {
+  getEssayBySlug,
+  getAllEssaySlugs,
+  getSiteSettings,
+} from '../../utils/sanity'
+
+export async function getStaticPaths() {
+  const slugs = await getAllEssaySlugs()
+  return slugs.map((s: any) => ({ params: { slug: s.slug } }))
+}
+
+export const prerender = false
+
+const { slug } = Astro.params
+const essay = slug ? await getEssayBySlug(slug) : null
+const settings = await getSiteSettings()
+
+if (!essay) {
+  return Astro.redirect('/404')
+}
+
+const seo = essay?.seo ?? {}
+const body = essay?.body
+const related = essay?.relatedEssays ?? []
+---
+
+<Layout
+  seo={seo}
+  title={essay?.title ?? undefined}
+  description={essay?.dek ?? undefined}
+  siteName={settings?.siteName}
+  ogImage={seo?.ogImageUrl ?? settings?.defaultSeo?.ogImageUrl}
+>
+  <HeroEssaySection essay={essay} />
+
+  {body && (
+    <Section tone="paper" padding="main" container="small" class="essay-body">
+      <RichText value={body} />
+    </Section>
+  )}
+
+  {related.length > 0 && (
+    <Section tone="paper" padding="main" container="main" class="essay-related">
+      <h2 class="essay-related__heading">Lees ook</h2>
+      <div class="essay-related__grid">
+        {related.slice(0, 3).map((r: any) => (
+          <EssayCard essay={r} variant="standard" />
+        ))}
+      </div>
+    </Section>
+  )}
+
+  <CtaRefreinSection pageKey="essay-detail" tone="claude" />
+</Layout>
+
+<style>
+  .essay-body :global(h2) {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h2);
+    margin: var(--sp-6) 0 var(--sp-3);
+  }
+
+  .essay-body :global(h3) {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    margin: var(--sp-5) 0 var(--sp-3);
+  }
+
+  .essay-body :global(p) {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    margin: 0 0 var(--sp-4);
+    text-wrap: pretty;
+  }
+
+  .essay-body :global(ul),
+  .essay-body :global(ol) {
+    margin: 0 0 var(--sp-4);
+    padding-left: var(--sp-5);
+  }
+
+  .essay-body :global(li) {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    margin-bottom: var(--sp-2);
+  }
+
+  .essay-body :global(blockquote) {
+    margin: var(--sp-5) 0;
+    padding-left: var(--sp-5);
+    border-left: 3px solid var(--atc-claude);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-lead);
+    color: var(--fg-secondary);
+  }
+
+  .essay-related__heading {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h2);
+    margin: 0 0 var(--sp-5);
+  }
+
+  .essay-related__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
+  }
+
+  @media (max-width: 991px) {
+    .essay-related__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .essay-related__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

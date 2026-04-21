@@ -18,7 +18,7 @@ const blocks = page?.content ?? [];
 >
   <Fragment slot="head">
     <JsonLd
-      type="LocalBusiness"
+      type="Organization"
       data={seo?.structuredData?.mode === "custom"
         ? JSON.parse(seo.structuredData.customJsonLd || "{}")
         : undefined}

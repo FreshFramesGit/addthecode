@@ -196,25 +196,28 @@ const footerColumns = footerNav.length
         submit?.setAttribute('disabled', '')
 
         try {
-          // TODO Phase 3: POST naar /api/newsletter-subscribe met JSON body
-          // const res = await fetch('/api/newsletter-subscribe', {
-          //   method: 'POST',
-          //   headers: { 'Content-Type': 'application/json' },
-          //   body: JSON.stringify({ email, source }),
-          // })
-          // if (!res.ok) throw new Error(`HTTP ${res.status}`)
+          const res = await fetch('/api/newsletter-subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, source }),
+          })
 
-          await new Promise((r) => setTimeout(r, 600)) // stub-delay v1.5
+          const result = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null
+
+          if (!res.ok || !result?.ok) {
+            throw new Error(result?.error ?? `HTTP ${res.status}`)
+          }
 
           if (feedback) {
             feedback.textContent =
-              '◌ Ingeschreven (stub — endpoint wordt in Phase 3 actief).'
+              '◌ Ingeschreven. De volgende essay verschijnt binnen ±30 dagen in je inbox.'
             feedback.hidden = false
           }
           form.reset()
         } catch (err) {
           if (feedback) {
-            feedback.textContent =
+            const message = err instanceof Error ? err.message : ''
+            feedback.textContent = message ||
               'Er ging iets mis. Probeer opnieuw of mail naar hello@addthecode.nl.'
             feedback.hidden = false
           }

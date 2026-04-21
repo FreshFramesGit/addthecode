@@ -1,0 +1,186 @@
+---
+/**
+ * HeroEssaySection — hero voor /academy/[slug].
+ *
+ * Spec: docs/07i Deel B §1, docs/08 §2.4.
+ *
+ * Niet in pageBuilder — wordt automatisch geprepended door
+ * /academy/[slug].astro op basis van essay-document velden
+ * (preClaim, title, dek, publishedAt, readTime, author, featuredImage).
+ */
+
+import Section from '../layout/Section.astro'
+import PreClaim from '../content/PreClaim.astro'
+import { urlFor } from '../../utils/sanity'
+
+interface Props {
+  essay: any
+}
+
+const { essay } = Astro.props
+
+const preClaim = essay?.preClaim
+const title = essay?.title
+const dek = essay?.dek
+const category = essay?.category
+const readTime = essay?.readTime
+const publishedAt = essay?.publishedAt
+const author = essay?.author
+const featuredImage = essay?.featuredImage
+
+const heroUrl = featuredImage?.asset?._id
+  ? urlFor(featuredImage).width(1400).format('webp').url()
+  : null
+
+const authorPortraitUrl = author?.portrait?.asset?._id
+  ? urlFor(author.portrait).width(80).height(80).format('webp').url()
+  : null
+
+const dateLabel = publishedAt
+  ? new Date(publishedAt).toLocaleDateString('nl-NL', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null
+---
+
+<Section tone="paper" padding="page-top" container="main" class="hero-essay">
+  <div class="hero-essay__content">
+    {preClaim && <PreClaim text={preClaim} class="hero-essay__pre" />}
+
+    <p class="hero-essay__meta">
+      {category && <span class="hero-essay__category">{category}</span>}
+      {readTime && <span> · {readTime}</span>}
+      {dateLabel && <span> · {dateLabel}</span>}
+    </p>
+
+    {title && <h1 class="hero-essay__title">{title}</h1>}
+
+    {dek && <p class="hero-essay__dek">{dek}</p>}
+
+    {author?.name && (
+      <footer class="hero-essay__author">
+        {authorPortraitUrl && (
+          <img
+            src={authorPortraitUrl}
+            alt={author.portrait?.alt ?? author.name}
+            class="hero-essay__author-portrait"
+            width="48"
+            height="48"
+            loading="lazy"
+          />
+        )}
+        <div class="hero-essay__author-text">
+          <span class="hero-essay__author-name">{author.name}</span>
+          {author.role && <span class="hero-essay__author-role">{author.role}</span>}
+        </div>
+      </footer>
+    )}
+  </div>
+
+  {heroUrl && (
+    <div class="hero-essay__featured">
+      <img
+        src={heroUrl}
+        alt={featuredImage?.alt ?? title ?? ''}
+        class="hero-essay__featured-image"
+        fetchpriority="high"
+      />
+    </div>
+  )}
+</Section>
+
+<style>
+  .hero-essay__content {
+    max-width: 50rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    text-align: left;
+  }
+
+  .hero-essay__meta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .hero-essay__category {
+    color: var(--atc-claude);
+  }
+
+  .hero-essay__title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-display);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .hero-essay__dek {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    color: var(--fg-secondary);
+    max-width: 40rem;
+    margin: 0;
+  }
+
+  .hero-essay__author {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    margin-top: var(--sp-3);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--border-default);
+  }
+
+  .hero-essay__author-portrait {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-round);
+    object-fit: cover;
+    filter: saturate(0.85);
+  }
+
+  .hero-essay__author-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-essay__author-name {
+    font-family: var(--font-body);
+    font-size: var(--fs-body-small);
+    font-weight: 500;
+    color: var(--fg-primary);
+  }
+
+  .hero-essay__author-role {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+  }
+
+  .hero-essay__featured {
+    margin-top: var(--sp-6);
+    max-width: 64rem;
+    margin-inline: auto;
+  }
+
+  .hero-essay__featured-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-radius: var(--radius-main);
+    display: block;
+  }
+</style>

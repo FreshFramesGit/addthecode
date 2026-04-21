@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro'
+import Section from '../components/layout/Section.astro'
+import RichText from '../components/content/RichText.astro'
+import CmsLink from '../components/content/CmsLink.astro'
+import { getErrorPage } from '../utils/sanity'
+
+const page = await getErrorPage()
+
+const heading = page?.heading ?? 'Er ging iets mis aan onze kant'
+const body = page?.body
+const ctaLabel = page?.ctaLabel ?? 'Terug naar home'
+const ctaLink = page?.ctaLink ?? '/'
+const seo = page?.seo
+---
+
+<Layout title={heading} seo={seo} noindex={true}>
+  <Section padding="page-top" container="main">
+    <div class="error-page">
+      <h1>{heading}</h1>
+      {body ? (
+        <RichText value={body} />
+      ) : (
+        <p>
+          Ververs de pagina over een minuut. Blijft het misgaan? Mail ons op
+          <a href="mailto:hello@addthecode.nl">hello@addthecode.nl</a>.
+        </p>
+      )}
+      <div class="error-page__cta">
+        <CmsLink link={ctaLink} class="error-page__button">{ctaLabel}</CmsLink>
+      </div>
+    </div>
+  </Section>
+</Layout>
+
+<style>
+  .error-page {
+    text-align: center;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sp-4);
+  }
+  .error-page h1 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-display);
+    margin: 0;
+  }
+  .error-page__cta { margin-top: var(--sp-4); }
+  .error-page__button {
+    display: inline-block;
+    background: var(--atc-ink);
+    color: var(--atc-paper);
+    padding: var(--sp-3) var(--sp-5);
+    border-radius: var(--radius-main);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .error-page__button:hover {
+    background: var(--atc-claude);
+  }
+</style>

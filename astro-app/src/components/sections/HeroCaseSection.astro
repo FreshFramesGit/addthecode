@@ -1,0 +1,247 @@
+---
+/**
+ * HeroCaseSection — 60/40 split hero voor case-detail.
+ *
+ * Spec: docs/07h §1, docs/08 §2.3.
+ *
+ * Niet in pageBuilder — wordt automatisch geprepended door /work/[slug].astro
+ * op basis van case-document velden (preClaim, subtitle, tags, heroArtifact,
+ * layer, period, client, liveUrl).
+ *
+ * NDA-cases (layer: 'in-flight' && ndaStatus: true) tonen geen client-naam
+ * en hero-image wordt subtiel grayscaled.
+ */
+
+import Section from '../layout/Section.astro'
+import PreClaim from '../content/PreClaim.astro'
+import CmsLink from '../content/CmsLink.astro'
+import { urlFor } from '../../utils/sanity'
+
+interface Props {
+  case: any
+}
+
+const { case: caseDoc } = Astro.props
+
+const preClaim = caseDoc?.preClaim
+const subtitle = caseDoc?.subtitle
+const title = caseDoc?.title
+const tags = caseDoc?.tags ?? []
+const layer = caseDoc?.layer ?? 'launch'
+const ndaStatus = caseDoc?.ndaStatus ?? false
+const client = caseDoc?.client
+const period = caseDoc?.period
+const role = caseDoc?.role
+const stack = caseDoc?.stack ?? []
+const liveUrl = caseDoc?.liveUrl
+
+const showClient = !(layer === 'in-flight' && ndaStatus)
+
+const heroUrl = caseDoc?.heroArtifact?.asset?._id
+  ? urlFor(caseDoc.heroArtifact).width(1400).format('webp').url()
+  : null
+
+const periodLabel = period
+  ? `${period.start?.slice(0, 7) ?? '?'} → ${
+      period.isOngoing ? 'heden' : period.end?.slice(0, 7) ?? '?'
+    }`
+  : null
+
+const isNdaGrayscale = layer === 'in-flight' && ndaStatus
+---
+
+<Section
+  tone="paper"
+  padding="page-top"
+  container="main"
+  class="hero-case"
+>
+  <div class="hero-case__layout">
+    <div class="hero-case__content">
+      {preClaim && <PreClaim text={preClaim} class="hero-case__pre" />}
+
+      {title && <h1 class="hero-case__title">{title}</h1>}
+      {subtitle && <p class="hero-case__subtitle">{subtitle}</p>}
+
+      {tags.length > 0 && (
+        <ul class="hero-case__tags" aria-label="Tags">
+          {tags.slice(0, 6).map((tag: string) => (
+            <li class="hero-case__tag">{tag}</li>
+          ))}
+        </ul>
+      )}
+
+      <dl class="hero-case__meta">
+        {showClient && client && (
+          <div class="hero-case__meta-row">
+            <dt>Client</dt>
+            <dd>{client}</dd>
+          </div>
+        )}
+        {!showClient && (
+          <div class="hero-case__meta-row">
+            <dt>Client</dt>
+            <dd class="hero-case__meta-nda">Onder NDA</dd>
+          </div>
+        )}
+        {periodLabel && (
+          <div class="hero-case__meta-row">
+            <dt>Periode</dt>
+            <dd>{periodLabel}</dd>
+          </div>
+        )}
+        {role && (
+          <div class="hero-case__meta-row">
+            <dt>Rol</dt>
+            <dd>{role}</dd>
+          </div>
+        )}
+        {stack.length > 0 && (
+          <div class="hero-case__meta-row">
+            <dt>Stack</dt>
+            <dd>{stack.join(', ')}</dd>
+          </div>
+        )}
+        {liveUrl && (
+          <div class="hero-case__meta-row">
+            <dt>Live</dt>
+            <dd>
+              <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="hero-case__live-link">
+                {liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+              </a>
+            </dd>
+          </div>
+        )}
+      </dl>
+    </div>
+
+    {heroUrl && (
+      <div class={`hero-case__artifact ${isNdaGrayscale ? 'hero-case__artifact--nda' : ''}`}>
+        <img
+          src={heroUrl}
+          alt={caseDoc?.heroArtifact?.alt ?? title ?? ''}
+          class="hero-case__image"
+          fetchpriority="high"
+        />
+      </div>
+    )}
+  </div>
+</Section>
+
+<style>
+  .hero-case__layout {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: var(--sp-7);
+    align-items: start;
+  }
+
+  .hero-case__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  .hero-case__title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h1);
+    line-height: var(--lh-heading);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .hero-case__subtitle {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    color: var(--fg-secondary);
+    margin: 0;
+    max-width: 40ch;
+  }
+
+  .hero-case__tags {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-2) 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  .hero-case__tag {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    background: var(--bg-quiet);
+    padding: var(--sp-1) var(--sp-3);
+    border-radius: var(--radius-small);
+  }
+
+  .hero-case__meta {
+    margin: var(--sp-4) 0 0;
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--border-default);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .hero-case__meta-row {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: var(--sp-3);
+    align-items: baseline;
+  }
+
+  .hero-case__meta dt {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .hero-case__meta dd {
+    font-size: var(--fs-body-small);
+    color: var(--fg-primary);
+    margin: 0;
+  }
+
+  .hero-case__meta-nda {
+    font-style: italic;
+    color: var(--fg-meta);
+  }
+
+  .hero-case__live-link {
+    color: var(--link-hover);
+    text-decoration: underline;
+    text-decoration-color: var(--atc-mid-gray);
+  }
+
+  .hero-case__artifact {
+    overflow: hidden;
+    border-radius: var(--radius-main);
+    aspect-ratio: 4/3;
+    background: var(--bg-quiet);
+  }
+
+  .hero-case__artifact--nda {
+    filter: saturate(0.5) opacity(0.85);
+  }
+
+  .hero-case__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 991px) {
+    .hero-case__layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

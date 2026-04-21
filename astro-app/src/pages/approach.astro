@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro'
+import PageBuilder from '../components/PageBuilder.astro'
+import { getApproachPage, getSiteSettings } from '../utils/sanity'
+
+const page = await getApproachPage()
+const settings = await getSiteSettings()
+
+const seo = page?.seo ?? {}
+const blocks = page?.content ?? []
+---
+
+<Layout
+  seo={seo}
+  siteName={settings?.siteName}
+  ogImage={seo?.ogImageUrl ?? settings?.defaultSeo?.ogImageUrl}
+>
+  <PageBuilder blocks={blocks} />
+</Layout>

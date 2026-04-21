@@ -7,9 +7,11 @@ import { getNotFoundPage } from "../utils/sanity";
 
 const page = await getNotFoundPage();
 
-const heading = page?.heading ?? "Page not found";
+// Sanity-driven content. Ultimate fallbacks zijn NL — alleen voor
+// network edge-cases als Sanity onbereikbaar is.
+const heading = page?.heading ?? "Pagina niet gevonden";
 const body = page?.body;
-const ctaLabel = page?.ctaLabel ?? "Back to home";
+const ctaLabel = page?.ctaLabel ?? "Terug naar home";
 const ctaLink = page?.ctaLink ?? "/";
 const seo = page?.seo;
 ---
@@ -18,7 +20,7 @@ const seo = page?.seo;
   <Section>
     <div style="text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center;">
       <h1>{heading}</h1>
-      {body ? <RichText value={body} /> : <p>The page you're looking for doesn't exist.</p>}
+      {body ? <RichText value={body} /> : <p>Deze route bestaat niet op addthecode.nl.</p>}
       <div style="margin-top: 2rem;">
         <CmsLink link={ctaLink} class="button">{ctaLabel}</CmsLink>
       </div>
