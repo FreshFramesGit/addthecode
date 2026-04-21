@@ -1,0 +1,282 @@
+---
+/**
+ * HeroHomeSection — Hero variant C (drie-delig).
+ *
+ * Spec: docs/07a §1, docs/08 §2.1.
+ * Schema: heroHomeBlock.
+ *
+ * Layout:
+ * - Pre-claim (optioneel mono-label)
+ * - 3 headline-regels (FK Display Italic, groot)
+ * - Sub-claim (optioneel)
+ * - Body-text (optioneel)
+ * - 1-2 CTA's
+ * - Optionele Thinking Ring (md size, hero-corner)
+ *
+ * Universal Rule #1: alle visible text uit Sanity props (`??` fallbacks alleen
+ * voor `null` waardes).
+ */
+
+import Section from '../layout/Section.astro'
+import PreClaim from '../content/PreClaim.astro'
+import CmsLink from '../content/CmsLink.astro'
+import ThinkingRing from '../media/ThinkingRing.astro'
+
+interface Cta {
+  _key?: string
+  label?: string | null
+  variant?: 'primary' | 'secondary' | 'tertiary' | null
+  link?: any
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  headlineParts?: string[] | null
+  subClaim?: string | null
+  bodyText?: string | null
+  ctas?: Cta[] | null
+  showThinkingRing?: boolean | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const {
+  preClaim,
+  headlineParts,
+  subClaim,
+  bodyText,
+  ctas,
+  showThinkingRing,
+  tone,
+  anchorId,
+} = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeShowRing = showThinkingRing ?? true
+const safeCtas = ctas ?? []
+const parts = headlineParts ?? []
+---
+
+<Section
+  tone={safeTone}
+  padding="page-top"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  ariaLabel="Welkom bij Add the Code"
+  class="hero-home"
+>
+  <div class="hero-home__layout">
+    <div class="hero-home__content">
+      {preClaim && (
+        <PreClaim text={preClaim} showThinkingRing={true} class="hero-home__pre" />
+      )}
+
+      {parts.length > 0 && (
+        <h1 class="hero-home__headline">
+          {parts.map((part, i) => (
+            <span class="hero-home__headline-part">{part}</span>
+          ))}
+        </h1>
+      )}
+
+      {subClaim && <p class="hero-home__sub-claim">{subClaim}</p>}
+
+      {bodyText && <p class="hero-home__body-text">{bodyText}</p>}
+
+      {safeCtas.length > 0 && (
+        <div class="hero-home__ctas">
+          {safeCtas.map((cta) => (
+            <CmsLink
+              link={cta.link}
+              class={`hero-home__cta hero-home__cta--${cta.variant ?? 'primary'}`}
+            >
+              {cta.variant === 'primary' && (
+                <ThinkingRing
+                  size="inline"
+                  tone="paper"
+                  motion="hover-rotate"
+                  class="hero-home__cta-ring"
+                />
+              )}
+              <span>{cta.label ?? ''}</span>
+            </CmsLink>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {safeShowRing && (
+      <aside class="hero-home__ring-wrapper" aria-hidden="true">
+        <ThinkingRing size="xl" tone={safeTone === 'ink' ? 'claude' : 'claude'} motion="cycle" />
+      </aside>
+    )}
+  </div>
+</Section>
+
+<style>
+  .hero-home__layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--sp-7);
+    align-items: center;
+  }
+
+  .hero-home__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5);
+    max-width: 24ch;
+  }
+
+  .hero-home__pre {
+    /* PreClaim heeft eigen styling — alleen positionering hier */
+  }
+
+  .hero-home__headline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-display);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    color: var(--fg-primary);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .hero-home__headline-part {
+    display: block;
+  }
+
+  /* Op donkere zones (.tone-ink): tekst wit */
+  :global(.tone-ink) .hero-home__headline {
+    color: var(--fg-on-dark);
+  }
+
+  .hero-home__sub-claim {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    color: var(--fg-secondary);
+    max-width: 36ch;
+    margin: var(--sp-3) 0 0;
+  }
+  :global(.tone-ink) .hero-home__sub-claim {
+    color: var(--atc-paper-70);
+  }
+
+  .hero-home__body-text {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--fg-secondary);
+    max-width: 50ch;
+  }
+
+  .hero-home__ctas {
+    display: flex;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+    margin-top: var(--sp-3);
+  }
+
+  /* CTA-buttons: 3 varianten */
+  .hero-home__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-5);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius-main);
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+
+  .hero-home__cta--primary {
+    background: var(--atc-ink);
+    color: var(--atc-paper);
+  }
+  .hero-home__cta--primary:hover {
+    background: var(--atc-claude);
+    text-decoration: none;
+  }
+
+  .hero-home__cta--secondary {
+    background: transparent;
+    color: var(--fg-primary);
+    border: 1px solid var(--border-default);
+  }
+  .hero-home__cta--secondary:hover {
+    background: var(--bg-quiet);
+    text-decoration: none;
+  }
+
+  .hero-home__cta--tertiary {
+    background: transparent;
+    color: var(--link-hover);
+    padding: var(--sp-2) 0;
+    text-decoration: underline;
+    text-decoration-color: var(--atc-mid-gray);
+    text-underline-offset: 0.2em;
+  }
+  .hero-home__cta--tertiary:hover {
+    text-decoration-color: var(--link-hover);
+  }
+
+  :global(.tone-ink) .hero-home__cta--primary {
+    background: var(--atc-paper);
+    color: var(--atc-ink);
+  }
+  :global(.tone-ink) .hero-home__cta--secondary {
+    color: var(--fg-on-dark);
+    border-color: var(--atc-paper-10);
+  }
+
+  .hero-home__cta-ring {
+    color: inherit;
+  }
+
+  /* Thinking Ring rechts (alleen desktop) */
+  .hero-home__ring-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  /* ─── Tablet ──────────────────────────────────────────── */
+  @media (max-width: 991px) {
+    .hero-home__content {
+      max-width: 28ch;
+    }
+    .hero-home__ring-wrapper :global(svg) {
+      width: 180px;
+      height: 180px;
+    }
+  }
+
+  /* ─── Mobile ──────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    .hero-home__layout {
+      grid-template-columns: 1fr;
+      gap: var(--sp-6);
+    }
+    .hero-home__content {
+      max-width: 100%;
+    }
+    .hero-home__ring-wrapper {
+      justify-content: flex-start;
+      order: -1;
+    }
+    .hero-home__ring-wrapper :global(svg) {
+      width: 120px;
+      height: 120px;
+    }
+  }
+</style>

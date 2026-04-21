@@ -10,10 +10,20 @@
  * defensief gefilterd vóór render, naast de GROQ-side filter.
  */
 
-// Add the Code — placeholder voor alle nieuwe blocks (Phase 2 vervangt per block)
+// Add the Code — homepage section-components (Phase 2 done)
+import HeroHomeSection from './sections/HeroHomeSection.astro'
+import PitchOpeningSection from './sections/PitchOpeningSection.astro'
+import ServiceTriptychSection from './sections/ServiceTriptychSection.astro'
+import ProjectGridSection from './sections/ProjectGridSection.astro'
+import QuoteClusterSection from './sections/QuoteClusterSection.astro'
+import HeritageStripSection from './sections/HeritageStripSection.astro'
+import EssayGridSection from './sections/EssayGridSection.astro'
+import CtaRefreinSection from './sections/CtaRefreinSection.astro'
+
+// Add the Code — placeholder voor blocks die nog geen eigen component hebben
 import PlaceholderSection from './sections/PlaceholderSection.astro'
 
-// Legacy template-blocks (backwards-compat) — kunnen later weg als ongebruikt
+// Legacy template-blocks (backwards-compat)
 import HeroSection from './sections/HeroSection.astro'
 import TextSection from './sections/TextSection.astro'
 import ImageSection from './sections/ImageSection.astro'
@@ -36,19 +46,19 @@ const { blocks } = Astro.props
  */
 const componentMap: Record<string, any> = {
   // ─── Add the Code Hero's ───
-  heroHomeBlock: PlaceholderSection,
-  heroStandardBlock: PlaceholderSection,
+  heroHomeBlock: HeroHomeSection,
+  heroStandardBlock: PlaceholderSection, // TODO Phase 2.16
 
   // ─── Add the Code Sections ───
-  pitchOpeningBlock: PlaceholderSection,
-  serviceTriptychBlock: PlaceholderSection,
-  quoteClusterBlock: PlaceholderSection,
-  ctaRefreinBlock: PlaceholderSection,
-  heritageStripBlock: PlaceholderSection,
-  projectGridBlock: PlaceholderSection,
-  essayGridBlock: PlaceholderSection,
-  teamGridBlock: PlaceholderSection,
-  timelineBlock: PlaceholderSection,
+  pitchOpeningBlock: PitchOpeningSection,
+  serviceTriptychBlock: ServiceTriptychSection,
+  quoteClusterBlock: QuoteClusterSection,
+  ctaRefreinBlock: CtaRefreinSection,
+  heritageStripBlock: HeritageStripSection,
+  projectGridBlock: ProjectGridSection,
+  essayGridBlock: EssayGridSection,
+  teamGridBlock: PlaceholderSection, // TODO Phase 2.16 (team page)
+  timelineBlock: PlaceholderSection, // TODO Phase 2.16 (team page)
 
   // ─── Add the Code Case-detail blocks ───
   decisionBlock: PlaceholderSection,

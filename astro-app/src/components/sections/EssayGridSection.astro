@@ -1,0 +1,131 @@
+---
+/**
+ * EssayGridSection — leest essays uit collection en rendert grid.
+ *
+ * Spec: docs/07i (academy index), docs/07a §8 (home featured-strip).
+ * Schema: essayGridBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+import EssayCard from '../cards/EssayCard.astro'
+import { getEssays, getFeaturedEssays } from '../../utils/sanity'
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  intro?: string | null
+  categoryFilter?: 'all' | 'principle' | 'practice' | 'analyse' | 'featured' | null
+  maxItems?: number | null
+  showFeaturedFirst?: boolean | null
+  showFilterChips?: boolean | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const {
+  preClaim,
+  heading,
+  intro,
+  categoryFilter,
+  maxItems,
+  showFeaturedFirst,
+  tone,
+  anchorId,
+} = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeCategory = categoryFilter ?? 'all'
+const safeMax = maxItems ?? 9
+const safeFeaturedFirst = showFeaturedFirst ?? true
+
+let essays: any[] = []
+if (safeCategory === 'featured') {
+  essays = await getFeaturedEssays()
+} else {
+  essays = await getEssays(safeCategory)
+}
+
+// Featured first: re-orden zodat featured: true bovenaan komt
+let ordered = essays
+if (safeFeaturedFirst && safeCategory !== 'featured') {
+  const featured = essays.filter((e: any) => e.featured)
+  const rest = essays.filter((e: any) => !e.featured)
+  ordered = [...featured, ...rest]
+}
+
+const visible = ordered.slice(0, safeMax)
+const flagshipEssay = safeFeaturedFirst && visible[0]?.featured ? visible[0] : null
+const standardEssays = flagshipEssay ? visible.slice(1) : visible
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="essay-grid"
+>
+  {(preClaim || heading || intro) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={heading}
+      intro={intro}
+      level={2}
+    />
+  )}
+
+  {visible.length > 0 ? (
+    <div class="essay-grid__layout">
+      {flagshipEssay && (
+        <div class="essay-grid__flagship">
+          <EssayCard essay={flagshipEssay} variant="flagship" />
+        </div>
+      )}
+
+      {standardEssays.length > 0 && (
+        <div class="essay-grid__standards">
+          {standardEssays.map((essay: any) => (
+            <EssayCard essay={essay} variant="standard" />
+          ))}
+        </div>
+      )}
+    </div>
+  ) : (
+    <p class="essay-grid__empty">Nog geen essays gepubliceerd.</p>
+  )}
+</Section>
+
+<style>
+  .essay-grid__layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    margin-top: var(--sp-6);
+  }
+
+  .essay-grid__standards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
+  }
+
+  .essay-grid__empty {
+    color: var(--fg-meta);
+    font-size: var(--fs-body-small);
+    margin-top: var(--sp-5);
+  }
+
+  @media (max-width: 991px) {
+    .essay-grid__standards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .essay-grid__standards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,29 +1,321 @@
 ---
 /**
- * Nav — Placeholder navigatie component.
- * Vervang met projectspecifieke navigatie.
- * Gebruik getNavigation() uit utils/sanity.ts voor de data.
+ * Nav — sitebreed navigatie (sticky top).
+ *
+ * Spec: docs/06 §1.
+ *
+ * Layout:
+ * - Logo links (wordmark "add the Code" met Thinking Ring rond de 'a')
+ * - Primary nav rechts (uit Sanity navigation singleton)
+ * - Children-arrays voor dropdown (services dropdown)
+ * - Mobile: hamburger → fullscreen drawer
+ *
+ * Hydration: vanilla JS voor mobile-toggle (Universal Rule #7: init-guard
+ * voor View Transitions).
  */
-import { getNavigation } from "../../utils/sanity";
-import CmsLink from "../content/CmsLink.astro";
+import { getNavigation, getSiteSettings } from '../../utils/sanity'
+import CmsLink from '../content/CmsLink.astro'
+import ThinkingRing from '../media/ThinkingRing.astro'
 
-const nav = await getNavigation();
-const mainNav = nav?.mainNav ?? [];
+const [nav, settings] = await Promise.all([getNavigation(), getSiteSettings()])
+const mainNav = nav?.mainNav ?? []
+const siteName = settings?.siteName ?? 'Add the Code'
 ---
 
-<nav class="nav-section">
-  <div class="page-padding">
-    <div class="container">
-      <div class="navigation">
-        <CmsLink href="/" class="nav_logo-link">Logo</CmsLink>
-        <div class="nav-menu">
-          {mainNav.map((item: any) => (
-            <CmsLink link={item.link ?? item.url} class="nav_link">
-              {item.label}
-            </CmsLink>
-          ))}
-        </div>
-      </div>
-    </div>
+<nav class="nav-primary" aria-label="Hoofdnavigatie">
+  <div class="nav-primary__inner">
+    {/* ─── Wordmark (logo) ─── */}
+    <a href="/" class="nav-primary__logo" aria-label={`${siteName} — naar home`}>
+      <span class="nav-primary__logo-letter">
+        <ThinkingRing
+          size="inline"
+          tone="claude"
+          motion="cycle"
+          class="nav-primary__logo-ring"
+        />
+        <span class="nav-primary__logo-letter-char">a</span>
+      </span><span class="nav-primary__logo-rest">dd the Code</span>
+    </a>
+
+    {/* ─── Mobile hamburger ─── */}
+    <button
+      type="button"
+      class="nav-primary__hamburger"
+      aria-label="Menu openen"
+      aria-expanded="false"
+      aria-controls="nav-primary-menu"
+      data-nav-toggle
+    >
+      <span class="nav-primary__hamburger-bar"></span>
+      <span class="nav-primary__hamburger-bar"></span>
+      <span class="nav-primary__hamburger-bar"></span>
+    </button>
+
+    {/* ─── Primary menu ─── */}
+    <ul class="nav-primary__menu" id="nav-primary-menu" data-nav-menu>
+      {mainNav.map((item: any) => (
+        <li class={`nav-primary__item ${item.children?.length ? 'nav-primary__item--has-children' : ''}`}>
+          <CmsLink link={item.link} class="nav-primary__link">
+            <ThinkingRing
+              size="inline"
+              tone="claude"
+              motion="hover-rotate"
+              class="nav-primary__link-ring"
+            />
+            <span class="nav-primary__link-text">{item.label}</span>
+          </CmsLink>
+
+          {item.children?.length > 0 && (
+            <ul class="nav-primary__submenu" aria-label={`${item.label} submenu`}>
+              {item.children.map((child: any) => (
+                <li class="nav-primary__subitem">
+                  <CmsLink link={child.link} class="nav-primary__sublink">
+                    {child.label}
+                  </CmsLink>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
   </div>
 </nav>
+
+<script>
+  // Init-guard tegen dubbele binding bij View Transitions (Universal Rule #7)
+  function initNav() {
+    const toggles = document.querySelectorAll<HTMLButtonElement>('[data-nav-toggle]')
+    toggles.forEach((toggle) => {
+      if (toggle.dataset.bound === 'true') return
+      toggle.dataset.bound = 'true'
+      toggle.addEventListener('click', () => {
+        const menu = document.querySelector<HTMLElement>('[data-nav-menu]')
+        if (!menu) return
+        const isOpen = menu.classList.toggle('is-open')
+        toggle.setAttribute('aria-expanded', String(isOpen))
+        toggle.setAttribute('aria-label', isOpen ? 'Menu sluiten' : 'Menu openen')
+        document.body.classList.toggle('is-nav-open', isOpen)
+      })
+    })
+  }
+
+  initNav()
+  document.addEventListener('astro:page-load', initNav)
+</script>
+
+<style>
+  .nav-primary {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-nav);
+    background: rgba(250, 249, 245, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-default);
+    height: var(--nav-height);
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+
+  .nav-primary__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-5);
+    height: 100%;
+    max-width: var(--container-main);
+    margin-inline: auto;
+    padding-inline: var(--container-gutter);
+  }
+
+  /* ─── Wordmark ───────────────────────────────────────── */
+  .nav-primary__logo {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    line-height: 1;
+    letter-spacing: var(--ls-display);
+    color: var(--fg-primary);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .nav-primary__logo:hover {
+    text-decoration: none;
+  }
+
+  .nav-primary__logo-letter {
+    display: inline-grid;
+    place-items: center;
+    position: relative;
+    width: 1.05em;
+    height: 1em;
+    margin-right: 0.05em;
+  }
+  .nav-primary__logo-ring {
+    position: absolute;
+    inset: -0.05em;
+    width: 1.1em;
+    height: 1.1em;
+  }
+  .nav-primary__logo-letter-char {
+    position: relative;
+    font-size: 0.7em;
+    line-height: 1;
+  }
+
+  /* ─── Hamburger (mobile only) ─────────────────────────── */
+  .nav-primary__hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--sp-3);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+  .nav-primary__hamburger-bar {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--atc-ink);
+    transition: transform var(--dur-fast), opacity var(--dur-fast);
+  }
+
+  /* ─── Menu (desktop = inline) ─────────────────────────── */
+  .nav-primary__menu {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-primary__item {
+    position: relative;
+  }
+
+  .nav-primary__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-small);
+    font-weight: 500;
+    color: var(--fg-primary);
+    text-decoration: none;
+    padding: var(--sp-2) 0;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .nav-primary__link:hover {
+    color: var(--atc-claude);
+    text-decoration: none;
+  }
+
+  .nav-primary__link-ring {
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .nav-primary__item:hover .nav-primary__link-ring,
+  .nav-primary__link:focus-visible .nav-primary__link-ring {
+    opacity: 1;
+  }
+
+  /* ─── Submenu (dropdown) ──────────────────────────────── */
+  .nav-primary__submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 12rem;
+    margin-top: var(--sp-2);
+    padding: var(--sp-3);
+    background: var(--atc-paper);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+    box-shadow: var(--shadow-resting);
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out),
+      visibility 0s linear var(--dur-fast);
+  }
+  .nav-primary__item--has-children:hover .nav-primary__submenu,
+  .nav-primary__item--has-children:focus-within .nav-primary__submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
+
+  .nav-primary__sublink {
+    display: block;
+    padding: var(--sp-2) var(--sp-3);
+    font-size: var(--fs-body-small);
+    color: var(--fg-primary);
+    text-decoration: none;
+    border-radius: var(--radius-small);
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+  .nav-primary__sublink:hover {
+    background: var(--atc-light-gray);
+    text-decoration: none;
+  }
+
+  /* ─── Mobile (max 767px) ──────────────────────────────── */
+  @media (max-width: 767px) {
+    .nav-primary__hamburger {
+      display: flex;
+      order: 2;
+    }
+    .nav-primary__menu {
+      position: fixed;
+      top: var(--nav-height);
+      left: 0;
+      right: 0;
+      bottom: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--sp-3);
+      padding: var(--sp-6) var(--container-gutter);
+      background: var(--atc-paper);
+      transform: translateY(-100%);
+      visibility: hidden;
+      transition:
+        transform var(--dur-normal) var(--ease-in-out),
+        visibility 0s linear var(--dur-normal);
+    }
+    .nav-primary__menu.is-open {
+      transform: translateY(0);
+      visibility: visible;
+      transition-delay: 0s;
+    }
+    .nav-primary__link {
+      font-size: var(--fs-h3);
+      font-family: var(--font-display);
+      font-weight: 400;
+    }
+    .nav-primary__submenu {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      border: 0;
+      padding: var(--sp-2) 0 var(--sp-2) var(--sp-5);
+      background: transparent;
+      margin: 0;
+    }
+
+    /* Body lock when mobile-nav open */
+    :global(body.is-nav-open) {
+      overflow: hidden;
+    }
+  }
+</style>

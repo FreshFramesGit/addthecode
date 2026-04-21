@@ -1,25 +1,98 @@
 ---
 /**
- * Section — Client-First layout wrapper.
- * Verbergt de page-padding > container > padding-vertical structuur achter props.
+ * Section — wrapper voor pageBuilder-blocks.
+ *
+ * Spec: docs/03 §4.2 (sectie-padding ritmes), §4.3 (containers), §2.3 (tonale zones).
+ *
+ * Universal Rules:
+ * - tonale-zone classes: paper (default), ink (max 2× per pagina), claude (max 1×)
+ * - sectie-padding ritme: none / small / main / large / page-top
+ * - container width: small / main / full (binnen container-gutter)
+ *
+ * BEM: `.section`, `.section--tone-*`, `.section--padding-*`, `.section--container-*`
  */
+
 interface Props {
-  id?: string;
-  class?: string;
-  noPadding?: boolean;
-  noContainer?: boolean;
+  /** Tonale zone (background + text color). */
+  tone?: 'paper' | 'ink' | 'claude'
+  /** Verticale padding-niveau. */
+  padding?: 'none' | 'small' | 'main' | 'large' | 'page-top'
+  /** Inhouds-container breedte. */
+  container?: 'small' | 'main' | 'full'
+  /** Anchor-ID voor #hash linking. */
+  anchorId?: string
+  /** Optionele aria-label. */
+  ariaLabel?: string
+  /** Extra class voor hyper-specifieke component-styling. */
+  class?: string
 }
-const { id, class: className = '', noPadding = false, noContainer = false } = Astro.props;
+
+const {
+  tone = 'paper',
+  padding = 'main',
+  container = 'main',
+  anchorId,
+  ariaLabel,
+  class: className = '',
+} = Astro.props
+
+const sectionClasses = [
+  'section',
+  `section--tone-${tone}`,
+  `section--padding-${padding}`,
+  `tone-${tone}`, // global helper class voor :where() child selectors
+  className,
+]
+  .filter(Boolean)
+  .join(' ')
+
+const containerClasses = ['section__container', `section__container--${container}`].join(' ')
 ---
 
-<section id={id} class={className}>
-  <div class="page-padding">
-    {noContainer ? (
-      noPadding ? <slot /> : <div class="padding-vertical"><slot /></div>
-    ) : (
-      <div class="container">
-        {noPadding ? <slot /> : <div class="padding-vertical"><slot /></div>}
-      </div>
-    )}
+<section
+  class={sectionClasses}
+  id={anchorId}
+  aria-label={ariaLabel}
+>
+  <div class={containerClasses}>
+    <slot />
   </div>
 </section>
+
+<style>
+  .section {
+    width: 100%;
+    position: relative;
+  }
+
+  /* ─── Verticale padding (docs/03 §4.2) ───────────────── */
+  .section--padding-none { padding-block: 0; }
+  .section--padding-small { padding-block: var(--section-pad-small); }
+  .section--padding-main { padding-block: var(--section-pad-main); }
+  .section--padding-large { padding-block: var(--section-pad-large); }
+  .section--padding-page-top {
+    padding-top: var(--section-pad-top);
+    padding-bottom: var(--section-pad-large);
+  }
+
+  /* ─── Container (docs/03 §4.3) ───────────────────────── */
+  .section__container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--container-gutter);
+  }
+  .section__container--small { max-width: var(--container-small); }
+  .section__container--main { max-width: var(--container-main); }
+  .section__container--full { max-width: var(--container-full); padding-inline: 0; }
+
+  /* Mobile: padding kleiner */
+  @media (max-width: 767px) {
+    .section--padding-small { padding-block: calc(var(--section-pad-small) * 0.6); }
+    .section--padding-main { padding-block: calc(var(--section-pad-main) * 0.55); }
+    .section--padding-large { padding-block: calc(var(--section-pad-large) * 0.5); }
+    .section--padding-page-top {
+      padding-top: calc(var(--section-pad-top) * 0.5);
+      padding-bottom: calc(var(--section-pad-large) * 0.5);
+    }
+  }
+</style>

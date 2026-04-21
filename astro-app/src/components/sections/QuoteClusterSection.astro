@@ -1,0 +1,173 @@
+---
+/**
+ * QuoteClusterSection — 1 primary + max 2 secundaire citaten.
+ *
+ * Spec: docs/08 §5.5.
+ * Schema: quoteClusterBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+import { urlFor } from '../../utils/sanity'
+
+interface Quote {
+  quote?: string | null
+  name?: string | null
+  role?: string | null
+  company?: string | null
+  portrait?: any
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  primaryQuote?: Quote | null
+  secondaryQuotes?: Quote[] | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { preClaim, heading, primaryQuote, secondaryQuotes, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeSecondaries = secondaryQuotes ?? []
+
+function attribution(q: Quote): string {
+  return [q.name, q.role, q.company].filter(Boolean).join(' · ')
+}
+
+function portraitUrl(q: Quote): string | null {
+  return q.portrait?.asset?._id
+    ? urlFor(q.portrait).width(80).height(80).format('webp').url()
+    : null
+}
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="quote-cluster"
+>
+  {(preClaim || heading) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={heading}
+      level={2}
+    />
+  )}
+
+  {primaryQuote && (
+    <blockquote class="quote-cluster__primary">
+      <p class="quote-cluster__primary-text">"{primaryQuote.quote}"</p>
+      <footer class="quote-cluster__attribution">
+        {portraitUrl(primaryQuote) && (
+          <img
+            src={portraitUrl(primaryQuote)!}
+            alt={primaryQuote.portrait?.alt ?? primaryQuote.name ?? ''}
+            loading="lazy"
+            width="48"
+            height="48"
+            class="quote-cluster__portrait"
+          />
+        )}
+        <cite class="quote-cluster__cite">{attribution(primaryQuote)}</cite>
+      </footer>
+    </blockquote>
+  )}
+
+  {safeSecondaries.length > 0 && (
+    <div class="quote-cluster__secondaries">
+      {safeSecondaries.map((q) => (
+        <blockquote class="quote-cluster__secondary">
+          <p class="quote-cluster__secondary-text">"{q.quote}"</p>
+          <footer class="quote-cluster__attribution">
+            <cite class="quote-cluster__cite">{attribution(q)}</cite>
+          </footer>
+        </blockquote>
+      ))}
+    </div>
+  )}
+</Section>
+
+<style>
+  .quote-cluster__primary {
+    margin: var(--sp-6) 0 var(--sp-7);
+    padding: 0;
+    max-width: 64ch;
+  }
+
+  .quote-cluster__primary-text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h2);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--fg-primary);
+    margin: 0;
+    text-wrap: balance;
+  }
+  :global(.tone-ink) .quote-cluster__primary-text {
+    color: var(--fg-on-dark);
+  }
+
+  .quote-cluster__attribution {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    margin-top: var(--sp-4);
+  }
+
+  .quote-cluster__portrait {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-round);
+    object-fit: cover;
+  }
+
+  .quote-cluster__cite {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    font-style: normal;
+  }
+  :global(.tone-ink) .quote-cluster__cite {
+    color: var(--atc-paper-70);
+  }
+
+  .quote-cluster__secondaries {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-6);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--border-default);
+  }
+  :global(.tone-ink) .quote-cluster__secondaries {
+    border-top-color: var(--atc-paper-10);
+  }
+
+  .quote-cluster__secondary {
+    margin: 0;
+  }
+
+  .quote-cluster__secondary-text {
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    line-height: var(--lh-heading);
+    color: var(--fg-secondary);
+    margin: 0;
+  }
+  :global(.tone-ink) .quote-cluster__secondary-text {
+    color: var(--atc-paper-70);
+  }
+
+  @media (max-width: 767px) {
+    .quote-cluster__secondaries {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

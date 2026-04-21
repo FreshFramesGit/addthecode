@@ -1,0 +1,191 @@
+---
+/**
+ * EssayCard — card voor essayGridBlock.
+ *
+ * Spec: docs/08 §3.3.
+ * Variants:
+ *  - standard: 3-kolom grid item
+ *  - flagship: groot, prominent (eerste op /academy)
+ *  - compact: kleine list-item
+ */
+
+import { urlFor } from '../../utils/sanity'
+import CmsLink from '../content/CmsLink.astro'
+
+interface Props {
+  essay: any
+  variant?: 'standard' | 'flagship' | 'compact' | null
+}
+
+const { essay, variant } = Astro.props
+
+const safeVariant = variant ?? 'standard'
+const slug = essay?.slug
+
+const heroUrl = essay?.featuredImage?.asset?._id
+  ? urlFor(essay.featuredImage).width(800).format('webp').url()
+  : null
+
+const date = essay?.publishedAt
+  ? new Date(essay.publishedAt).toLocaleDateString('nl-NL', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null
+
+const cardClasses = ['essay-card', `essay-card--${safeVariant}`].join(' ')
+---
+
+<article class={cardClasses}>
+  <CmsLink
+    link={{ linkKind: 'internalPage', internalPage: { _type: 'essay', slug } }}
+    class="essay-card__link"
+  >
+    {heroUrl && safeVariant !== 'compact' && (
+      <div class="essay-card__media">
+        <img
+          src={heroUrl}
+          alt={essay?.featuredImage?.alt ?? essay?.title ?? ''}
+          loading="lazy"
+          class="essay-card__image"
+        />
+      </div>
+    )}
+
+    <div class="essay-card__content">
+      <p class="essay-card__meta">
+        {essay?.category && <span class="essay-card__category">{essay.category}</span>}
+        {essay?.readTime && <span class="essay-card__read-time">· {essay.readTime}</span>}
+        {date && <span class="essay-card__date">· {date}</span>}
+      </p>
+
+      <h3 class="essay-card__title">{essay?.title}</h3>
+
+      {essay?.dek && safeVariant !== 'compact' && (
+        <p class="essay-card__dek">{essay.dek}</p>
+      )}
+
+      {essay?.author?.name && (
+        <p class="essay-card__author">door {essay.author.name}</p>
+      )}
+    </div>
+  </CmsLink>
+</article>
+
+<style>
+  .essay-card__link {
+    display: grid;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    transition: transform var(--dur-normal) var(--ease-out);
+  }
+  .essay-card__link:hover {
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  /* ─── Standard variant ─────────────────────────────────── */
+  .essay-card--standard .essay-card__link {
+    grid-template-rows: auto 1fr;
+    gap: var(--sp-3);
+  }
+
+  .essay-card--standard .essay-card__media {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-radius: var(--radius-small);
+  }
+
+  /* ─── Flagship variant ─────────────────────────────────── */
+  .essay-card--flagship .essay-card__link {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-6);
+    align-items: center;
+    padding: var(--sp-5);
+    background: var(--atc-paper);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+  }
+  .essay-card--flagship .essay-card__media {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: var(--radius-small);
+  }
+  .essay-card--flagship .essay-card__title {
+    font-size: var(--fs-h2);
+  }
+
+  @media (max-width: 767px) {
+    .essay-card--flagship .essay-card__link {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ─── Compact variant ──────────────────────────────────── */
+  .essay-card--compact .essay-card__link {
+    grid-template-columns: 1fr;
+    padding-block: var(--sp-3);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  /* ─── Common image ──────────────────────────────────────── */
+  .essay-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ─── Content ──────────────────────────────────────────── */
+  .essay-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .essay-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .essay-card__category {
+    color: var(--atc-claude);
+  }
+
+  .essay-card__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    color: var(--fg-primary);
+    margin: 0;
+  }
+  :global(.tone-ink) .essay-card__title {
+    color: var(--fg-on-dark);
+  }
+
+  .essay-card__dek {
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body);
+    color: var(--fg-secondary);
+    margin: 0;
+  }
+  :global(.tone-ink) .essay-card__dek {
+    color: var(--atc-paper-70);
+  }
+
+  .essay-card__author {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--fg-meta);
+    margin: var(--sp-2) 0 0;
+  }
+</style>

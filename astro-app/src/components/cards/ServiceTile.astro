@@ -1,0 +1,158 @@
+---
+/**
+ * ServiceTile — single card in service triptych.
+ *
+ * Spec: docs/08 §3.1.
+ *
+ * Per tile: optionele icon (design / build / automate / custom), title,
+ * tagline (mono), description, en CTA-link.
+ */
+
+import CmsLink from '../content/CmsLink.astro'
+import ThinkingRing from '../media/ThinkingRing.astro'
+
+interface Props {
+  title?: string | null
+  tagline?: string | null
+  description?: string | null
+  ctaLabel?: string | null
+  ctaLink?: any
+  icon?: string | null
+}
+
+const { title, tagline, description, ctaLabel, ctaLink, icon } = Astro.props
+---
+
+<article class="service-tile">
+  {icon && (
+    <div class={`service-tile__icon service-tile__icon--${icon}`} aria-hidden="true">
+      {/* Icon-rendering: simple SVG per kind. Voor `custom` valt de styling-default-cirkel terug. */}
+      {icon === 'design' && (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="12" r="4" />
+          <line x1="12" y1="2" x2="12" y2="6" />
+          <line x1="12" y1="18" x2="12" y2="22" />
+        </svg>
+      )}
+      {icon === 'build' && (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+      )}
+      {icon === 'automate' && (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="10" rx="2" />
+          <circle cx="12" cy="5" r="2" />
+          <path d="M12 7v4" />
+          <line x1="8" y1="16" x2="8" y2="16" />
+          <line x1="16" y1="16" x2="16" y2="16" />
+        </svg>
+      )}
+      {icon === 'custom' && (
+        <ThinkingRing size="sm" tone="claude" motion="static" />
+      )}
+    </div>
+  )}
+
+  {tagline && <p class="service-tile__tagline">{tagline}</p>}
+
+  {title && <h3 class="service-tile__title">{title}</h3>}
+
+  {description && <p class="service-tile__description">{description}</p>}
+
+  {ctaLabel && ctaLink && (
+    <CmsLink link={ctaLink} class="service-tile__cta">
+      <span>{ctaLabel}</span>
+      <span aria-hidden="true" class="service-tile__cta-arrow">→</span>
+    </CmsLink>
+  )}
+</article>
+
+<style>
+  .service-tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--atc-paper);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+    height: 100%;
+  }
+  .service-tile:hover {
+    border-color: var(--atc-mid-gray);
+    transform: translateY(-2px);
+  }
+
+  :global(.tone-ink) .service-tile {
+    background: var(--atc-paper-10);
+    border-color: var(--atc-paper-10);
+    color: var(--fg-on-dark);
+  }
+
+  .service-tile__icon {
+    width: 32px;
+    height: 32px;
+    color: var(--atc-claude);
+  }
+  .service-tile__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .service-tile__tagline {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .service-tile__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    margin: 0;
+  }
+
+  .service-tile__description {
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body);
+    color: var(--fg-secondary);
+    margin: 0;
+    flex: 1;
+  }
+  :global(.tone-ink) .service-tile__description {
+    color: var(--atc-paper-70);
+  }
+
+  .service-tile__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: var(--link-hover);
+    font-size: var(--fs-body-small);
+    font-weight: 500;
+    text-decoration: none;
+    margin-top: var(--sp-3);
+    align-self: flex-start;
+    transition: gap var(--dur-fast) var(--ease-out);
+  }
+  .service-tile__cta:hover {
+    gap: var(--sp-3);
+    text-decoration: none;
+  }
+
+  .service-tile__cta-arrow {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .service-tile__cta:hover .service-tile__cta-arrow {
+    transform: translateX(4px);
+  }
+</style>

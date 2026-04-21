@@ -1,0 +1,93 @@
+---
+/**
+ * ServiceTriptychSection — drie service-tiles naast elkaar.
+ *
+ * Spec: docs/07a §3, docs/08 §3.1.
+ * Schema: serviceTriptychBlock.
+ *
+ * Layout: 3-kolom desktop → 2-kolom tablet → 1-kolom mobile.
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+import ServiceTile from '../cards/ServiceTile.astro'
+
+interface Tile {
+  _key?: string
+  title?: string | null
+  tagline?: string | null
+  description?: string | null
+  ctaLabel?: string | null
+  ctaLink?: any
+  icon?: string | null
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  intro?: string | null
+  tiles?: Tile[] | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { preClaim, heading, intro, tiles, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeTiles = tiles ?? []
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="service-triptych"
+>
+  {(preClaim || heading || intro) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={heading}
+      intro={intro}
+      level={2}
+      align="left"
+    />
+  )}
+
+  {safeTiles.length > 0 && (
+    <div class="service-triptych__grid">
+      {safeTiles.map((tile) => (
+        <ServiceTile
+          title={tile.title}
+          tagline={tile.tagline}
+          description={tile.description}
+          ctaLabel={tile.ctaLabel}
+          ctaLink={tile.ctaLink}
+          icon={tile.icon}
+        />
+      ))}
+    </div>
+  )}
+</Section>
+
+<style>
+  .service-triptych__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
+    margin-top: var(--sp-6);
+  }
+
+  @media (max-width: 991px) {
+    .service-triptych__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .service-triptych__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

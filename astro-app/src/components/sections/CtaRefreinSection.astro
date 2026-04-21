@@ -1,0 +1,155 @@
+---
+/**
+ * CtaRefreinSection — sitebreed CTA-blok.
+ *
+ * Spec: docs/09-microcopy §11.
+ * Schema: ctaRefreinBlock.
+ *
+ * Defaults+override pattern:
+ * 1. Block.pageKey wijst naar componentDefaults.ctaRefreins[key === pageKey]
+ * 2. Block.overrideStatement / overrideButtonLabel / overrideButtonLink
+ *    hebben voorrang als ingevuld
+ * 3. Hardcoded fallback alleen als laatste resort (niet wenselijk —
+ *    componentDefaults moet altijd geseed zijn).
+ */
+
+import Section from '../layout/Section.astro'
+import CmsLink from '../content/CmsLink.astro'
+import ThinkingRing from '../media/ThinkingRing.astro'
+import { getComponentDefaults } from '../../utils/sanity'
+
+interface Props {
+  enabled?: boolean
+  pageKey?: string | null
+  overrideStatement?: string | null
+  overrideButtonLabel?: string | null
+  overrideButtonLink?: any
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const {
+  pageKey,
+  overrideStatement,
+  overrideButtonLabel,
+  overrideButtonLink,
+  tone,
+  anchorId,
+} = Astro.props
+
+const safeTone = tone ?? 'claude'
+const safePageKey = pageKey ?? 'primary'
+
+const defaults = await getComponentDefaults()
+const ctaRefreins: any[] = defaults?.ctaRefreins ?? []
+const matched = ctaRefreins.find((c) => c.key === safePageKey) ?? ctaRefreins[0] ?? null
+
+const statement = overrideStatement ?? matched?.statement ?? null
+const helperLine = matched?.helperLine ?? null
+const buttonLabel = overrideButtonLabel ?? matched?.buttonLabel ?? null
+const buttonLink = overrideButtonLink ?? matched?.buttonLink ?? null
+---
+
+<Section
+  tone={safeTone}
+  padding="large"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="cta-refrein"
+>
+  <div class="cta-refrein__inner">
+    {statement && <p class="cta-refrein__statement">{statement}</p>}
+    {helperLine && <p class="cta-refrein__helper">{helperLine}</p>}
+
+    {buttonLabel && buttonLink && (
+      <CmsLink link={buttonLink} class="cta-refrein__button">
+        <ThinkingRing
+          size="inline"
+          tone="current"
+          motion="hover-rotate"
+          class="cta-refrein__button-ring"
+        />
+        <span>{buttonLabel}</span>
+      </CmsLink>
+    )}
+  </div>
+</Section>
+
+<style>
+  .cta-refrein__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--sp-4);
+    max-width: 36ch;
+    margin-inline: auto;
+  }
+
+  .cta-refrein__statement {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-h1);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    color: var(--fg-primary);
+    margin: 0;
+    text-wrap: balance;
+  }
+  :global(.tone-ink) .cta-refrein__statement {
+    color: var(--fg-on-dark);
+  }
+
+  .cta-refrein__helper {
+    color: var(--fg-secondary);
+    font-size: var(--fs-body);
+    margin: 0;
+  }
+  :global(.tone-ink) .cta-refrein__helper {
+    color: var(--atc-paper-70);
+  }
+
+  .cta-refrein__button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-5);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    text-decoration: none;
+    background: var(--atc-ink);
+    color: var(--atc-paper);
+    border-radius: var(--radius-main);
+    margin-top: var(--sp-3);
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+  .cta-refrein__button:hover {
+    background: var(--atc-paper);
+    color: var(--atc-ink);
+    text-decoration: none;
+  }
+
+  :global(.tone-ink) .cta-refrein__button {
+    background: var(--atc-paper);
+    color: var(--atc-ink);
+  }
+  :global(.tone-ink) .cta-refrein__button:hover {
+    background: var(--atc-claude);
+    color: var(--atc-paper);
+  }
+
+  :global(.tone-claude) .cta-refrein__button {
+    background: var(--atc-ink);
+    color: var(--atc-paper);
+  }
+  :global(.tone-claude) .cta-refrein__button:hover {
+    background: var(--atc-paper);
+    color: var(--atc-ink);
+  }
+
+  .cta-refrein__button-ring {
+    color: inherit;
+  }
+</style>

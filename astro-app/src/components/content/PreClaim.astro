@@ -1,0 +1,64 @@
+---
+/**
+ * PreClaim — mono-tier label boven heading of standalone.
+ *
+ * Spec: docs/08 §5.1.
+ * Pattern: "◌ TEAM · BREDA · EST. 2017 (FRESH FRAMES)"
+ *
+ * Met optionele Thinking Ring (◌-glyph) als visueel anker.
+ */
+
+import ThinkingRing from '../media/ThinkingRing.astro'
+
+interface Props {
+  text?: string | null
+  showThinkingRing?: boolean
+  class?: string
+}
+
+const { text, showThinkingRing = true, class: className = '' } = Astro.props
+
+if (!text) {
+  return null
+}
+
+const classes = ['pre-claim', className].filter(Boolean).join(' ')
+---
+
+<p class={classes}>
+  {showThinkingRing && (
+    <ThinkingRing size="inline" tone="claude" motion="cycle" class="pre-claim__ring" />
+  )}
+  <span class="pre-claim__text">{text}</span>
+</p>
+
+<style>
+  .pre-claim {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    line-height: 1.4;
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+  }
+
+  /* Op donkere zones */
+  :global(.tone-ink) .pre-claim {
+    color: var(--atc-paper-70);
+  }
+  :global(.tone-claude) .pre-claim {
+    color: var(--atc-ink-70);
+  }
+
+  .pre-claim__ring {
+    flex-shrink: 0;
+  }
+
+  .pre-claim__text {
+    /* No additional styling — inherits from parent */
+  }
+</style>

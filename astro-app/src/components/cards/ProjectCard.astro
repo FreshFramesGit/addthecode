@@ -1,0 +1,264 @@
+---
+/**
+ * ProjectCard — case-card variant per layer.
+ *
+ * Spec: docs/08 §3.2.
+ * Varianten:
+ *  - featured-60-40 — grote highlight (60% artifact + 40% tekst)
+ *  - grid-3 / grid-2 — kleine cards in grid
+ *  - list — heritage compact list
+ *
+ * Per layer een visueel onderscheid:
+ *  - launch: full color, prominent
+ *  - in-flight: NDA-tone, geen client-naam
+ *  - heritage: archival, monochrome
+ */
+
+import { urlFor } from '../../utils/sanity'
+import CmsLink from '../content/CmsLink.astro'
+import ThinkingRing from '../media/ThinkingRing.astro'
+
+interface Props {
+  case: any
+  variant?: 'featured-60-40' | 'grid-2' | 'grid-3' | 'list' | null
+}
+
+const { case: caseDoc, variant } = Astro.props
+
+const safeVariant = variant ?? 'grid-3'
+const slug = caseDoc?.slug
+const layer = caseDoc?.layer ?? 'launch'
+const ndaStatus = caseDoc?.ndaStatus ?? false
+
+// NDA-cases tonen geen client-naam (anonimized).
+const showClient = layer !== 'in-flight' || !ndaStatus
+const clientLabel = showClient ? caseDoc?.client : caseDoc?.client ?? 'Onder NDA'
+
+// Image URL met urlFor (Sanity image-pipeline)
+const heroUrl = caseDoc?.heroArtifact?.asset?._id
+  ? urlFor(caseDoc.heroArtifact).width(1200).format('webp').url()
+  : null
+
+const period = caseDoc?.period
+const periodLabel = period
+  ? `${period.start?.slice(0, 7) ?? '?'} → ${
+      period.isOngoing ? 'heden' : period.end?.slice(0, 7) ?? '?'
+    }`
+  : null
+
+const cardClasses = ['project-card', `project-card--${safeVariant}`, `project-card--layer-${layer}`].join(' ')
+---
+
+<article class={cardClasses}>
+  <CmsLink
+    link={{ linkKind: 'internalPage', internalPage: { _type: 'case', slug } }}
+    class="project-card__link"
+  >
+    {heroUrl && (
+      <div class="project-card__media">
+        <img
+          src={heroUrl}
+          alt={caseDoc?.heroArtifact?.alt ?? caseDoc?.title ?? ''}
+          loading="lazy"
+          class="project-card__image"
+        />
+      </div>
+    )}
+
+    <div class="project-card__content">
+      {caseDoc?.preClaim && <p class="project-card__pre-claim">{caseDoc.preClaim}</p>}
+
+      <h3 class="project-card__title">{caseDoc?.title}</h3>
+
+      {caseDoc?.subtitle && <p class="project-card__subtitle">{caseDoc.subtitle}</p>}
+
+      {(clientLabel || periodLabel) && (
+        <p class="project-card__meta">
+          {clientLabel && <span>{clientLabel}</span>}
+          {clientLabel && periodLabel && <span aria-hidden="true"> · </span>}
+          {periodLabel && <span>{periodLabel}</span>}
+        </p>
+      )}
+
+      {caseDoc?.tags?.length > 0 && (
+        <ul class="project-card__tags" aria-label="Tags">
+          {caseDoc.tags.slice(0, 4).map((tag: string) => (
+            <li class="project-card__tag">{tag}</li>
+          ))}
+        </ul>
+      )}
+
+      <span class="project-card__cta" aria-hidden="true">
+        <ThinkingRing size="inline" tone="claude" motion="hover-rotate" />
+        <span>Lees de case</span>
+        <span class="project-card__cta-arrow">→</span>
+      </span>
+    </div>
+  </CmsLink>
+</article>
+
+<style>
+  .project-card {
+    height: 100%;
+  }
+
+  .project-card__link {
+    display: grid;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    transition: transform var(--dur-normal) var(--ease-out);
+  }
+  .project-card__link:hover {
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  /* ─── featured-60-40 variant ───────────────────────────── */
+  .project-card--featured-60-40 .project-card__link {
+    grid-template-columns: 60% 40%;
+    gap: var(--sp-6);
+    align-items: center;
+    padding: var(--sp-5);
+    background: var(--atc-paper);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+  }
+  .project-card--featured-60-40 .project-card__media {
+    overflow: hidden;
+    border-radius: var(--radius-small);
+    aspect-ratio: 4/3;
+  }
+  .project-card--featured-60-40 .project-card__title {
+    font-size: var(--fs-h2);
+  }
+
+  @media (max-width: 767px) {
+    .project-card--featured-60-40 .project-card__link {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ─── grid-3 / grid-2 variant ──────────────────────────── */
+  .project-card--grid-3 .project-card__link,
+  .project-card--grid-2 .project-card__link {
+    grid-template-rows: auto 1fr;
+    gap: var(--sp-3);
+  }
+  .project-card--grid-3 .project-card__media,
+  .project-card--grid-2 .project-card__media {
+    overflow: hidden;
+    border-radius: var(--radius-small);
+    aspect-ratio: 4/3;
+  }
+
+  /* ─── list variant (heritage) ──────────────────────────── */
+  .project-card--list .project-card__link {
+    grid-template-columns: auto 1fr auto;
+    gap: var(--sp-5);
+    align-items: center;
+    padding-block: var(--sp-4);
+    border-bottom: 1px solid var(--border-default);
+  }
+  .project-card--list .project-card__media {
+    width: 80px;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: var(--radius-small);
+  }
+
+  /* ─── Layer-specifieke styling ─────────────────────────── */
+  .project-card--layer-in-flight .project-card__media {
+    filter: grayscale(0.5) opacity(0.85);
+  }
+  .project-card--layer-heritage {
+    opacity: 0.85;
+  }
+
+  /* ─── Common image ──────────────────────────────────────── */
+  .project-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ─── Content elements ──────────────────────────────────── */
+  .project-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    min-width: 0;
+  }
+
+  .project-card__pre-claim {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .project-card__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    margin: 0;
+  }
+
+  .project-card__subtitle {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--fg-secondary);
+    margin: 0;
+  }
+
+  .project-card__meta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .project-card__tag {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    background: var(--bg-quiet);
+    padding: 0 var(--sp-2);
+    border-radius: var(--radius-small);
+  }
+
+  .project-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: var(--link-hover);
+    font-size: var(--fs-body-small);
+    font-weight: 500;
+    margin-top: var(--sp-3);
+    transition: gap var(--dur-fast) var(--ease-out);
+  }
+  .project-card__link:hover .project-card__cta {
+    gap: var(--sp-3);
+  }
+
+  .project-card__cta-arrow {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .project-card__link:hover .project-card__cta-arrow {
+    transform: translateX(4px);
+  }
+</style>

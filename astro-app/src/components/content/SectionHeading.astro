@@ -1,0 +1,93 @@
+---
+/**
+ * SectionHeading — pre-claim + heading + intro pattern.
+ *
+ * Spec: docs/08 §1.3.
+ *
+ * Optionele Thinking Ring naast pre-claim (sm size, Claude tone).
+ * Heading-level configureerbaar (h1 op page-opener, h2 op secties).
+ */
+
+import ThinkingRing from '../media/ThinkingRing.astro'
+import PreClaim from './PreClaim.astro'
+
+interface Props {
+  preClaim?: string | null
+  heading?: string | null
+  intro?: string | null
+  /** HTML heading-tag. Default h2 voor secties. */
+  level?: 1 | 2 | 3
+  /** Toon Thinking Ring naast pre-claim. Default true. */
+  showRing?: boolean
+  /** Italic styling op heading (FK Display Italic). Default true voor statements. */
+  italic?: boolean
+  /** Alignment. */
+  align?: 'left' | 'center'
+  class?: string
+}
+
+const {
+  preClaim,
+  heading,
+  intro,
+  level = 2,
+  showRing = true,
+  italic = true,
+  align = 'left',
+  class: className = '',
+} = Astro.props
+
+const Heading = `h${level}` as 'h1' | 'h2' | 'h3'
+const headingClasses = ['section-heading__heading', italic && 'section-heading__heading--italic']
+  .filter(Boolean)
+  .join(' ')
+
+const wrapperClasses = ['section-heading', `section-heading--align-${align}`, className]
+  .filter(Boolean)
+  .join(' ')
+---
+
+<header class={wrapperClasses}>
+  {preClaim && (
+    <PreClaim text={preClaim} showThinkingRing={showRing} class="section-heading__pre" />
+  )}
+  {heading && <Heading class={headingClasses}>{heading}</Heading>}
+  {intro && <p class="section-heading__intro">{intro}</p>}
+</header>
+
+<style>
+  .section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    max-width: 60ch;
+    margin-bottom: var(--sp-6);
+  }
+
+  .section-heading--align-center {
+    align-items: center;
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .section-heading__heading {
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .section-heading__heading--italic {
+    font-style: italic;
+  }
+
+  .section-heading__intro {
+    color: var(--fg-secondary);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    text-wrap: pretty;
+  }
+
+  /* Op donkere zones (.tone-ink): intro lichter */
+  :global(.tone-ink) .section-heading__intro {
+    color: var(--atc-paper-70);
+  }
+</style>

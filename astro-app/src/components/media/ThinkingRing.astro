@@ -1,0 +1,180 @@
+---
+/**
+ * ThinkingRing — Add the Code signature motif.
+ *
+ * Spec: docs/04-motion-spec.md, docs/08 §1.5.
+ * Source-of-truth design: reference/design files/addthecode/thinking-ring.html
+ *
+ * Een 75–85% getekende cirkel die ademt over een 4-seconden cubic ease-in-out.
+ * Verschijnt waar de studio "denkt" — nav-hover, sectie-opener, CTA, scroll-indicator,
+ * wordmark, favicon.
+ *
+ * Reduced-motion fallback: statische 80%-arc met gap op 2-uur positie (canoniek).
+ *
+ * Regels (zie thinking-ring.html §3):
+ * - One per viewport (signature, geen pattern)
+ * - 4-seconden breath, nooit constante rotatie
+ * - Round caps, round joins
+ * - Stroke-width schaalt mee met maat
+ * - Color = Claude (op zowel Paper als Ink zones)
+ */
+
+interface Props {
+  /** Maat — beïnvloedt pixel-grootte + stroke-width. */
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'inline'
+  /** Animation-modus. */
+  motion?: 'cycle' | 'static' | 'scroll-shrink' | 'hover-rotate'
+  /** Color tone — claude (default), ink (op licht), paper (op donker), current (inherit). */
+  tone?: 'claude' | 'ink' | 'paper' | 'current'
+  /** Optionele aria-label. Default verborgen voor screen readers (decoratief). */
+  ariaLabel?: string
+  /** Extra class voor positionering door parent. */
+  class?: string
+}
+
+const {
+  size = 'md',
+  motion = 'cycle',
+  tone = 'claude',
+  ariaLabel,
+  class: className = '',
+} = Astro.props
+
+const sizeMap: Record<string, { px: number; stroke: number }> = {
+  xs: { px: 14, stroke: 2.5 },
+  sm: { px: 24, stroke: 2 },
+  md: { px: 64, stroke: 1.5 },
+  lg: { px: 120, stroke: 1 },
+  xl: { px: 240, stroke: 0.8 },
+  inline: { px: 0, stroke: 1.8 }, // Inline = 1em via CSS, geen pixel-fix
+}
+
+const dims = sizeMap[size]
+const isInline = size === 'inline'
+
+const classes = [
+  'thinking-ring',
+  `thinking-ring--size-${size}`,
+  `thinking-ring--tone-${tone}`,
+  `thinking-ring--motion-${motion}`,
+  className,
+]
+  .filter(Boolean)
+  .join(' ')
+---
+
+<svg
+  class={classes}
+  viewBox="0 0 24 24"
+  width={isInline ? undefined : dims.px}
+  height={isInline ? undefined : dims.px}
+  fill="none"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={ariaLabel ? 'img' : 'presentation'}
+  aria-label={ariaLabel}
+  aria-hidden={ariaLabel ? undefined : 'true'}
+>
+  <circle
+    cx="12"
+    cy="12"
+    r="10"
+    pathLength="70"
+    stroke-width={dims.stroke}
+  />
+</svg>
+
+<style>
+  .thinking-ring {
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* Inline mode: ring is 1em — past zich aan font-size aan */
+  .thinking-ring--size-inline {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.1em;
+  }
+
+  /* ─── Tones (color-only) ─────────────────────────────── */
+  .thinking-ring--tone-claude { color: var(--atc-claude); }
+  .thinking-ring--tone-ink { color: var(--atc-ink); }
+  .thinking-ring--tone-paper { color: var(--atc-paper); }
+  .thinking-ring--tone-current { color: currentColor; }
+
+  .thinking-ring circle {
+    stroke: currentColor;
+    transform-origin: center;
+  }
+
+  /* ─── Motion: cycle (default — 4s breathing) ─────────── */
+  .thinking-ring--motion-cycle circle {
+    animation: ring-breathe var(--dur-ring-cycle, 4s)
+      cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  @keyframes ring-breathe {
+    0% {
+      stroke-dasharray: 53 15;
+      stroke-dashoffset: 0;
+      opacity: 0.7;
+      transform: rotate(20deg);
+    }
+    50% {
+      stroke-dasharray: 60 8;
+      stroke-dashoffset: -18;
+      opacity: 1;
+      transform: rotate(200deg);
+    }
+    100% {
+      stroke-dasharray: 53 15;
+      stroke-dashoffset: -62;
+      opacity: 0.7;
+      transform: rotate(380deg);
+    }
+  }
+
+  /* ─── Motion: static (canoniek 80% arc, gap op 2-uur) ── */
+  .thinking-ring--motion-static circle {
+    stroke-dasharray: 56 14;
+    stroke-dashoffset: -10;
+    opacity: 0.85;
+  }
+
+  /* ─── Motion: hover-rotate (rotates on parent hover) ─── */
+  .thinking-ring--motion-hover-rotate circle {
+    stroke-dasharray: 56 14;
+    transition: transform var(--dur-normal, 300ms) var(--ease-out);
+  }
+  :where(a, button, .has-ring-hover):hover .thinking-ring--motion-hover-rotate circle {
+    transform: rotate(180deg);
+  }
+
+  /* ─── Motion: scroll-shrink (CSS-only via scroll-driven animations) ─── */
+  /* Voor browsers met support — graceful fallback elders. */
+  @supports (animation-timeline: scroll()) {
+    .thinking-ring--motion-scroll-shrink circle {
+      stroke-dasharray: 56 14;
+      animation: ring-scroll-shrink linear;
+      animation-timeline: scroll(root);
+      transform-origin: center;
+    }
+    @keyframes ring-scroll-shrink {
+      from { transform: scale(1); opacity: 0.85; }
+      to { transform: scale(0.85); opacity: 1; }
+    }
+  }
+
+  /* ─── Reduced motion: alle vallen terug op static 80% arc ─── */
+  @media (prefers-reduced-motion: reduce) {
+    .thinking-ring circle {
+      animation: none !important;
+      transition: none !important;
+      stroke-dasharray: 56 14;
+      stroke-dashoffset: -10;
+      opacity: 0.85;
+      transform: none;
+    }
+  }
+</style>

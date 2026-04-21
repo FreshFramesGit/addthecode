@@ -1,0 +1,71 @@
+---
+/**
+ * PitchOpeningSection — 1-2 alinea's positionering-tekst.
+ *
+ * Spec: docs/07a §2, docs/08 §3 (pitch-opening pattern).
+ * Schema: pitchOpeningBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import PreClaim from '../content/PreClaim.astro'
+import RichText from '../content/RichText.astro'
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  body?: any
+  maxWidth?: 'small' | 'main' | 'full' | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { preClaim, body, maxWidth, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeMaxWidth = maxWidth ?? 'main'
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container={safeMaxWidth}
+  anchorId={anchorId ?? undefined}
+  class="pitch-opening"
+>
+  {preClaim && <PreClaim text={preClaim} class="pitch-opening__pre" />}
+
+  {body && (
+    <div class="pitch-opening__body">
+      <RichText value={body} />
+    </div>
+  )}
+</Section>
+
+<style>
+  .pitch-opening__pre {
+    margin-bottom: var(--sp-4);
+  }
+
+  .pitch-opening__body :global(p) {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    color: var(--fg-primary);
+    text-wrap: pretty;
+    margin: 0;
+  }
+
+  .pitch-opening__body :global(p + p) {
+    margin-top: var(--sp-4);
+  }
+
+  /* Inline emphasis-styling */
+  .pitch-opening__body :global(em),
+  .pitch-opening__body :global(i) {
+    font-style: italic;
+    color: var(--atc-claude);
+  }
+
+  :global(.tone-ink) .pitch-opening__body :global(p) {
+    color: var(--fg-on-dark);
+  }
+</style>
