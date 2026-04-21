@@ -437,7 +437,50 @@ async function seedNavigation() {
   console.log('  ✓')
 }
 
-// ─── 6. Home Page ────────────────────────────────────────────
+// ─── 6. Core Team (Alex) ────────────────────────────────────
+
+async function seedCoreTeam() {
+  console.log('▸ Core team (Alex de Graaf als team_member)…')
+  await client.createOrReplace({
+    _id: 'team-alex',
+    _type: 'teamMember',
+    name: 'Alex de Graaf',
+    slug: { _type: 'slug', current: 'alex-de-graaf' },
+    language: 'nl',
+    role: 'Founder · Hoofdaannemer',
+    isCore: true,
+    displayOrder: 1,
+    email: 'alex@freshframes.nl',
+    bio: [
+      portableTextParagraph([
+        {
+          text: 'Ontwerpt en bouwt sinds 2017 onder de vlag Fresh Frames. Met Add the Code bouwt hij de volgende fase: custom-met-AI — merk-eigen websites en web-apps die klanten weer van zichzelf kunnen maken, zonder template-configuratie.',
+        },
+      ]),
+      portableTextParagraph([
+        {
+          text: 'Schrijft maandelijks over dit vak op ',
+        },
+        { text: 'addthecode.nl/academy', italic: true },
+        { text: '. Werkt vanuit Breda en online.' },
+      ]),
+    ],
+    quote: {
+      text: 'Onze waarde zit niet in "wij kunnen dit coderen en jij niet" — die zit in oordeelsvorming. AI versnelt de bouw, maar architectuur-keuzes blijven mens-werk.',
+      context: 'Over de rol van AI in het bouwproces',
+    },
+    links: [
+      {
+        _key: 'linkedin',
+        platform: 'LinkedIn',
+        url: 'https://www.linkedin.com/in/alex-de-graaf/',
+      },
+    ],
+  })
+  console.log('  ✓ (Alex geseed als team-alex)')
+}
+
+// ─── 7. Home Page ────────────────────────────────────────────
 
 async function seedHomePage() {
   console.log('▸ Home Page (hero variant C + 9 secties per docs/07a)…')
@@ -695,6 +738,7 @@ async function main() {
   await seedSiteSettings()
   await seedComponentDefaults()
   await seedNavigation()
+  await seedCoreTeam()
   await seedHomePage()
 
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
