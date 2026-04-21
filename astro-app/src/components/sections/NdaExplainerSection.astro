@@ -1,0 +1,146 @@
+---
+/**
+ * NdaExplainerSection — vervangt §6/§7 op in-flight (NDA) cases.
+ *
+ * Spec: docs/07b §3 + docs/07h. Voor case-pagina's met `layer: 'in-flight'`.
+ * Schema: ndaExplainerBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import PreClaim from '../content/PreClaim.astro'
+import RichText from '../content/RichText.astro'
+import CmsLink from '../content/CmsLink.astro'
+import ThinkingRing from '../media/ThinkingRing.astro'
+
+interface ContactCta {
+  label?: string | null
+  link?: any
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  body?: any
+  expectedReleaseDate?: string | null
+  contactCta?: ContactCta | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const {
+  preClaim,
+  heading,
+  body,
+  expectedReleaseDate,
+  contactCta,
+  tone,
+  anchorId,
+} = Astro.props
+
+const safeTone = tone ?? 'paper'
+const showCta = Boolean(contactCta?.label && contactCta?.link)
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="nda-explainer"
+>
+  <div class="nda-explainer__inner">
+    {preClaim && (
+      <PreClaim text={preClaim} class="nda-explainer__pre" />
+    )}
+
+    {heading && <h3 class="nda-explainer__heading">{heading}</h3>}
+
+    {body && (
+      <div class="nda-explainer__body">
+        <RichText value={body} />
+      </div>
+    )}
+
+    {expectedReleaseDate && (
+      <p class="nda-explainer__release">
+        <span class="nda-explainer__release-label">Verwachte release:</span>
+        <span class="nda-explainer__release-date">{expectedReleaseDate}</span>
+      </p>
+    )}
+
+    {showCta && (
+      <CmsLink link={contactCta.link} class="nda-explainer__cta">
+        <ThinkingRing size="inline" tone="claude" motion="hover-rotate" />
+        <span>{contactCta.label}</span>
+      </CmsLink>
+    )}
+  </div>
+</Section>
+
+<style>
+  .nda-explainer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    padding: var(--sp-6);
+    background: var(--bg-quiet);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+    max-width: 60ch;
+  }
+
+  .nda-explainer__heading {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h3);
+    margin: 0;
+  }
+
+  .nda-explainer__body :global(p) {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--fg-secondary);
+    margin: 0 0 var(--sp-3);
+  }
+
+  .nda-explainer__release {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .nda-explainer__release-label {
+    color: var(--fg-meta);
+  }
+  .nda-explainer__release-date {
+    color: var(--atc-claude);
+  }
+
+  .nda-explainer__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: var(--link-hover);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    text-decoration: none;
+    margin-top: var(--sp-3);
+    align-self: flex-start;
+  }
+  .nda-explainer__cta:hover {
+    text-decoration: none;
+    color: var(--atc-claude);
+  }
+
+  :global(.tone-ink) .nda-explainer__inner {
+    background: var(--atc-paper-10);
+    border-color: var(--atc-paper-10);
+  }
+</style>

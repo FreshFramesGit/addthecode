@@ -1,0 +1,84 @@
+---
+/**
+ * TeamGridSection — team-members in grid.
+ *
+ * Spec: docs/07c §4.
+ * Schema: teamGridBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+import TeamCard from '../cards/TeamCard.astro'
+import { getTeamMembers } from '../../utils/sanity'
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  coreOnly?: boolean | null
+  showQuotes?: boolean | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { preClaim, heading, coreOnly, showQuotes, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeCoreOnly = coreOnly ?? true
+const safeShowQuotes = showQuotes ?? true
+
+const members = await getTeamMembers(safeCoreOnly)
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="team-grid"
+>
+  {(preClaim || heading) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={heading}
+      level={2}
+    />
+  )}
+
+  {members.length > 0 ? (
+    <div class="team-grid__items">
+      {members.map((m: any) => (
+        <TeamCard member={m} variant="core" showQuote={safeShowQuotes} />
+      ))}
+    </div>
+  ) : (
+    <p class="team-grid__empty">Nog geen team-members.</p>
+  )}
+</Section>
+
+<style>
+  .team-grid__items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-6);
+    margin-top: var(--sp-6);
+  }
+
+  .team-grid__empty {
+    color: var(--fg-meta);
+    font-size: var(--fs-body-small);
+    margin-top: var(--sp-5);
+  }
+
+  @media (max-width: 991px) {
+    .team-grid__items {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .team-grid__items {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

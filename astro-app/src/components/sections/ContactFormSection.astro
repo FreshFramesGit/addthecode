@@ -1,0 +1,333 @@
+---
+/**
+ * ContactFormSection — contact-formulier met Sanity-first storage.
+ *
+ * Spec: docs/07j §2 + docs/09-microcopy §2.1.
+ * Schema: contactFormBlock.
+ *
+ * Submit-flow: POST /api/contact-submit (Phase 3 wires endpoint).
+ * Bot-bescherming: Turnstile + honeypot via API endpoint.
+ * Init-guard tegen dubbele binding (Universal Rule #7).
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+import RichText from '../content/RichText.astro'
+import TurnstileField from '../forms/TurnstileField.astro'
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  intro?: any
+  topicOptions?: string[] | null
+  requireCompany?: boolean | null
+  submitLabel?: string | null
+  successMessage?: string | null
+  errorMessage?: string | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const {
+  preClaim,
+  heading,
+  intro,
+  topicOptions,
+  requireCompany,
+  submitLabel,
+  successMessage,
+  errorMessage,
+  tone,
+  anchorId,
+} = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeOptions = topicOptions ?? []
+const safeRequireCompany = requireCompany ?? false
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="contact-form-section"
+>
+  {(preClaim || heading) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={heading}
+      level={2}
+    />
+  )}
+
+  {intro && (
+    <div class="contact-form-section__intro">
+      <RichText value={intro} />
+    </div>
+  )}
+
+  <form
+    class="contact-form"
+    data-contact-form
+    data-success-message={successMessage ?? ''}
+    data-error-message={errorMessage ?? ''}
+    novalidate
+  >
+    {/* Honeypot — verborgen voor users, gevuld door bots */}
+    <div class="contact-form__honeypot" aria-hidden="true">
+      <label>
+        Laat dit veld leeg
+        <input type="text" name="company_url" tabindex="-1" autocomplete="off" />
+      </label>
+    </div>
+
+    <div class="contact-form__row">
+      <label class="contact-form__field">
+        <span class="contact-form__label">Naam</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+
+      <label class="contact-form__field">
+        <span class="contact-form__label">Email</span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+    </div>
+
+    <label class="contact-form__field">
+      <span class="contact-form__label">
+        Bedrijf {!safeRequireCompany && <span class="contact-form__optional">(optioneel)</span>}
+      </span>
+      <input
+        type="text"
+        name="company"
+        autocomplete="organization"
+        required={safeRequireCompany}
+      />
+    </label>
+
+    {safeOptions.length > 0 && (
+      <label class="contact-form__field">
+        <span class="contact-form__label">Waar gaat het over?</span>
+        <select name="topic" required>
+          <option value="">— Kies —</option>
+          {safeOptions.map((opt) => (
+            <option value={opt}>{opt}</option>
+          ))}
+        </select>
+      </label>
+    )}
+
+    <label class="contact-form__field">
+      <span class="contact-form__label">Bericht</span>
+      <textarea name="message" rows="6" required></textarea>
+    </label>
+
+    <TurnstileField />
+
+    <button type="submit" class="contact-form__submit">
+      <span data-label-default>{submitLabel ?? 'Verstuur bericht'}</span>
+      <span data-label-submitting hidden>Verzenden…</span>
+    </button>
+
+    <p
+      class="contact-form__feedback"
+      data-contact-feedback
+      aria-live="polite"
+      hidden
+    ></p>
+  </form>
+</Section>
+
+<script>
+  function initContactForms() {
+    const forms = document.querySelectorAll<HTMLFormElement>('[data-contact-form]')
+    forms.forEach((form) => {
+      if (form.dataset.bound === 'true') return
+      form.dataset.bound = 'true'
+
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')
+      const labelDefault = form.querySelector<HTMLElement>('[data-label-default]')
+      const labelSubmitting = form.querySelector<HTMLElement>('[data-label-submitting]')
+      const feedback = form.querySelector<HTMLElement>('[data-contact-feedback]')
+      const successMsg = form.dataset.successMessage ?? ''
+      const errorMsg = form.dataset.errorMessage ?? ''
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData(form)
+        const payload: Record<string, any> = {}
+        formData.forEach((v, k) => (payload[k] = v))
+
+        // Honeypot check
+        if (payload.company_url) {
+          if (feedback) {
+            feedback.textContent = errorMsg
+            feedback.hidden = false
+          }
+          return
+        }
+
+        labelDefault?.setAttribute('hidden', '')
+        labelSubmitting?.removeAttribute('hidden')
+        submit?.setAttribute('disabled', '')
+
+        try {
+          // TODO Phase 3: POST naar /api/contact-submit
+          // const res = await fetch('/api/contact-submit', {
+          //   method: 'POST',
+          //   headers: { 'Content-Type': 'application/json' },
+          //   body: JSON.stringify(payload),
+          // })
+          // if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+          await new Promise((r) => setTimeout(r, 800)) // stub-delay
+
+          if (feedback) {
+            feedback.textContent =
+              successMsg || '◌ Bericht verstuurd (stub — endpoint volgt in Phase 3).'
+            feedback.hidden = false
+            feedback.classList.add('contact-form__feedback--success')
+          }
+          form.reset()
+        } catch (err) {
+          if (feedback) {
+            feedback.textContent =
+              errorMsg ||
+              'Er is iets misgegaan. Stuur direct naar hello@addthecode.nl.'
+            feedback.hidden = false
+            feedback.classList.add('contact-form__feedback--error')
+          }
+        } finally {
+          labelDefault?.removeAttribute('hidden')
+          labelSubmitting?.setAttribute('hidden', '')
+          submit?.removeAttribute('disabled')
+        }
+      })
+    })
+  }
+
+  initContactForms()
+  document.addEventListener('astro:page-load', initContactForms)
+</script>
+
+<style>
+  .contact-form-section__intro {
+    max-width: 60ch;
+    margin: var(--sp-3) 0 var(--sp-5);
+  }
+  .contact-form-section__intro :global(p) {
+    color: var(--fg-secondary);
+    line-height: var(--lh-body);
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    max-width: 50rem;
+  }
+
+  .contact-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contact-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4);
+  }
+
+  .contact-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .contact-form__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+  }
+
+  .contact-form__optional {
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--fg-meta);
+  }
+
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    font: inherit;
+    font-size: var(--fs-body);
+    color: var(--fg-primary);
+    background: var(--atc-paper);
+    padding: var(--sp-3) var(--sp-4);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-small);
+    width: 100%;
+  }
+
+  .contact-form input:focus-visible,
+  .contact-form select:focus-visible,
+  .contact-form textarea:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 1px;
+  }
+
+  .contact-form textarea {
+    resize: vertical;
+    min-height: 8rem;
+    font-family: var(--font-body);
+  }
+
+  .contact-form__submit {
+    align-self: flex-start;
+    background: var(--atc-ink);
+    color: var(--atc-paper);
+    padding: var(--sp-3) var(--sp-5);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    border-radius: var(--radius-main);
+    margin-top: var(--sp-3);
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+  .contact-form__submit:hover:not(:disabled) {
+    background: var(--atc-claude);
+  }
+  .contact-form__submit:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+
+  .contact-form__feedback {
+    font-family: var(--font-mono);
+    font-size: var(--fs-body-small);
+    margin: var(--sp-3) 0 0;
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-small);
+  }
+  .contact-form__feedback--success {
+    background: rgba(36, 145, 196, 0.08);
+    color: var(--atc-signal);
+  }
+  .contact-form__feedback--error {
+    background: rgba(217, 119, 87, 0.08);
+    color: var(--atc-claude);
+  }
+
+  @media (max-width: 767px) {
+    .contact-form__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

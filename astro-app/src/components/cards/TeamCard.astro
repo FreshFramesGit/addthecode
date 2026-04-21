@@ -1,0 +1,156 @@
+---
+/**
+ * TeamCard — team-member card.
+ *
+ * Spec: docs/07c §4, docs/08 §3.4.
+ *
+ * Variants:
+ *  - core: full-bleed portrait + bio + quote (voor /team grid)
+ *  - collaborator: compact portrait + name + role
+ */
+
+import { urlFor } from '../../utils/sanity'
+import RichText from '../content/RichText.astro'
+
+interface Props {
+  member: any
+  variant?: 'core' | 'collaborator' | null
+  showQuote?: boolean | null
+}
+
+const { member, variant, showQuote } = Astro.props
+
+const safeVariant = variant ?? 'core'
+const safeShowQuote = showQuote ?? true
+
+const portraitUrl = member?.portrait?.asset?._id
+  ? urlFor(member.portrait).width(800).format('webp').url()
+  : null
+
+const cardClasses = ['team-card', `team-card--${safeVariant}`].join(' ')
+---
+
+<article class={cardClasses}>
+  {portraitUrl && (
+    <div class="team-card__portrait-wrapper">
+      <img
+        src={portraitUrl}
+        alt={member?.portrait?.alt ?? member?.name ?? ''}
+        loading="lazy"
+        class="team-card__portrait"
+      />
+    </div>
+  )}
+
+  <div class="team-card__content">
+    {member?.name && <h3 class="team-card__name">{member.name}</h3>}
+    {member?.role && <p class="team-card__role">{member.role}</p>}
+
+    {safeVariant === 'core' && member?.bio && (
+      <div class="team-card__bio">
+        <RichText value={member.bio} />
+      </div>
+    )}
+
+    {safeShowQuote && safeVariant === 'core' && member?.quote?.text && (
+      <blockquote class="team-card__quote">
+        <p>"{member.quote.text}"</p>
+        {member.quote.context && (
+          <footer class="team-card__quote-context">{member.quote.context}</footer>
+        )}
+      </blockquote>
+    )}
+  </div>
+</article>
+
+<style>
+  .team-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .team-card__portrait-wrapper {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--bg-quiet);
+  }
+
+  .team-card__portrait {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Desaturated-natural treatment per docs/05-beeldtaal */
+    filter: saturate(0.85);
+  }
+
+  .team-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .team-card__name {
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    margin: 0;
+  }
+
+  .team-card__role {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .team-card__bio :global(p) {
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body);
+    color: var(--fg-secondary);
+    margin: 0 0 var(--sp-2);
+  }
+  :global(.tone-ink) .team-card__bio :global(p) {
+    color: var(--atc-paper-70);
+  }
+
+  .team-card__quote {
+    margin: var(--sp-3) 0 0;
+    padding: var(--sp-4);
+    background: var(--bg-quiet);
+    border-radius: var(--radius-small);
+  }
+  .team-card__quote p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-body);
+    line-height: var(--lh-heading);
+    color: var(--fg-primary);
+    margin: 0 0 var(--sp-2);
+  }
+
+  .team-card__quote-context {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+  }
+
+  /* Compact collaborator variant */
+  .team-card--collaborator .team-card__portrait-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-round);
+    flex-shrink: 0;
+  }
+  .team-card--collaborator {
+    flex-direction: row;
+    align-items: center;
+  }
+  .team-card--collaborator .team-card__name {
+    font-size: var(--fs-body);
+  }
+</style>

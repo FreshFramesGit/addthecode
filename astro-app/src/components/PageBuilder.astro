@@ -3,26 +3,47 @@
  * PageBuilder — routes pageBuilder blocks to the correct section components.
  * Used by all pages that pull their content from the Sanity pageBuilder.
  *
- * Phase 1.5: alle 25 Add the Code blocks routeren naar PlaceholderSection.
- * Phase 2: vervang per block-type de mapping naar echte section-component.
+ * Phase 2 (homepage): 9 blocks routeren naar echte components.
+ * Phase 2.16: alle 26 Add the Code blocks routeren naar echte components.
  *
  * Universal Rule #4: respect `enabled` toggle — uitgeschakelde blocks worden
  * defensief gefilterd vóór render, naast de GROQ-side filter.
  */
 
-// Add the Code — homepage section-components (Phase 2 done)
+// Add the Code — Hero's
 import HeroHomeSection from './sections/HeroHomeSection.astro'
+import HeroStandardSection from './sections/HeroStandardSection.astro'
+
+// Add the Code — Sections
 import PitchOpeningSection from './sections/PitchOpeningSection.astro'
 import ServiceTriptychSection from './sections/ServiceTriptychSection.astro'
-import ProjectGridSection from './sections/ProjectGridSection.astro'
 import QuoteClusterSection from './sections/QuoteClusterSection.astro'
 import HeritageStripSection from './sections/HeritageStripSection.astro'
+import ProjectGridSection from './sections/ProjectGridSection.astro'
 import EssayGridSection from './sections/EssayGridSection.astro'
-import CtaRefreinSection from './sections/CtaRefreinSection.astro'
+import TeamGridSection from './sections/TeamGridSection.astro'
+import TimelineSection from './sections/TimelineSection.astro'
 import PrinciplesSection from './sections/PrinciplesSection.astro'
+import CtaRefreinSection from './sections/CtaRefreinSection.astro'
 
-// Add the Code — placeholder voor blocks die nog geen eigen component hebben
-import PlaceholderSection from './sections/PlaceholderSection.astro'
+// Add the Code — Case-detail blocks
+import DecisionsSection from './sections/DecisionsSection.astro'
+import PhaseSection from './sections/PhaseSection.astro'
+import MetaBlockSection from './sections/MetaBlockSection.astro'
+import ArtifactGallerySection from './sections/ArtifactGallerySection.astro'
+import MetricsStripSection from './sections/MetricsStripSection.astro'
+import NextCaseSection from './sections/NextCaseSection.astro'
+import NdaExplainerSection from './sections/NdaExplainerSection.astro'
+
+// Add the Code — Forms + utility
+import ContactFormSection from './sections/ContactFormSection.astro'
+import NewsletterFormSection from './sections/NewsletterFormSection.astro'
+import FaqSection from './sections/FaqSection.astro'
+import DirectChannelsSection from './sections/DirectChannelsSection.astro'
+import ExpectationStepsSection from './sections/ExpectationStepsSection.astro'
+import CalloutSection from './sections/CalloutSection.astro'
+import TagStripSection from './sections/TagStripSection.astro'
+import PreClaimSection from './sections/PreClaimSection.astro'
 
 // Legacy template-blocks (backwards-compat)
 import HeroSection from './sections/HeroSection.astro'
@@ -40,15 +61,15 @@ const { blocks } = Astro.props
 /**
  * Component map: block._type → Astro component.
  *
- * Add the Code blocks staan nu allemaal op PlaceholderSection. Fase 2 vervangt
- * per type een entry naar de echte component:
- *   import HeroHomeSection from './sections/HeroHomeSection.astro'
- *   ... heroHomeBlock: HeroHomeSection,
+ * Alle Add the Code blocks gemapt naar echte components per einde Phase 2.16.
+ * Add new blocks: register in studio/src/schemaTypes/index.ts + page-builder.ts
+ * accept-list, voeg PAGE_BUILDER_FRAGMENT branch toe in utils/sanity.ts,
+ * import + map hier.
  */
 const componentMap: Record<string, any> = {
   // ─── Add the Code Hero's ───
   heroHomeBlock: HeroHomeSection,
-  heroStandardBlock: PlaceholderSection, // TODO Phase 2.16
+  heroStandardBlock: HeroStandardSection,
 
   // ─── Add the Code Sections ───
   pitchOpeningBlock: PitchOpeningSection,
@@ -59,27 +80,27 @@ const componentMap: Record<string, any> = {
   projectGridBlock: ProjectGridSection,
   essayGridBlock: EssayGridSection,
   principlesBlock: PrinciplesSection,
-  teamGridBlock: PlaceholderSection, // TODO Phase 2.16 (team page)
-  timelineBlock: PlaceholderSection, // TODO Phase 2.16 (team page)
+  teamGridBlock: TeamGridSection,
+  timelineBlock: TimelineSection,
 
   // ─── Add the Code Case-detail blocks ───
-  decisionBlock: PlaceholderSection,
-  phaseBlock: PlaceholderSection,
-  metaBlock: PlaceholderSection,
-  artifactGalleryBlock: PlaceholderSection,
-  metricsStripBlock: PlaceholderSection,
-  nextCaseBlock: PlaceholderSection,
-  ndaExplainerBlock: PlaceholderSection,
+  decisionBlock: DecisionsSection,
+  phaseBlock: PhaseSection,
+  metaBlock: MetaBlockSection,
+  artifactGalleryBlock: ArtifactGallerySection,
+  metricsStripBlock: MetricsStripSection,
+  nextCaseBlock: NextCaseSection,
+  ndaExplainerBlock: NdaExplainerSection,
 
   // ─── Add the Code Forms + utility ───
-  contactFormBlock: PlaceholderSection,
-  newsletterFormBlock: PlaceholderSection,
-  faqBlock: PlaceholderSection,
-  directChannelsBlock: PlaceholderSection,
-  expectationStepsBlock: PlaceholderSection,
-  calloutBlock: PlaceholderSection,
-  tagStripBlock: PlaceholderSection,
-  preClaimBlock: PlaceholderSection,
+  contactFormBlock: ContactFormSection,
+  newsletterFormBlock: NewsletterFormSection,
+  faqBlock: FaqSection,
+  directChannelsBlock: DirectChannelsSection,
+  expectationStepsBlock: ExpectationStepsSection,
+  calloutBlock: CalloutSection,
+  tagStripBlock: TagStripSection,
+  preClaimBlock: PreClaimSection,
 
   // ─── Legacy template-blocks (backwards-compat) ───
   heroBlock: HeroSection,

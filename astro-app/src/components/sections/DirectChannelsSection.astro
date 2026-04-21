@@ -1,0 +1,167 @@
+---
+/**
+ * DirectChannelsSection — alternatieve contactkanalen.
+ *
+ * Spec: docs/07j §4.
+ * Schema: directChannelsBlock.
+ *
+ * Type-aware: maakt waarde klikbaar voor email/phone/whatsapp.
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+
+interface Channel {
+  _key?: string
+  kind?: 'email' | 'phone' | 'whatsapp' | 'address' | 'other' | null
+  label?: string | null
+  value?: string | null
+  helperLine?: string | null
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  channels?: Channel[] | null
+  layoutVariant?: 'grid-2x2' | 'inline' | 'stack' | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { preClaim, heading, channels, layoutVariant, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeVariant = layoutVariant ?? 'grid-2x2'
+const safeChannels = channels ?? []
+
+function channelHref(c: Channel): string | null {
+  if (!c.value) return null
+  if (c.kind === 'email') return `mailto:${c.value}`
+  if (c.kind === 'phone') return `tel:${c.value.replace(/\s+/g, '')}`
+  if (c.kind === 'whatsapp') {
+    const num = c.value.replace(/[^\d+]/g, '')
+    return `https://wa.me/${num}`
+  }
+  return null
+}
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="direct-channels"
+>
+  {(preClaim || heading) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={heading}
+      level={3}
+    />
+  )}
+
+  {safeChannels.length > 0 && (
+    <ul class={`direct-channels__list direct-channels__list--${safeVariant}`}>
+      {safeChannels.map((c) => {
+        const href = channelHref(c)
+        return (
+          <li class="direct-channels__item">
+            <span class="direct-channels__label">{c.label}</span>
+            {href ? (
+              <a
+                href={href}
+                target={c.kind === 'whatsapp' ? '_blank' : undefined}
+                rel={c.kind === 'whatsapp' ? 'noopener noreferrer' : undefined}
+                class="direct-channels__value"
+              >
+                {c.value}
+              </a>
+            ) : (
+              <span class="direct-channels__value direct-channels__value--static">
+                {c.value}
+              </span>
+            )}
+            {c.helperLine && (
+              <span class="direct-channels__helper">{c.helperLine}</span>
+            )}
+          </li>
+        )
+      })}
+    </ul>
+  )}
+</Section>
+
+<style>
+  .direct-channels__list {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-5) 0 0;
+    display: grid;
+    gap: var(--sp-5);
+  }
+
+  .direct-channels__list--grid-2x2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .direct-channels__list--inline {
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+
+  .direct-channels__list--stack {
+    grid-template-columns: 1fr;
+    max-width: 30rem;
+  }
+
+  .direct-channels__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-4);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+  }
+  :global(.tone-ink) .direct-channels__item {
+    border-color: var(--atc-paper-10);
+  }
+
+  .direct-channels__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+  }
+
+  .direct-channels__value {
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    color: var(--fg-primary);
+    text-decoration: none;
+    word-break: break-word;
+  }
+  .direct-channels__value:not(.direct-channels__value--static):hover {
+    color: var(--atc-claude);
+    text-decoration: none;
+  }
+  .direct-channels__value--static {
+    line-height: 1.5;
+  }
+  :global(.tone-ink) .direct-channels__value {
+    color: var(--fg-on-dark);
+  }
+
+  .direct-channels__helper {
+    font-size: var(--fs-meta);
+    color: var(--fg-meta);
+    font-style: italic;
+  }
+
+  @media (max-width: 767px) {
+    .direct-channels__list--grid-2x2 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

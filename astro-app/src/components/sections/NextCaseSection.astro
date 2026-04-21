@@ -1,0 +1,119 @@
+---
+/**
+ * NextCaseSection — recommendation aan einde van case-detail.
+ *
+ * Spec: docs/07h §11. Recommended (primair) + alternatieve case (optioneel).
+ * Schema: nextCaseBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import ProjectCard from '../cards/ProjectCard.astro'
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  recommendedCase?: any
+  recommendationReason?: string | null
+  alternativeCase?: any
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const {
+  preClaim,
+  heading,
+  recommendedCase,
+  recommendationReason,
+  alternativeCase,
+  tone,
+  anchorId,
+} = Astro.props
+
+const safeTone = tone ?? 'paper'
+const fallbackHeading = 'Volgende case'
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="next-case"
+>
+  <header class="next-case__header">
+    {preClaim && <p class="next-case__pre">{preClaim}</p>}
+    <h3 class="next-case__heading">{heading ?? fallbackHeading}</h3>
+  </header>
+
+  {recommendationReason && (
+    <p class="next-case__reason">{recommendationReason}</p>
+  )}
+
+  <div class="next-case__cards">
+    {recommendedCase && (
+      <div class="next-case__card next-case__card--recommended">
+        <ProjectCard case={recommendedCase} variant="featured-60-40" />
+      </div>
+    )}
+    {alternativeCase && (
+      <div class="next-case__card next-case__card--alternative">
+        <p class="next-case__alt-label">Of bekijk:</p>
+        <ProjectCard case={alternativeCase} variant="grid-3" />
+      </div>
+    )}
+  </div>
+</Section>
+
+<style>
+  .next-case__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-5);
+  }
+
+  .next-case__pre {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .next-case__heading {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h2);
+    margin: 0;
+  }
+
+  .next-case__reason {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    color: var(--fg-secondary);
+    max-width: 50ch;
+    margin: 0 0 var(--sp-5);
+  }
+
+  .next-case__cards {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--sp-6);
+    align-items: start;
+  }
+
+  .next-case__alt-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--fg-meta);
+    margin: 0 0 var(--sp-3);
+  }
+
+  @media (max-width: 991px) {
+    .next-case__cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

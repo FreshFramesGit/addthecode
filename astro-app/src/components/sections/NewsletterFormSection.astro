@@ -1,0 +1,190 @@
+---
+/**
+ * NewsletterFormSection — standalone newsletter-block.
+ *
+ * Voor footer-newsletter, zie Footer.astro (inline newsletter form).
+ * Deze section is voor "academy bottom" of "site-breed" placement
+ * waar je een grotere newsletter-aanbod wil tonen.
+ *
+ * Spec: docs/09-microcopy §2.2.
+ * Schema: newsletterFormBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import { getComponentDefaults } from '../../utils/sanity'
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  overrideIntro?: string | null
+  overrideHelperLine?: string | null
+  source?: 'footer' | 'academy' | 'other' | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const {
+  preClaim,
+  overrideIntro,
+  overrideHelperLine,
+  source,
+  tone,
+  anchorId,
+} = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeSource = source ?? 'other'
+
+const defaults = await getComponentDefaults()
+const newsletter = defaults?.newsletter ?? null
+
+const intro = overrideIntro ?? newsletter?.intro ?? null
+const helper = overrideHelperLine ?? newsletter?.helperLine ?? null
+const placeholder = newsletter?.placeholder ?? null
+const buttonLabel = newsletter?.buttonLabel ?? null
+const buttonLabelSubmitting = newsletter?.buttonLabelSubmitting ?? null
+const successMessage = newsletter?.successMessage ?? null
+const errorMessage = newsletter?.errorMessage ?? null
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="small"
+  anchorId={anchorId ?? undefined}
+  class="newsletter-form-section"
+>
+  <div class="newsletter-form-section__inner">
+    {preClaim && <p class="newsletter-form-section__pre">{preClaim}</p>}
+
+    {intro && <p class="newsletter-form-section__intro">{intro}</p>}
+
+    <form
+      class="newsletter-form-section__form"
+      data-newsletter-form
+      data-source={safeSource}
+      data-success-message={successMessage ?? ''}
+      data-error-message={errorMessage ?? ''}
+      novalidate
+    >
+      <label class="u-visually-hidden" for="newsletter-section-email">
+        Email-adres
+      </label>
+      <input
+        type="email"
+        id="newsletter-section-email"
+        name="email"
+        required
+        autocomplete="email"
+        placeholder={placeholder ?? ''}
+        class="newsletter-form-section__input"
+      />
+      {buttonLabel && (
+        <button type="submit" class="newsletter-form-section__submit">
+          <span data-label-default>{buttonLabel}</span>
+          <span data-label-submitting hidden>{buttonLabelSubmitting ?? buttonLabel}</span>
+        </button>
+      )}
+    </form>
+
+    {helper && <p class="newsletter-form-section__helper">{helper}</p>}
+
+    <p
+      class="newsletter-form-section__feedback"
+      data-newsletter-feedback
+      aria-live="polite"
+      hidden
+    ></p>
+  </div>
+</Section>
+
+<style>
+  .newsletter-form-section__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    max-width: 36rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .newsletter-form-section__pre {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .newsletter-form-section__intro {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    color: var(--fg-primary);
+    margin: 0;
+    text-wrap: balance;
+  }
+  :global(.tone-ink) .newsletter-form-section__intro {
+    color: var(--fg-on-dark);
+  }
+
+  .newsletter-form-section__form {
+    display: flex;
+    gap: var(--sp-2);
+    margin-top: var(--sp-3);
+  }
+
+  .newsletter-form-section__input {
+    flex: 1;
+    font: inherit;
+    font-size: var(--fs-body);
+    background: var(--atc-paper);
+    color: var(--fg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-small);
+    padding: var(--sp-3) var(--sp-4);
+  }
+  .newsletter-form-section__input:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 1px;
+  }
+
+  .newsletter-form-section__submit {
+    background: var(--atc-ink);
+    color: var(--atc-paper);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    padding: var(--sp-3) var(--sp-5);
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+  .newsletter-form-section__submit:hover:not(:disabled) {
+    background: var(--atc-claude);
+  }
+  .newsletter-form-section__submit:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+
+  .newsletter-form-section__helper {
+    font-size: var(--fs-meta);
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .newsletter-form-section__feedback {
+    font-family: var(--font-mono);
+    font-size: var(--fs-body-small);
+    color: var(--atc-claude);
+  }
+
+  @media (max-width: 479px) {
+    .newsletter-form-section__form {
+      flex-direction: column;
+    }
+  }
+</style>

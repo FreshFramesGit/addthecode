@@ -1,0 +1,112 @@
+---
+/**
+ * MetaBlockSection — sleutel-waarde tabel voor case-meta.
+ *
+ * Spec: docs/07h §2 (Client / Period / Stack / Role / Status).
+ * Schema: metaBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import CmsLink from '../content/CmsLink.astro'
+
+interface Item {
+  _key?: string
+  label?: string | null
+  value?: string | null
+  href?: any
+}
+
+interface Props {
+  enabled?: boolean
+  heading?: string | null
+  items?: Item[] | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { heading, items, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeItems = items ?? []
+---
+
+<Section
+  tone={safeTone}
+  padding="small"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="meta-block"
+>
+  {heading && <h3 class="meta-block__heading">{heading}</h3>}
+
+  {safeItems.length > 0 && (
+    <dl class="meta-block__list">
+      {safeItems.map((item) => (
+        <div class="meta-block__row">
+          <dt class="meta-block__label">{item.label}</dt>
+          <dd class="meta-block__value">
+            {item.href ? (
+              <CmsLink link={item.href} class="meta-block__link">{item.value}</CmsLink>
+            ) : (
+              item.value
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  )}
+</Section>
+
+<style>
+  .meta-block__heading {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0 0 var(--sp-3);
+  }
+
+  .meta-block__list {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--sp-4) var(--sp-5);
+    border-top: 1px solid var(--border-default);
+    padding-top: var(--sp-4);
+  }
+  :global(.tone-ink) .meta-block__list {
+    border-top-color: var(--atc-paper-10);
+  }
+
+  .meta-block__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .meta-block__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  .meta-block__value {
+    font-size: var(--fs-body);
+    color: var(--fg-primary);
+    margin: 0;
+  }
+  :global(.tone-ink) .meta-block__value {
+    color: var(--fg-on-dark);
+  }
+
+  .meta-block__link {
+    color: var(--link-hover);
+    text-decoration: underline;
+    text-decoration-color: var(--atc-mid-gray);
+    text-underline-offset: 0.2em;
+  }
+</style>

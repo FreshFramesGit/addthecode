@@ -1,0 +1,242 @@
+---
+/**
+ * HeroStandardSection — generic hero met 3 layoutVariants.
+ *
+ * Spec: docs/08 §2.2.
+ * Schema: heroStandardBlock.
+ *
+ * Variants:
+ *  - text-only: pre-claim + heading + subheading + ctas
+ *  - with-artifact: tekst-kolom links, artifact rechts (40/60)
+ *  - split-50-50: gelijke kolommen
+ */
+
+import Section from '../layout/Section.astro'
+import PreClaim from '../content/PreClaim.astro'
+import CmsLink from '../content/CmsLink.astro'
+import { urlFor } from '../../utils/sanity'
+
+interface Cta {
+  _key?: string
+  label?: string | null
+  variant?: 'primary' | 'secondary' | 'tertiary' | null
+  link?: any
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  subheading?: string | null
+  layoutVariant?: 'text-only' | 'with-artifact' | 'split-50-50' | null
+  artifact?: any
+  ctas?: Cta[] | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const {
+  preClaim,
+  heading,
+  subheading,
+  layoutVariant,
+  artifact,
+  ctas,
+  tone,
+  anchorId,
+} = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeVariant = layoutVariant ?? 'text-only'
+const safeCtas = ctas ?? []
+
+const artifactUrl = artifact?.asset?._id
+  ? urlFor(artifact).width(900).format('webp').url()
+  : null
+
+const layoutClass = `hero-standard__layout hero-standard__layout--${safeVariant}`
+---
+
+<Section
+  tone={safeTone}
+  padding="page-top"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  ariaLabel={heading ?? undefined}
+  class="hero-standard"
+>
+  <div class={layoutClass}>
+    <div class="hero-standard__content">
+      {preClaim && <PreClaim text={preClaim} class="hero-standard__pre" />}
+
+      {heading && <h1 class="hero-standard__heading">{heading}</h1>}
+
+      {subheading && <p class="hero-standard__subheading">{subheading}</p>}
+
+      {safeCtas.length > 0 && (
+        <div class="hero-standard__ctas">
+          {safeCtas.map((cta) => (
+            <CmsLink
+              link={cta.link}
+              class={`hero-standard__cta hero-standard__cta--${cta.variant ?? 'primary'}`}
+            >
+              <span>{cta.label ?? ''}</span>
+            </CmsLink>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {safeVariant !== 'text-only' && artifactUrl && (
+      <div class="hero-standard__artifact">
+        <img
+          src={artifactUrl}
+          alt={artifact?.alt ?? heading ?? ''}
+          class="hero-standard__image"
+        />
+        {artifact?.caption && (
+          <p class="hero-standard__caption">{artifact.caption}</p>
+        )}
+      </div>
+    )}
+  </div>
+</Section>
+
+<style>
+  .hero-standard__layout {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: center;
+  }
+
+  .hero-standard__layout--text-only {
+    grid-template-columns: 1fr;
+    max-width: 36ch;
+  }
+
+  .hero-standard__layout--with-artifact {
+    grid-template-columns: 2fr 3fr;
+  }
+
+  .hero-standard__layout--split-50-50 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-standard__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  .hero-standard__heading {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-h1);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    margin: 0;
+    text-wrap: balance;
+  }
+  :global(.tone-ink) .hero-standard__heading {
+    color: var(--fg-on-dark);
+  }
+
+  .hero-standard__subheading {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    color: var(--fg-secondary);
+    max-width: 50ch;
+    margin: var(--sp-2) 0 0;
+  }
+  :global(.tone-ink) .hero-standard__subheading {
+    color: var(--atc-paper-70);
+  }
+
+  .hero-standard__ctas {
+    display: flex;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+    margin-top: var(--sp-4);
+  }
+
+  .hero-standard__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-5);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius-main);
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .hero-standard__cta--primary {
+    background: var(--atc-ink);
+    color: var(--atc-paper);
+  }
+  .hero-standard__cta--primary:hover {
+    background: var(--atc-claude);
+    text-decoration: none;
+  }
+
+  .hero-standard__cta--secondary {
+    background: transparent;
+    color: var(--fg-primary);
+    border: 1px solid var(--border-default);
+  }
+  .hero-standard__cta--secondary:hover {
+    background: var(--bg-quiet);
+    text-decoration: none;
+  }
+
+  .hero-standard__cta--tertiary {
+    background: transparent;
+    color: var(--link-hover);
+    padding: var(--sp-2) 0;
+    text-decoration: underline;
+    text-decoration-color: var(--atc-mid-gray);
+    text-underline-offset: 0.2em;
+  }
+
+  :global(.tone-ink) .hero-standard__cta--primary {
+    background: var(--atc-paper);
+    color: var(--atc-ink);
+  }
+  :global(.tone-ink) .hero-standard__cta--secondary {
+    color: var(--fg-on-dark);
+    border-color: var(--atc-paper-10);
+  }
+
+  .hero-standard__artifact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .hero-standard__image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-main);
+    object-fit: cover;
+    aspect-ratio: 4/3;
+  }
+
+  .hero-standard__caption {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  @media (max-width: 991px) {
+    .hero-standard__layout--with-artifact,
+    .hero-standard__layout--split-50-50 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

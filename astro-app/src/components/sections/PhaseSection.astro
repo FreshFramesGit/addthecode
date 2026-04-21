@@ -1,0 +1,196 @@
+---
+/**
+ * PhaseSection — project-fase rendering.
+ *
+ * Spec: docs/07d §3 (approach: 5 fases), docs/07h §5 (case-detail per fase).
+ * Schema: phaseBlock — gedeeld tussen approach + case.
+ */
+
+import Section from '../layout/Section.astro'
+import RichText from '../content/RichText.astro'
+
+interface Props {
+  enabled?: boolean
+  phaseNumber?: string | null
+  phaseName?: string | null
+  oneLiner?: string | null
+  body?: any
+  aiRole?: string | null
+  humanResponsibility?: string | null
+  deliverables?: string[] | null
+  duration?: string | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const {
+  phaseNumber,
+  phaseName,
+  oneLiner,
+  body,
+  aiRole,
+  humanResponsibility,
+  deliverables,
+  duration,
+  tone,
+  anchorId,
+} = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeDeliverables = deliverables ?? []
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="phase"
+>
+  <article class="phase__article">
+    <header class="phase__header">
+      {phaseNumber && <span class="phase__number">{phaseNumber}</span>}
+      {phaseName && <h3 class="phase__name">{phaseName}</h3>}
+      {duration && <span class="phase__duration">{duration}</span>}
+    </header>
+
+    {oneLiner && <p class="phase__one-liner">{oneLiner}</p>}
+
+    {body && (
+      <div class="phase__body">
+        <RichText value={body} />
+      </div>
+    )}
+
+    <div class="phase__roles">
+      {aiRole && (
+        <div class="phase__role">
+          <p class="phase__role-label">AI-rol</p>
+          <p class="phase__role-text">{aiRole}</p>
+        </div>
+      )}
+      {humanResponsibility && (
+        <div class="phase__role">
+          <p class="phase__role-label">Mens-verantwoordelijkheid</p>
+          <p class="phase__role-text">{humanResponsibility}</p>
+        </div>
+      )}
+    </div>
+
+    {safeDeliverables.length > 0 && (
+      <div class="phase__deliverables">
+        <p class="phase__role-label">Deliverables</p>
+        <ul class="phase__deliverable-list">
+          {safeDeliverables.map((d) => <li>{d}</li>)}
+        </ul>
+      </div>
+    )}
+  </article>
+</Section>
+
+<style>
+  .phase__article {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  .phase__header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+  }
+
+  .phase__number {
+    font-family: var(--font-mono);
+    font-size: var(--fs-h3);
+    color: var(--atc-claude);
+    line-height: 1;
+  }
+
+  .phase__name {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h2);
+    margin: 0;
+  }
+
+  .phase__duration {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+  }
+
+  .phase__one-liner {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    color: var(--fg-secondary);
+    max-width: 60ch;
+  }
+
+  .phase__body :global(p) {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    margin: 0 0 var(--sp-3);
+  }
+
+  .phase__roles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-5);
+    padding: var(--sp-5);
+    background: var(--bg-quiet);
+    border-radius: var(--radius-main);
+  }
+
+  .phase__role-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--atc-claude);
+    margin: 0 0 var(--sp-2);
+  }
+
+  .phase__role-text {
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body);
+    color: var(--fg-primary);
+    margin: 0;
+  }
+
+  .phase__deliverables {
+    margin-top: var(--sp-3);
+  }
+
+  .phase__deliverable-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  .phase__deliverable-list li {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--fg-meta);
+    padding: var(--sp-1) var(--sp-3);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-small);
+  }
+
+  :global(.tone-ink) .phase__roles {
+    background: var(--atc-paper-10);
+  }
+
+  @media (max-width: 767px) {
+    .phase__roles {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

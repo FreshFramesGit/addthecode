@@ -1,0 +1,194 @@
+---
+/**
+ * DecisionsSection — case-detail decision-block.
+ *
+ * Spec: docs/07h §6. Maakt traceerbaar waarom een keuze is gemaakt.
+ * Schema: decisionBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+import RichText from '../content/RichText.astro'
+
+interface Option {
+  _key?: string
+  label?: string | null
+  pros?: any
+  cons?: any
+  chosen?: boolean | null
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  question?: string | null
+  options?: Option[] | null
+  conclusion?: any
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { preClaim, question, options, conclusion, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeOptions = options ?? []
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="decisions"
+>
+  {(preClaim || question) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={question}
+      level={3}
+    />
+  )}
+
+  {safeOptions.length > 0 && (
+    <ul class="decisions__options" aria-label="Beslissingsopties">
+      {safeOptions.map((opt) => (
+        <li class={`decisions__option ${opt.chosen ? 'decisions__option--chosen' : ''}`}>
+          <header class="decisions__option-header">
+            <span class="decisions__option-marker" aria-hidden="true">
+              {opt.chosen ? '✓' : '○'}
+            </span>
+            <h4 class="decisions__option-label">{opt.label}</h4>
+          </header>
+          {opt.pros && (
+            <div class="decisions__pros">
+              <p class="decisions__col-label">Pros</p>
+              <RichText value={opt.pros} />
+            </div>
+          )}
+          {opt.cons && (
+            <div class="decisions__cons">
+              <p class="decisions__col-label">Cons</p>
+              <RichText value={opt.cons} />
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  )}
+
+  {conclusion && (
+    <div class="decisions__conclusion">
+      <p class="decisions__conclusion-label">Conclusie</p>
+      <RichText value={conclusion} />
+    </div>
+  )}
+</Section>
+
+<style>
+  .decisions__options {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-5) 0;
+    display: grid;
+    gap: var(--sp-4);
+  }
+
+  .decisions__option {
+    padding: var(--sp-5);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+    background: var(--atc-paper);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'header header'
+      'pros cons';
+    gap: var(--sp-4);
+  }
+
+  .decisions__option--chosen {
+    border-color: var(--atc-claude);
+    background: rgba(217, 119, 87, 0.04);
+  }
+
+  .decisions__option-header {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    margin: 0;
+  }
+
+  .decisions__option-marker {
+    font-family: var(--font-mono);
+    color: var(--atc-claude);
+    font-size: var(--fs-h4);
+  }
+
+  .decisions__option-label {
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    margin: 0;
+  }
+
+  .decisions__pros { grid-area: pros; }
+  .decisions__cons { grid-area: cons; }
+
+  .decisions__col-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0 0 var(--sp-2);
+  }
+
+  .decisions__pros :global(p),
+  .decisions__cons :global(p) {
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body);
+    color: var(--fg-secondary);
+    margin: 0;
+  }
+
+  .decisions__conclusion {
+    margin-top: var(--sp-5);
+    padding: var(--sp-5);
+    border-left: 3px solid var(--atc-claude);
+    background: var(--bg-quiet);
+    border-radius: var(--radius-small);
+  }
+
+  .decisions__conclusion-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--atc-claude);
+    margin: 0 0 var(--sp-2);
+  }
+
+  .decisions__conclusion :global(p) {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    margin: 0;
+  }
+
+  :global(.tone-ink) .decisions__option {
+    background: var(--atc-paper-10);
+    border-color: var(--atc-paper-10);
+  }
+  :global(.tone-ink) .decisions__conclusion {
+    background: var(--atc-paper-10);
+  }
+
+  @media (max-width: 767px) {
+    .decisions__option {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'header'
+        'pros'
+        'cons';
+    }
+  }
+</style>

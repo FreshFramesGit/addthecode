@@ -1,0 +1,155 @@
+---
+/**
+ * TimelineSection — verticale of horizontale tijdlijn.
+ *
+ * Spec: docs/07c §5 (Fresh Frames history 2017–2026).
+ * Schema: timelineBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+
+interface Item {
+  _key?: string
+  year?: string | null
+  label?: string | null
+  description?: string | null
+  highlight?: boolean | null
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  intro?: string | null
+  items?: Item[] | null
+  orientation?: 'vertical' | 'horizontal' | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { preClaim, heading, intro, items, orientation, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeOrientation = orientation ?? 'vertical'
+const safeItems = items ?? []
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="timeline"
+>
+  {(preClaim || heading || intro) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={heading}
+      intro={intro}
+      level={2}
+    />
+  )}
+
+  {safeItems.length > 0 && (
+    <ol class={`timeline__list timeline__list--${safeOrientation}`}>
+      {safeItems.map((item) => (
+        <li class={`timeline__item ${item.highlight ? 'timeline__item--highlight' : ''}`}>
+          <span class="timeline__year">{item.year}</span>
+          <div class="timeline__content">
+            <h4 class="timeline__label">{item.label}</h4>
+            {item.description && <p class="timeline__description">{item.description}</p>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  )}
+</Section>
+
+<style>
+  .timeline__list {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-6) 0 0;
+  }
+
+  /* ─── Vertical (default) ──────────────────────────────── */
+  .timeline__list--vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-left: 1px solid var(--border-default);
+    padding-left: var(--sp-5);
+  }
+  .timeline__list--vertical .timeline__item {
+    position: relative;
+    padding: var(--sp-4) 0;
+  }
+  .timeline__list--vertical .timeline__item::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * var(--sp-5) - 4px);
+    top: var(--sp-5);
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-round);
+    background: var(--atc-mid-gray);
+  }
+  .timeline__list--vertical .timeline__item--highlight::before {
+    background: var(--atc-claude);
+    width: 12px;
+    height: 12px;
+    left: calc(-1 * var(--sp-5) - 6px);
+  }
+
+  /* ─── Horizontal ──────────────────────────────────────── */
+  .timeline__list--horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--sp-5);
+    border-top: 1px solid var(--border-default);
+    padding-top: var(--sp-5);
+  }
+  .timeline__list--horizontal .timeline__item {
+    padding-block: 0;
+  }
+
+  .timeline__year {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    color: var(--atc-claude);
+  }
+
+  .timeline__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    margin-top: var(--sp-2);
+  }
+
+  .timeline__label {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h4);
+    color: var(--fg-primary);
+    margin: 0;
+  }
+  :global(.tone-ink) .timeline__label {
+    color: var(--fg-on-dark);
+  }
+
+  .timeline__item--highlight .timeline__label {
+    color: var(--atc-claude);
+  }
+
+  .timeline__description {
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body);
+    color: var(--fg-secondary);
+    margin: 0;
+  }
+  :global(.tone-ink) .timeline__description {
+    color: var(--atc-paper-70);
+  }
+</style>

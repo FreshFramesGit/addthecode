@@ -1,0 +1,37 @@
+---
+/**
+ * PreClaimSection — standalone pre-claim als pageBuilder-element.
+ *
+ * Spec: docs/08 §5.1.
+ * Schema: preClaimBlock.
+ *
+ * Meestal als veld binnen andere blocks (hero, section-heading), maar ook
+ * beschikbaar als losse block voor kale labels (bv intro tussen secties).
+ */
+
+import Section from '../layout/Section.astro'
+import PreClaim from '../content/PreClaim.astro'
+
+interface Props {
+  enabled?: boolean
+  text?: string | null
+  showThinkingRing?: boolean | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { text, showThinkingRing, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeShowRing = showThinkingRing ?? true
+---
+
+<Section
+  tone={safeTone}
+  padding="small"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="pre-claim-section"
+>
+  {text && <PreClaim text={text} showThinkingRing={safeShowRing} />}
+</Section>

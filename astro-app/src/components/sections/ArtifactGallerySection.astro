@@ -1,0 +1,161 @@
+---
+/**
+ * ArtifactGallerySection — static artifact-thumbs gallery.
+ *
+ * Spec: docs/07h §7. Geen carousel (docs/04 §3.3 — bewust statisch).
+ * Schema: artifactGalleryBlock.
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+import { urlFor } from '../../utils/sanity'
+
+interface Item {
+  _key?: string
+  image?: any
+  title?: string | null
+  caption?: string | null
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  intro?: string | null
+  items?: Item[] | null
+  layoutVariant?: 'grid-3' | 'grid-2' | 'stack' | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { preClaim, heading, intro, items, layoutVariant, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeVariant = layoutVariant ?? 'grid-3'
+const safeItems = items ?? []
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="artifact-gallery"
+>
+  {(preClaim || heading || intro) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={heading}
+      intro={intro}
+      level={3}
+    />
+  )}
+
+  {safeItems.length > 0 && (
+    <ul class={`artifact-gallery__list artifact-gallery__list--${safeVariant}`}>
+      {safeItems.map((item) => {
+        const imageUrl = item.image?.asset?._id
+          ? urlFor(item.image).width(900).format('webp').url()
+          : null
+        return (
+          <li class="artifact-gallery__item">
+            {imageUrl && (
+              <figure class="artifact-gallery__figure">
+                <img
+                  src={imageUrl}
+                  alt={item.image?.alt ?? item.title ?? ''}
+                  loading="lazy"
+                  class="artifact-gallery__image"
+                />
+                {(item.title || item.caption) && (
+                  <figcaption class="artifact-gallery__caption">
+                    {item.title && <span class="artifact-gallery__title">{item.title}</span>}
+                    {item.caption && <span class="artifact-gallery__text">{item.caption}</span>}
+                  </figcaption>
+                )}
+              </figure>
+            )}
+          </li>
+        )
+      })}
+    </ul>
+  )}
+</Section>
+
+<style>
+  .artifact-gallery__list {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-5) 0 0;
+    display: grid;
+    gap: var(--sp-5);
+  }
+
+  .artifact-gallery__list--grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .artifact-gallery__list--grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .artifact-gallery__list--stack {
+    grid-template-columns: 1fr;
+    max-width: 50rem;
+    margin-inline: auto;
+  }
+
+  .artifact-gallery__figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .artifact-gallery__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: var(--radius-small);
+    background: var(--bg-quiet);
+  }
+
+  .artifact-gallery__caption {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .artifact-gallery__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-style: italic;
+    color: var(--fg-primary);
+  }
+  :global(.tone-ink) .artifact-gallery__title {
+    color: var(--fg-on-dark);
+  }
+
+  .artifact-gallery__text {
+    font-size: var(--fs-body-small);
+    color: var(--fg-secondary);
+    line-height: var(--lh-body);
+  }
+  :global(.tone-ink) .artifact-gallery__text {
+    color: var(--atc-paper-70);
+  }
+
+  @media (max-width: 991px) {
+    .artifact-gallery__list--grid-3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .artifact-gallery__list--grid-3,
+    .artifact-gallery__list--grid-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

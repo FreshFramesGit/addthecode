@@ -1,0 +1,124 @@
+---
+/**
+ * CalloutSection — inline emphasis-blok als pageBuilder-element.
+ *
+ * Spec: docs/08 §5.4.
+ * Schema: calloutBlock.
+ *
+ * 4 kinds: side-note / pull-quote / diagram-text / warning.
+ */
+
+import Section from '../layout/Section.astro'
+import RichText from '../content/RichText.astro'
+
+interface Props {
+  enabled?: boolean
+  kind?: 'side-note' | 'pull-quote' | 'diagram-text' | 'warning' | null
+  body?: any
+  attribution?: string | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { kind, body, attribution, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'paper'
+const safeKind = kind ?? 'side-note'
+---
+
+<Section
+  tone={safeTone}
+  padding="small"
+  container="small"
+  anchorId={anchorId ?? undefined}
+  class="callout-section"
+>
+  <aside class={`callout callout--${safeKind}`}>
+    {body && (
+      <div class="callout__body">
+        <RichText value={body} />
+      </div>
+    )}
+    {safeKind === 'pull-quote' && attribution && (
+      <p class="callout__attribution">— {attribution}</p>
+    )}
+  </aside>
+</Section>
+
+<style>
+  .callout {
+    padding: var(--sp-5);
+    border-radius: var(--radius-main);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .callout--side-note {
+    background: var(--bg-quiet);
+    border-left: 3px solid var(--atc-mid-gray);
+  }
+  .callout--side-note .callout__body :global(p) {
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body);
+    color: var(--fg-secondary);
+  }
+
+  .callout--pull-quote {
+    border-left: 3px solid var(--atc-claude);
+    padding-left: var(--sp-6);
+  }
+  .callout--pull-quote .callout__body :global(p) {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-h3);
+    line-height: var(--lh-heading);
+    color: var(--fg-primary);
+    text-wrap: balance;
+  }
+
+  .callout--diagram-text {
+    background: var(--bg-quiet);
+    border-radius: var(--radius-main);
+  }
+  .callout--diagram-text .callout__body :global(p) {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    line-height: var(--lh-mono);
+    color: var(--fg-secondary);
+  }
+
+  .callout--warning {
+    background: rgba(251, 202, 16, 0.12);
+    border-left: 3px solid var(--atc-spark);
+  }
+  .callout--warning .callout__body :global(p) {
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body);
+    color: var(--fg-primary);
+  }
+
+  .callout__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .callout__attribution {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0;
+  }
+
+  :global(.tone-ink) .callout--side-note,
+  :global(.tone-ink) .callout--diagram-text {
+    background: var(--atc-paper-10);
+  }
+  :global(.tone-ink) .callout__body :global(p) {
+    color: var(--atc-paper-70);
+  }
+  :global(.tone-ink) .callout--pull-quote .callout__body :global(p) {
+    color: var(--fg-on-dark);
+  }
+</style>

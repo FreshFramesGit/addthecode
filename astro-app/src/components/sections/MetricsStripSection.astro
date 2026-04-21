@@ -1,0 +1,147 @@
+---
+/**
+ * MetricsStripSection — KPI-strip voor case-detail.
+ *
+ * Spec: docs/07h §10 (bv Bell `CMS-tijd -85%`).
+ * Schema: metricsStripBlock.
+ *
+ * Verschijnt onverbloemd ⚠ markering bij metrics waar `verifiedByAlex: false`
+ * (alleen in DEV — pre-launch QA-script blokkeert publicatie).
+ */
+
+import Section from '../layout/Section.astro'
+import SectionHeading from '../content/SectionHeading.astro'
+
+interface Metric {
+  _key?: string
+  label?: string | null
+  value?: string | null
+  source?: string | null
+  verifiedByAlex?: boolean | null
+}
+
+interface Props {
+  enabled?: boolean
+  preClaim?: string | null
+  heading?: string | null
+  metrics?: Metric[] | null
+  sourceNote?: string | null
+  tone?: 'paper' | 'ink' | 'claude' | null
+  anchorId?: string | null
+}
+
+const { preClaim, heading, metrics, sourceNote, tone, anchorId } = Astro.props
+
+const safeTone = tone ?? 'ink'
+const safeMetrics = metrics ?? []
+const isDev = import.meta.env.DEV
+---
+
+<Section
+  tone={safeTone}
+  padding="main"
+  container="main"
+  anchorId={anchorId ?? undefined}
+  class="metrics-strip"
+>
+  {(preClaim || heading) && (
+    <SectionHeading
+      preClaim={preClaim}
+      heading={heading}
+      level={3}
+    />
+  )}
+
+  {safeMetrics.length > 0 && (
+    <ul class="metrics-strip__list" aria-label="Metrics">
+      {safeMetrics.map((m) => (
+        <li class="metrics-strip__item">
+          <p class="metrics-strip__value">
+            {m.value}
+            {isDev && m.verifiedByAlex === false && (
+              <span class="metrics-strip__warn" title="Onbevestigd door Alex — pre-launch QA blocker">
+                ⚠
+              </span>
+            )}
+          </p>
+          <p class="metrics-strip__label">{m.label}</p>
+          {m.source && <p class="metrics-strip__source">{m.source}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
+
+  {sourceNote && <p class="metrics-strip__note">{sourceNote}</p>}
+</Section>
+
+<style>
+  .metrics-strip__list {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-5) 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--sp-5);
+  }
+
+  .metrics-strip__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-5);
+    border: 1px solid var(--atc-paper-10);
+    border-radius: var(--radius-main);
+  }
+
+  .metrics-strip__value {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-display);
+    line-height: 1;
+    color: var(--atc-claude);
+    margin: 0;
+  }
+
+  .metrics-strip__warn {
+    margin-left: var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--atc-spark);
+  }
+
+  .metrics-strip__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--atc-paper-70);
+    margin: 0;
+  }
+
+  .metrics-strip__source {
+    font-size: var(--fs-meta);
+    color: var(--atc-paper-70);
+    margin: 0;
+  }
+
+  .metrics-strip__note {
+    margin: var(--sp-5) 0 0;
+    font-size: var(--fs-meta);
+    color: var(--atc-paper-70);
+    font-style: italic;
+  }
+
+  /* Light tone variant */
+  :global(.tone-paper) .metrics-strip__item,
+  :global(.tone-claude) .metrics-strip__item {
+    border-color: var(--border-default);
+  }
+  :global(.tone-paper) .metrics-strip__label,
+  :global(.tone-claude) .metrics-strip__label {
+    color: var(--fg-meta);
+  }
+  :global(.tone-paper) .metrics-strip__source,
+  :global(.tone-claude) .metrics-strip__source {
+    color: var(--fg-meta);
+  }
+</style>
