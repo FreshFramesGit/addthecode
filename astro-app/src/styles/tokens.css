@@ -186,10 +186,15 @@
   --section-pad-large:    8rem;
   --section-pad-top:      6rem;
 
-  /* Containers (docs/03 §4.3) */
+  /* Containers (docs/03 §4.3) — T-shirt sizing.
+     small=42rem (essay-leeskolom), medium=72rem (default), large=88rem
+     (wide hero/grid), full=100% (full-bleed banners).
+     `--container-main` blijft als alias voor backwards-compat. */
   --container-small:      42rem;
-  --container-main:       72rem;
+  --container-medium:     72rem;
+  --container-large:      88rem;
   --container-full:       100%;
+  --container-main:       var(--container-medium); /* alias — gebruik medium */
   --container-gutter:     clamp(1.25rem, 4vw, 3rem);
 
   /* ------------------------------------------------------------

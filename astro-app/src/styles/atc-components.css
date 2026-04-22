@@ -11,13 +11,23 @@ body { margin: 0; }
    Global layout
    ------------------------------------------------------------ */
 
+/* Containers — T-shirt sizing (Add the Code 2026-04-22).
+   Default `.container` zonder modifier = medium (72rem).
+   `.container--wide` en `.container--narrow` blijven als aliassen voor
+   backwards-compat met oude markup uit enterprise.html. */
 .container {
   width: 100%;
-  max-width: var(--container-main);
+  max-width: var(--container-medium);
   margin: 0 auto;
   padding: 0 var(--container-gutter);
 }
-.container--wide { max-width: 88rem; }
+.container--small { max-width: var(--container-small); }
+.container--medium { max-width: var(--container-medium); }
+.container--large { max-width: var(--container-large); }
+.container--full { max-width: var(--container-full); padding: 0; }
+
+/* Aliassen voor backwards-compat met enterprise.html markup */
+.container--wide { max-width: var(--container-large); }
 .container--narrow { max-width: var(--container-small); }
 
 .section {

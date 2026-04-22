@@ -17,8 +17,10 @@ interface Props {
   tone?: 'paper' | 'ink' | 'claude'
   /** Verticale padding-niveau. */
   padding?: 'none' | 'small' | 'main' | 'large' | 'page-top'
-  /** Container-breedte: main (default), wide (88rem), narrow (essay), full (geen container). */
-  container?: 'main' | 'wide' | 'narrow' | 'full'
+  /** Container-breedte: small (42rem essay), medium (72rem default),
+   *  large (88rem hero/grid), full (geen container).
+   *  Backwards-compat: 'main' → medium, 'wide' → large, 'narrow' → small. */
+  container?: 'small' | 'medium' | 'large' | 'full' | 'main' | 'wide' | 'narrow'
   /** Hash-anchor ID. */
   anchorId?: string
   /** Optionele aria-label. */
@@ -30,11 +32,23 @@ interface Props {
 const {
   tone = 'paper',
   padding = 'main',
-  container = 'main',
+  container: containerInput = 'medium',
   anchorId,
   ariaLabel,
   class: className = '',
 } = Astro.props
+
+// Backwards-compat alias mapping
+const containerAlias: Record<string, 'small' | 'medium' | 'large' | 'full'> = {
+  small: 'small',
+  medium: 'medium',
+  large: 'large',
+  full: 'full',
+  main: 'medium',
+  wide: 'large',
+  narrow: 'small',
+}
+const container = containerAlias[containerInput] ?? 'medium'
 
 const sectionClasses = ['section']
 if (padding === 'small') sectionClasses.push('section--small')
@@ -53,11 +67,11 @@ if (className) sectionClasses.push(className)
 const containerClass =
   container === 'full'
     ? null
-    : container === 'wide'
-      ? 'container container--wide'
-      : container === 'narrow'
-        ? 'container container--narrow'
-        : 'container'
+    : container === 'small'
+      ? 'container container--small'
+      : container === 'large'
+        ? 'container container--large'
+        : 'container container--medium'
 ---
 
 <section

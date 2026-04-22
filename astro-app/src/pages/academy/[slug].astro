@@ -40,7 +40,7 @@ const related = essay?.relatedEssays ?? []
   )}
 
   {related.length > 0 && (
-    <Section tone="paper" padding="main" container="main" class="essay-related">
+    <Section tone="paper" padding="main" container="medium" class="essay-related">
       <h2 class="essay-related__heading">Lees ook</h2>
       <div class="essay-related__grid">
         {related.slice(0, 3).map((r: any) => (

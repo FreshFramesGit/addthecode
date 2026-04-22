@@ -244,24 +244,94 @@ export const prerender = true
           <span class="mono">§ 03 · Layout primitives</span>
         </div>
         <h2>Container, section, en padding-classes <em>uit atc-components.css</em>.</h2>
+        <p class="lead">
+          Visuele demo via <code class="sg-code">.sg-empty-box</code> — blauw-stippellijntje,
+          zelfde patroon als <code class="sg-code">.fs-styleguide_empty-box</code> in Webflow.
+        </p>
       </div>
 
-      <h3 class="sg-h3">Containers</h3>
+      <h3 class="sg-h3">Containers — T-shirt sizing</h3>
       <ul class="sg-list">
-        <li><code>.container</code> — max-width <code>--container-main</code> (72rem)</li>
-        <li><code>.container--wide</code> — max-width 88rem</li>
-        <li><code>.container--narrow</code> — max-width <code>--container-small</code> (42rem)</li>
-        <li>Geen container = full-bleed</li>
+        <li><code>.container</code> — default = <code>--container-medium</code> (72rem)</li>
+        <li><code>.container--small</code> — <code>--container-small</code> (42rem)</li>
+        <li><code>.container--medium</code> — <code>--container-medium</code> (72rem)</li>
+        <li><code>.container--large</code> — <code>--container-large</code> (88rem)</li>
+        <li><code>.container--full</code> — <code>--container-full</code> (100%, zonder gutter)</li>
+        <li>Aliassen (backwards-compat): <code>.container--wide</code> = large, <code>.container--narrow</code> = small, <code>--container-main</code> = medium</li>
       </ul>
+    </div>
 
-      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Section padding</h3>
+    {/* Container size demos — zelfde sectie, eigen container per demo */}
+    <div class="container container--full" style="margin-top: var(--sp-7);">
+      <div class="sg-bleed-hint">
+        <code>.container--full</code> — 100% breed, geen gutter (full-bleed)
+        <div class="sg-empty-box sg-empty-box--full">100% (full-bleed)</div>
+      </div>
+    </div>
+
+    <div class="container container--large" style="margin-top: var(--sp-4);">
+      <div class="sg-container-demo">
+        <code>.container--large</code> — 88rem
+        <div class="sg-empty-box">88rem max-width</div>
+      </div>
+    </div>
+
+    <div class="container container--medium" style="margin-top: var(--sp-4);">
+      <div class="sg-container-demo">
+        <code>.container--medium</code> — 72rem (default <code>.container</code>)
+        <div class="sg-empty-box">72rem max-width</div>
+      </div>
+    </div>
+
+    <div class="container container--small" style="margin-top: var(--sp-4);">
+      <div class="sg-container-demo">
+        <code>.container--small</code> — 42rem
+        <div class="sg-empty-box">42rem max-width</div>
+      </div>
+    </div>
+
+    <div class="container" style="margin-top: var(--sp-7);">
+      <h3 class="sg-h3">Section padding (verticaal)</h3>
       <ul class="sg-list">
-        <li><code>.section</code> — padding-block <code>--section-pad-main</code></li>
-        <li><code>.section--small</code> — <code>--section-pad-small</code></li>
-        <li><code>.section--large</code> — <code>--section-pad-large</code></li>
-        <li><code>.section--top</code> — padding-top <code>--section-pad-top</code> (first-after-nav)</li>
-        <li><code>.section--ink</code> — donkere achtergrond + paper-tekst</li>
+        <li><code>.section</code> — padding-block <code>--section-pad-main</code> (6rem)</li>
+        <li><code>.section--small</code> — <code>--section-pad-small</code> (4rem)</li>
+        <li><code>.section--large</code> — <code>--section-pad-large</code> (8rem)</li>
+        <li><code>.section--top</code> — padding-top <code>--section-pad-top</code> (6rem, first-after-nav)</li>
+        <li><code>.section--ink</code> — donkere achtergrond + paper-tekst (modifier, niet padding)</li>
       </ul>
+    </div>
+
+    {/* Section padding demos — empty-boxes laten visueel de witruimte zien */}
+    <div class="sg-pad-demo sg-pad-demo--small">
+      <div class="container">
+        <div class="sg-empty-box sg-empty-box--pad">
+          <code>.section--small</code> · padding-block 4rem
+        </div>
+      </div>
+    </div>
+
+    <div class="sg-pad-demo sg-pad-demo--main">
+      <div class="container">
+        <div class="sg-empty-box sg-empty-box--pad">
+          <code>.section</code> (default) · padding-block 6rem
+        </div>
+      </div>
+    </div>
+
+    <div class="sg-pad-demo sg-pad-demo--large">
+      <div class="container">
+        <div class="sg-empty-box sg-empty-box--pad">
+          <code>.section--large</code> · padding-block 8rem
+        </div>
+      </div>
+    </div>
+
+    <div class="sg-pad-demo sg-pad-demo--ink section--ink">
+      <div class="container">
+        <div class="sg-empty-box sg-empty-box--pad sg-empty-box--on-dark">
+          <code>.section--ink</code> · donkere achtergrond, padding-block 6rem
+        </div>
+      </div>
     </div>
   </section>
 
@@ -817,6 +887,95 @@ export const prerender = true
     font-size: var(--fs-mono-small);
     color: var(--fg-meta);
     text-align: right;
+  }
+
+  /* ─── Empty-box visual marker (Webflow-style) ─────────────
+     Maakt onzichtbare layout-ruimte zichtbaar met blauw stippellijntje.
+     Patroon overgenomen uit `.fs-styleguide_empty-box` van Bell's Comedy Club.
+     ────────────────────────────────────────────────────────── */
+  .sg-empty-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4rem;
+    padding: var(--sp-4);
+    border: 1px dashed var(--atc-signal);
+    border-radius: var(--radius-small);
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgba(36, 145, 196, 0.05) 0,
+        rgba(36, 145, 196, 0.05) 8px,
+        transparent 8px,
+        transparent 16px
+      );
+    color: var(--atc-signal);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .sg-empty-box code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: inherit;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .sg-empty-box--full {
+    min-height: 3rem;
+    border-radius: 0;
+  }
+  .sg-empty-box--pad {
+    min-height: 6rem;
+  }
+  .sg-empty-box--on-dark {
+    border-color: var(--atc-spark);
+    color: var(--atc-spark);
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgba(251, 202, 16, 0.08) 0,
+        rgba(251, 202, 16, 0.08) 8px,
+        transparent 8px,
+        transparent 16px
+      );
+  }
+
+  /* Container demos — toont label + empty-box per maat */
+  .sg-container-demo,
+  .sg-bleed-hint {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .sg-container-demo > code,
+  .sg-bleed-hint > code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--fg-meta);
+  }
+  .sg-bleed-hint {
+    background: var(--atc-light-gray);
+    padding: var(--sp-3);
+    border-radius: 0;
+  }
+
+  /* Section-padding demos — eigen achtergrond zodat de
+     padding-block visueel zichtbaar is via contrast met .container. */
+  .sg-pad-demo {
+    margin-top: var(--sp-4);
+    background: rgba(36, 145, 196, 0.04);
+    border-top: 1px dashed var(--atc-signal);
+    border-bottom: 1px dashed var(--atc-signal);
+  }
+  .sg-pad-demo--small { padding: var(--section-pad-small) 0; }
+  .sg-pad-demo--main  { padding: var(--section-pad-main)  0; }
+  .sg-pad-demo--large { padding: var(--section-pad-large) 0; }
+  .sg-pad-demo--ink {
+    background: var(--atc-ink);
+    border-color: var(--atc-spark);
   }
 
   /* ─── Thinking Ring grid ────────────────────────────────── */
