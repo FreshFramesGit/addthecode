@@ -41,10 +41,12 @@ const {
   defaultDescription = settings?.defaultSeo?.description ?? undefined,
   baseUrl = getBaseUrl(settings, Astro.url.origin),
   lang = settings?.languageCode ?? "nl",
-  seo = {},
+  seo: seoInput = {},
   hideNav = false,
   hideFooter = false,
 } = Astro.props as Props;
+
+const seo = seoInput ?? {};
 
 const seoProps: SeoProps = {
   ...seo,

@@ -1,9 +1,11 @@
 ---
 /**
- * HeritageStripSection — korte tijdlijn-strip met items.
+ * HeritageStripSection — chip-strip pattern.
  *
  * Spec: docs/08 §5.3.
  * Schema: heritageStripBlock.
+ *
+ * Items als horizontale chip-row, single line per item.
  */
 
 import Section from '../layout/Section.astro'
@@ -22,6 +24,7 @@ const { preClaim, heading, items, tone, anchorId } = Astro.props
 
 const safeTone = tone ?? 'paper'
 const safeItems = items ?? []
+const isOnDark = safeTone === 'ink'
 ---
 
 <Section
@@ -29,55 +32,16 @@ const safeItems = items ?? []
   padding="small"
   container="main"
   anchorId={anchorId ?? undefined}
-  class="heritage-strip"
 >
   {(preClaim || heading) && (
-    <SectionHeading
-      preClaim={preClaim}
-      heading={heading}
-      level={3}
-    />
+    <SectionHeading preClaim={preClaim} heading={heading} level={3} onDark={isOnDark} />
   )}
 
   {safeItems.length > 0 && (
-    <ul class="heritage-strip__list" aria-label="Heritage items">
+    <div style="display: flex; flex-wrap: wrap; gap: var(--sp-3);">
       {safeItems.map((item) => (
-        <li class="heritage-strip__item">{item}</li>
+        <span class={`chip ${isOnDark ? 'chip--on-dark' : ''}`}>{item}</span>
       ))}
-    </ul>
+    </div>
   )}
 </Section>
-
-<style>
-  .heritage-strip__list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-4) var(--sp-5);
-    list-style: none;
-    margin: var(--sp-4) 0 0;
-    padding: 0;
-  }
-
-  .heritage-strip__item {
-    font-family: var(--font-mono);
-    font-size: var(--fs-mono-small);
-    letter-spacing: var(--ls-mono-caps);
-    text-transform: uppercase;
-    color: var(--fg-meta);
-    padding: var(--sp-2) 0;
-    border-top: 1px solid var(--border-default);
-    flex-basis: calc(33.33% - var(--sp-5));
-    min-width: 14rem;
-  }
-
-  :global(.tone-ink) .heritage-strip__item {
-    color: var(--atc-paper-70);
-    border-top-color: var(--atc-paper-10);
-  }
-
-  @media (max-width: 767px) {
-    .heritage-strip__item {
-      flex-basis: 100%;
-    }
-  }
-</style>

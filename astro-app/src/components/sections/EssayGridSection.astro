@@ -1,9 +1,11 @@
 ---
 /**
- * EssayGridSection — leest essays uit collection en rendert grid.
+ * EssayGridSection — leest essays + rendert via enterprise grid.
  *
  * Spec: docs/07i (academy index), docs/07a §8 (home featured-strip).
  * Schema: essayGridBlock.
+ *
+ * Layout: featured-eerst (groot), daarna .fgrid (3-kolom feature cards).
  */
 
 import Section from '../layout/Section.astro'
@@ -39,6 +41,7 @@ const safeTone = tone ?? 'paper'
 const safeCategory = categoryFilter ?? 'all'
 const safeMax = maxItems ?? 9
 const safeFeaturedFirst = showFeaturedFirst ?? true
+const isOnDark = safeTone === 'ink'
 
 let essays: any[] = []
 if (safeCategory === 'featured') {
@@ -47,7 +50,6 @@ if (safeCategory === 'featured') {
   essays = await getEssays(safeCategory)
 }
 
-// Featured first: re-orden zodat featured: true bovenaan komt
 let ordered = essays
 if (safeFeaturedFirst && safeCategory !== 'featured') {
   const featured = essays.filter((e: any) => e.featured)
@@ -65,27 +67,21 @@ const standardEssays = flagshipEssay ? visible.slice(1) : visible
   padding="main"
   container="main"
   anchorId={anchorId ?? undefined}
-  class="essay-grid"
 >
   {(preClaim || heading || intro) && (
-    <SectionHeading
-      preClaim={preClaim}
-      heading={heading}
-      intro={intro}
-      level={2}
-    />
+    <SectionHeading preClaim={preClaim} heading={heading} intro={intro} level={2} onDark={isOnDark} />
   )}
 
   {visible.length > 0 ? (
-    <div class="essay-grid__layout">
+    <div style="display: flex; flex-direction: column; gap: var(--sp-6); margin-top: var(--sp-6);">
       {flagshipEssay && (
-        <div class="essay-grid__flagship">
+        <div>
           <EssayCard essay={flagshipEssay} variant="flagship" />
         </div>
       )}
 
       {standardEssays.length > 0 && (
-        <div class="essay-grid__standards">
+        <div class="fgrid">
           {standardEssays.map((essay: any) => (
             <EssayCard essay={essay} variant="standard" />
           ))}
@@ -93,39 +89,6 @@ const standardEssays = flagshipEssay ? visible.slice(1) : visible
       )}
     </div>
   ) : (
-    <p class="essay-grid__empty">Nog geen essays gepubliceerd.</p>
+    <p class="lead">Nog geen essays gepubliceerd.</p>
   )}
 </Section>
-
-<style>
-  .essay-grid__layout {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-6);
-    margin-top: var(--sp-6);
-  }
-
-  .essay-grid__standards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--sp-5);
-  }
-
-  .essay-grid__empty {
-    color: var(--fg-meta);
-    font-size: var(--fs-body-small);
-    margin-top: var(--sp-5);
-  }
-
-  @media (max-width: 991px) {
-    .essay-grid__standards {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 479px) {
-    .essay-grid__standards {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>

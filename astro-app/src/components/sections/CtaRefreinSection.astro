@@ -1,21 +1,15 @@
 ---
 /**
- * CtaRefreinSection — sitebreed CTA-blok.
+ * CtaRefreinSection — `.refrein` enterprise pattern (donker, watermark Ring).
  *
  * Spec: docs/09-microcopy §11.
  * Schema: ctaRefreinBlock.
  *
- * Defaults+override pattern:
- * 1. Block.pageKey wijst naar componentDefaults.ctaRefreins[key === pageKey]
- * 2. Block.overrideStatement / overrideButtonLabel / overrideButtonLink
- *    hebben voorrang als ingevuld
- * 3. Hardcoded fallback alleen als laatste resort (niet wenselijk —
- *    componentDefaults moet altijd geseed zijn).
+ * Defaults+override pattern via componentDefaults.ctaRefreins[key=pageKey].
  */
 
 import Section from '../layout/Section.astro'
 import CmsLink from '../content/CmsLink.astro'
-import ThinkingRing from '../media/ThinkingRing.astro'
 import { getComponentDefaults } from '../../utils/sanity'
 
 interface Props {
@@ -33,11 +27,9 @@ const {
   overrideStatement,
   overrideButtonLabel,
   overrideButtonLink,
-  tone,
   anchorId,
 } = Astro.props
 
-const safeTone = tone ?? 'claude'
 const safePageKey = pageKey ?? 'primary'
 
 const defaults = await getComponentDefaults()
@@ -45,111 +37,32 @@ const ctaRefreins: any[] = defaults?.ctaRefreins ?? []
 const matched = ctaRefreins.find((c) => c.key === safePageKey) ?? ctaRefreins[0] ?? null
 
 const statement = overrideStatement ?? matched?.statement ?? null
-const helperLine = matched?.helperLine ?? null
 const buttonLabel = overrideButtonLabel ?? matched?.buttonLabel ?? null
 const buttonLink = overrideButtonLink ?? matched?.buttonLink ?? null
 ---
 
-<Section
-  tone={safeTone}
-  padding="large"
-  container="main"
-  anchorId={anchorId ?? undefined}
-  class="cta-refrein"
->
-  <div class="cta-refrein__inner">
-    {statement && <p class="cta-refrein__statement">{statement}</p>}
-    {helperLine && <p class="cta-refrein__helper">{helperLine}</p>}
+<Section padding="main" container="main" anchorId={anchorId ?? undefined}>
+  <div class="refrein">
+    {statement && <h3>{statement}</h3>}
 
     {buttonLabel && buttonLink && (
-      <CmsLink link={buttonLink} class="cta-refrein__button">
-        <ThinkingRing
-          size="inline"
-          tone="current"
-          motion="hover-rotate"
-          class="cta-refrein__button-ring"
-        />
+      <CmsLink link={buttonLink} class="btn btn--on-dark">
+        <svg class="tr" viewBox="0 0 24 24" aria-hidden="true">
+          <circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"></circle>
+        </svg>
         <span>{buttonLabel}</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
       </CmsLink>
     )}
+
+    {/* Watermark — grote stille Thinking Ring rechtsonder */}
+    <div class="refrein__watermark" aria-hidden="true">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="44" pathLength="68"
+                fill="none" stroke="currentColor" stroke-width="1.2"
+                stroke-dasharray="55 13" stroke-linecap="round"
+                transform="rotate(20 50 50)" />
+      </svg>
+    </div>
   </div>
 </Section>
-
-<style>
-  .cta-refrein__inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: var(--sp-4);
-    max-width: 36ch;
-    margin-inline: auto;
-  }
-
-  .cta-refrein__statement {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    font-size: var(--fs-h1);
-    line-height: var(--lh-display);
-    letter-spacing: var(--ls-display);
-    color: var(--fg-primary);
-    margin: 0;
-    text-wrap: balance;
-  }
-  :global(.tone-ink) .cta-refrein__statement {
-    color: var(--fg-on-dark);
-  }
-
-  .cta-refrein__helper {
-    color: var(--fg-secondary);
-    font-size: var(--fs-body);
-    margin: 0;
-  }
-  :global(.tone-ink) .cta-refrein__helper {
-    color: var(--atc-paper-70);
-  }
-
-  .cta-refrein__button {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    padding: var(--sp-3) var(--sp-5);
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    font-weight: 500;
-    text-decoration: none;
-    background: var(--atc-ink);
-    color: var(--atc-paper);
-    border-radius: var(--radius-main);
-    margin-top: var(--sp-3);
-    transition: background var(--dur-fast) var(--ease-out);
-  }
-  .cta-refrein__button:hover {
-    background: var(--atc-paper);
-    color: var(--atc-ink);
-    text-decoration: none;
-  }
-
-  :global(.tone-ink) .cta-refrein__button {
-    background: var(--atc-paper);
-    color: var(--atc-ink);
-  }
-  :global(.tone-ink) .cta-refrein__button:hover {
-    background: var(--atc-claude);
-    color: var(--atc-paper);
-  }
-
-  :global(.tone-claude) .cta-refrein__button {
-    background: var(--atc-ink);
-    color: var(--atc-paper);
-  }
-  :global(.tone-claude) .cta-refrein__button:hover {
-    background: var(--atc-paper);
-    color: var(--atc-ink);
-  }
-
-  .cta-refrein__button-ring {
-    color: inherit;
-  }
-</style>

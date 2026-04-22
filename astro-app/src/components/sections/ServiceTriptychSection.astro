@@ -1,16 +1,22 @@
 ---
 /**
- * ServiceTriptychSection — drie service-tiles naast elkaar.
+ * ServiceTriptychSection — drie service-tiles in `.promise` enterprise pattern.
  *
- * Spec: docs/07a §3, docs/08 §3.1.
- * Schema: serviceTriptychBlock.
+ * Spec: docs/07a §3, enterprise.html `.promise` blok (Architect/Redesign/
+ * Handover als referentie-instantie).
  *
- * Layout: 3-kolom desktop → 2-kolom tablet → 1-kolom mobile.
+ * Tile-mapping:
+ *   tagline      → .promise__num    (mono Claude-orange, "01 · Design")
+ *   title        → .promise__title  (FK Display met inline <em> emphasis)
+ *   description  → .promise__pitch
+ *   ctaLabel     → .promise__tag    (klikbaar als ctaLink aanwezig)
+ *
+ * Title kan asterisken bevatten voor emphasis: "We bouwen *systemen*, geen redesigns".
  */
 
 import Section from '../layout/Section.astro'
 import SectionHeading from '../content/SectionHeading.astro'
-import ServiceTile from '../cards/ServiceTile.astro'
+import CmsLink from '../content/CmsLink.astro'
 
 interface Tile {
   _key?: string
@@ -36,6 +42,21 @@ const { preClaim, heading, intro, tiles, tone, anchorId } = Astro.props
 
 const safeTone = tone ?? 'paper'
 const safeTiles = tiles ?? []
+
+/** Parse asterisk-emphasis: "*woord*" → <em>woord</em> */
+function parseEmphasis(text: string): Array<{ type: 'text' | 'em'; value: string }> {
+  const parts: Array<{ type: 'text' | 'em'; value: string }> = []
+  const regex = /\*([^*]+)\*/g
+  let lastIndex = 0
+  let match
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push({ type: 'text', value: text.slice(lastIndex, match.index) })
+    parts.push({ type: 'em', value: match[1] })
+    lastIndex = regex.lastIndex
+  }
+  if (lastIndex < text.length) parts.push({ type: 'text', value: text.slice(lastIndex) })
+  return parts.length ? parts : [{ type: 'text', value: text }]
+}
 ---
 
 <Section
@@ -43,51 +64,49 @@ const safeTiles = tiles ?? []
   padding="main"
   container="main"
   anchorId={anchorId ?? undefined}
-  class="service-triptych"
 >
   {(preClaim || heading || intro) && (
-    <SectionHeading
-      preClaim={preClaim}
-      heading={heading}
-      intro={intro}
-      level={2}
-      align="left"
-    />
+    <SectionHeading preClaim={preClaim} heading={heading} intro={intro} level={2} />
   )}
 
   {safeTiles.length > 0 && (
-    <div class="service-triptych__grid">
-      {safeTiles.map((tile) => (
-        <ServiceTile
-          title={tile.title}
-          tagline={tile.tagline}
-          description={tile.description}
-          ctaLabel={tile.ctaLabel}
-          ctaLink={tile.ctaLink}
-          icon={tile.icon}
-        />
-      ))}
+    <div class="promise">
+      {safeTiles.map((tile, i) => {
+        const num = tile.tagline ?? `0${i + 1}`
+        const titleParts = tile.title ? parseEmphasis(tile.title) : []
+        return (
+          <article class="promise__item">
+            <span class="promise__num">{num}</span>
+            {tile.title && (
+              <h3 class="promise__title">
+                {titleParts.map((p) =>
+                  p.type === 'em' ? <em>{p.value}</em> : <span>{p.value}</span>
+                )}
+              </h3>
+            )}
+            {tile.description && <p class="promise__pitch">{tile.description}</p>}
+            {tile.ctaLabel && tile.ctaLink ? (
+              <CmsLink link={tile.ctaLink} class="promise__tag promise__tag--link">
+                {tile.ctaLabel} →
+              </CmsLink>
+            ) : tile.ctaLabel ? (
+              <span class="promise__tag">{tile.ctaLabel}</span>
+            ) : null}
+          </article>
+        )
+      })}
     </div>
   )}
 </Section>
 
 <style>
-  .service-triptych__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--sp-5);
-    margin-top: var(--sp-6);
+  .promise__tag--link {
+    color: var(--atc-signal);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
   }
-
-  @media (max-width: 991px) {
-    .service-triptych__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 479px) {
-    .service-triptych__grid {
-      grid-template-columns: 1fr;
-    }
+  .promise__tag--link:hover {
+    color: var(--atc-claude);
+    text-decoration: none;
   }
 </style>

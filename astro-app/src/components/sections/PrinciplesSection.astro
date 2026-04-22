@@ -1,11 +1,14 @@
 ---
 /**
- * PrinciplesSection — genummerde principles-lijst.
+ * PrinciplesSection — `.benefits` enterprise grid pattern.
  *
- * Spec: docs/07a §5, docs/07c team values pattern.
+ * Spec: docs/07a §5 + docs/03 §1 (vijf principes).
  * Schema: principlesBlock.
  *
- * Items genummerd op render-tijd (01, 02, ...).
+ * Mapping:
+ *   index+1     → .benefit__num   (mono Signal-blue, "01", "02")
+ *   title       → .benefit__title (FK Display met inline <em> emphasis)
+ *   description → .benefit__pitch
  */
 
 import Section from '../layout/Section.astro'
@@ -31,8 +34,22 @@ interface Props {
 const { preClaim, heading, intro, principles, layoutVariant, tone, anchorId } = Astro.props
 
 const safeTone = tone ?? 'paper'
-const safeVariant = layoutVariant ?? 'stack'
 const safePrinciples = principles ?? []
+const isOnDark = safeTone === 'ink'
+
+function parseEmphasis(text: string) {
+  const parts: Array<{ type: 'text' | 'em'; value: string }> = []
+  const regex = /\*([^*]+)\*/g
+  let lastIndex = 0
+  let match
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push({ type: 'text', value: text.slice(lastIndex, match.index) })
+    parts.push({ type: 'em', value: match[1] })
+    lastIndex = regex.lastIndex
+  }
+  if (lastIndex < text.length) parts.push({ type: 'text', value: text.slice(lastIndex) })
+  return parts.length ? parts : [{ type: 'text', value: text }]
+}
 ---
 
 <Section
@@ -40,100 +57,30 @@ const safePrinciples = principles ?? []
   padding="main"
   container="main"
   anchorId={anchorId ?? undefined}
-  class="principles"
 >
   {(preClaim || heading || intro) && (
-    <SectionHeading
-      preClaim={preClaim}
-      heading={heading}
-      intro={intro}
-      level={2}
-    />
+    <SectionHeading preClaim={preClaim} heading={heading} intro={intro} level={2} onDark={isOnDark} />
   )}
 
   {safePrinciples.length > 0 && (
-    <ol class={`principles__list principles__list--${safeVariant}`}>
-      {safePrinciples.map((p, idx) => (
-        <li class="principles__item">
-          <span class="principles__number" aria-hidden="true">
-            {String(idx + 1).padStart(2, '0')}
-          </span>
-          <div class="principles__content">
-            <h3 class="principles__title">{p.title}</h3>
-            <p class="principles__description">{p.description}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
+    <div class="benefits">
+      {safePrinciples.map((p, i) => {
+        const num = String(i + 1).padStart(2, '0')
+        const titleParts = p.title ? parseEmphasis(p.title) : []
+        return (
+          <article class="benefit">
+            <span class="benefit__num">{num}</span>
+            {p.title && (
+              <h3 class="benefit__title">
+                {titleParts.map((part) =>
+                  part.type === 'em' ? <em>{part.value}</em> : <span>{part.value}</span>
+                )}
+              </h3>
+            )}
+            {p.description && <p class="benefit__pitch">{p.description}</p>}
+          </article>
+        )
+      })}
+    </div>
   )}
 </Section>
-
-<style>
-  .principles__list {
-    list-style: none;
-    padding: 0;
-    margin: var(--sp-6) 0 0;
-    display: grid;
-  }
-
-  .principles__list--stack {
-    grid-template-columns: 1fr;
-    gap: var(--sp-5);
-  }
-
-  .principles__list--grid-2 {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--sp-6);
-  }
-
-  .principles__item {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--sp-4);
-    padding-block: var(--sp-3);
-    border-top: 1px solid var(--border-default);
-  }
-  :global(.tone-ink) .principles__item {
-    border-top-color: var(--atc-paper-10);
-  }
-
-  .principles__number {
-    font-family: var(--font-mono);
-    font-size: var(--fs-mono-small);
-    letter-spacing: var(--ls-mono-caps);
-    color: var(--atc-claude);
-    padding-top: 0.25em;
-  }
-
-  .principles__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-2);
-  }
-
-  .principles__title {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: var(--fs-h3);
-    line-height: var(--lh-heading);
-    margin: 0;
-    text-wrap: balance;
-  }
-
-  .principles__description {
-    font-size: var(--fs-body);
-    line-height: var(--lh-body);
-    color: var(--fg-secondary);
-    margin: 0;
-    text-wrap: pretty;
-  }
-  :global(.tone-ink) .principles__description {
-    color: var(--atc-paper-70);
-  }
-
-  @media (max-width: 767px) {
-    .principles__list--grid-2 {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>

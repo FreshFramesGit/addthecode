@@ -17,6 +17,19 @@
 
 @import './tokens.css';
 
+/**
+ * Enterprise component library — vanilla BEM-classes uit
+ * /reference/design files/addthecode/enterprise-{redesign,modules}.css
+ * 1:1 gekopieerd. Bevat .btn, .chip, .section, .container, .hero__,
+ * .promise, .benefits, .metrics, .compare, .ba, .fcard, .collab,
+ * .stack, .diy, .clib, .faq, .refrein, .footer__, .newsletter,
+ * .quote, .centered-cta, .topbar, .nav__, .tr.
+ *
+ * Astro-components hergebruiken deze classes zodat de visuele taal
+ * 1:1 overeenkomt met enterprise.html, components.html, team.html.
+ */
+@import './atc-components.css';
+
 /* ─── Reset ──────────────────────────────────────────────── */
 *,
 *::before,

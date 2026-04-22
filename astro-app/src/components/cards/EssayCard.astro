@@ -1,12 +1,12 @@
 ---
 /**
- * EssayCard — card voor essayGridBlock.
+ * EssayCard — fcard pattern + flagship variant.
  *
  * Spec: docs/08 §3.3.
  * Variants:
- *  - standard: 3-kolom grid item
- *  - flagship: groot, prominent (eerste op /academy)
- *  - compact: kleine list-item
+ *  - standard → .fcard
+ *  - flagship → eigen 60/40 split (groot)
+ *  - compact  → kleine list-row
  */
 
 import { urlFor } from '../../utils/sanity'
@@ -34,158 +34,114 @@ const date = essay?.publishedAt
     })
   : null
 
-const cardClasses = ['essay-card', `essay-card--${safeVariant}`].join(' ')
+const linkObject = { linkKind: 'internalPage', internalPage: { _type: 'essay', slug } }
+
+const metaParts = [
+  essay?.category ? essay.category.toUpperCase() : null,
+  essay?.readTime,
+  date,
+].filter(Boolean)
 ---
 
-<article class={cardClasses}>
-  <CmsLink
-    link={{ linkKind: 'internalPage', internalPage: { _type: 'essay', slug } }}
-    class="essay-card__link"
-  >
-    {heroUrl && safeVariant !== 'compact' && (
-      <div class="essay-card__media">
-        <img
-          src={heroUrl}
-          alt={essay?.featuredImage?.alt ?? essay?.title ?? ''}
-          loading="lazy"
-          class="essay-card__image"
-        />
+{safeVariant === 'flagship' && (
+  <article class="essay-flagship">
+    <CmsLink link={linkObject} class="essay-flagship__link">
+      {heroUrl && (
+        <div class="essay-flagship__media">
+          <img src={heroUrl} alt={essay?.featuredImage?.alt ?? essay?.title ?? ''} loading="lazy" />
+        </div>
+      )}
+      <div class="essay-flagship__content">
+        {metaParts.length > 0 && <span class="mono">{metaParts.join(' · ')}</span>}
+        {essay?.title && <h3 class="essay-flagship__title">{essay.title}</h3>}
+        {essay?.dek && <p class="lead">{essay.dek}</p>}
+        {essay?.author?.name && <p class="mono">door {essay.author.name}</p>}
       </div>
-    )}
+    </CmsLink>
+  </article>
+)}
 
-    <div class="essay-card__content">
-      <p class="essay-card__meta">
-        {essay?.category && <span class="essay-card__category">{essay.category}</span>}
-        {essay?.readTime && <span class="essay-card__read-time">· {essay.readTime}</span>}
-        {date && <span class="essay-card__date">· {date}</span>}
-      </p>
+{safeVariant === 'standard' && (
+  <article class="fcard">
+    <CmsLink link={linkObject} style="display: contents; color: inherit; text-decoration: none;">
+      <span class="fcard__num">{(essay?.category ?? 'ESSAY').toString().toUpperCase()}</span>
+      {essay?.title && <h3 class="fcard__title">{essay.title}</h3>}
+      {essay?.dek && <p class="fcard__pitch">{essay.dek}</p>}
+      {essay?.readTime && <span class="fcard__tag">{essay.readTime}{date ? ` · ${date}` : ''}</span>}
+    </CmsLink>
+  </article>
+)}
 
-      <h3 class="essay-card__title">{essay?.title}</h3>
-
-      {essay?.dek && safeVariant !== 'compact' && (
-        <p class="essay-card__dek">{essay.dek}</p>
-      )}
-
-      {essay?.author?.name && (
-        <p class="essay-card__author">door {essay.author.name}</p>
-      )}
-    </div>
-  </CmsLink>
-</article>
+{safeVariant === 'compact' && (
+  <article class="essay-compact">
+    <CmsLink link={linkObject} class="essay-compact__link">
+      <span class="mono" style="color: var(--atc-claude);">{(essay?.category ?? 'ESSAY').toString().toUpperCase()}</span>
+      <span style="font-family: var(--font-display); font-size: 1.125rem; flex: 1;">{essay?.title}</span>
+      {essay?.readTime && <span class="mono">{essay.readTime}</span>}
+    </CmsLink>
+  </article>
+)}
 
 <style>
-  .essay-card__link {
-    display: grid;
-    text-decoration: none;
-    color: inherit;
-    height: 100%;
-    transition: transform var(--dur-normal) var(--ease-out);
-  }
-  .essay-card__link:hover {
-    text-decoration: none;
-    transform: translateY(-2px);
-  }
-
-  /* ─── Standard variant ─────────────────────────────────── */
-  .essay-card--standard .essay-card__link {
-    grid-template-rows: auto 1fr;
-    gap: var(--sp-3);
-  }
-
-  .essay-card--standard .essay-card__media {
-    aspect-ratio: 16/9;
-    overflow: hidden;
-    border-radius: var(--radius-small);
-  }
-
-  /* ─── Flagship variant ─────────────────────────────────── */
-  .essay-card--flagship .essay-card__link {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--sp-6);
-    align-items: center;
-    padding: var(--sp-5);
-    background: var(--atc-paper);
+  /* Flagship 60/40 */
+  .essay-flagship {
     border: 1px solid var(--border-default);
     border-radius: var(--radius-main);
-  }
-  .essay-card--flagship .essay-card__media {
-    aspect-ratio: 4/3;
     overflow: hidden;
-    border-radius: var(--radius-small);
+    background: var(--atc-paper);
+    transition: border-color var(--dur-fast) var(--ease-out);
   }
-  .essay-card--flagship .essay-card__title {
-    font-size: var(--fs-h2);
+  .essay-flagship:hover { border-color: var(--atc-mid-gray); }
+  .essay-flagship__link {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    color: inherit;
+    text-decoration: none;
   }
-
-  @media (max-width: 767px) {
-    .essay-card--flagship .essay-card__link {
-      grid-template-columns: 1fr;
-    }
+  @media (max-width: 900px) { .essay-flagship__link { grid-template-columns: 1fr; } }
+  .essay-flagship__media {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--bg-quiet);
   }
-
-  /* ─── Compact variant ──────────────────────────────────── */
-  .essay-card--compact .essay-card__link {
-    grid-template-columns: 1fr;
-    padding-block: var(--sp-3);
-    border-bottom: 1px solid var(--border-default);
-  }
-
-  /* ─── Common image ──────────────────────────────────────── */
-  .essay-card__image {
+  .essay-flagship__media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
-
-  /* ─── Content ──────────────────────────────────────────── */
-  .essay-card__content {
+  .essay-flagship__content {
     display: flex;
     flex-direction: column;
-    gap: var(--sp-2);
+    gap: var(--sp-3);
+    padding: var(--sp-6);
+    align-self: center;
   }
-
-  .essay-card__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-1);
-    font-family: var(--font-mono);
-    font-size: var(--fs-mono-small);
-    letter-spacing: var(--ls-mono-caps);
-    text-transform: uppercase;
-    color: var(--fg-meta);
-    margin: 0;
-  }
-
-  .essay-card__category {
-    color: var(--atc-claude);
-  }
-
-  .essay-card__title {
+  .essay-flagship__title {
     font-family: var(--font-display);
-    font-size: var(--fs-h3);
-    line-height: var(--lh-heading);
-    color: var(--fg-primary);
+    font-style: italic;
+    font-size: clamp(1.5rem, 1.5vw + 0.5rem, 2rem);
+    line-height: 1.15;
     margin: 0;
   }
-  :global(.tone-ink) .essay-card__title {
-    color: var(--fg-on-dark);
-  }
 
-  .essay-card__dek {
-    font-size: var(--fs-body-small);
-    line-height: var(--lh-body);
-    color: var(--fg-secondary);
-    margin: 0;
+  /* Compact list-row */
+  .essay-compact {
+    border-bottom: 1px solid var(--border-default);
   }
-  :global(.tone-ink) .essay-card__dek {
-    color: var(--atc-paper-70);
+  .essay-compact__link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+    padding: var(--sp-4) 0;
+    color: inherit;
+    text-decoration: none;
+    transition: background var(--dur-fast) var(--ease-out);
   }
-
-  .essay-card__author {
-    font-family: var(--font-mono);
-    font-size: var(--fs-mono-small);
-    color: var(--fg-meta);
-    margin: var(--sp-2) 0 0;
+  .essay-compact__link:hover {
+    text-decoration: none;
+    background: var(--bg-quiet);
+    padding-inline: var(--sp-3);
   }
 </style>

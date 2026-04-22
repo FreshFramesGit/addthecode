@@ -1,15 +1,14 @@
 ---
 /**
- * ProjectGridSection — leest cases en rendert als grid/list per layer-filter.
+ * ProjectGridSection — leest cases en rendert via enterprise grid.
  *
  * Spec: docs/07a §4 (featured op home), docs/07b (drielaag op /work).
  * Schema: projectGridBlock.
  *
  * Variants:
- *  - featured-60-40: enkele case, groot
- *  - grid-2 / grid-3: meerdere cards in grid
- *  - list: compacte heritage-lijst
- *  - auto: kies op basis van layerFilter (launch=featured-60-40, in-flight=grid-2, heritage=list)
+ *  - featured-60-40 → enkele case, hero-style card
+ *  - grid-3 / grid-2 → fcard grid pattern
+ *  - list → compacte horizontale rij
  */
 
 import Section from '../layout/Section.astro'
@@ -43,10 +42,9 @@ const {
 
 const safeTone = tone ?? 'paper'
 const safeLayerFilter = (layerFilter ?? 'launch') as 'launch' | 'in-flight' | 'heritage' | 'all'
-// 'featured' is een UI-keuze maar geen aparte case-flag in v1 — voor nu gelijk aan 'all'
-const queryLayer = safeLayerFilter === 'featured' as any ? 'all' : safeLayerFilter
+const queryLayer = (safeLayerFilter as any) === 'featured' ? 'all' : safeLayerFilter
+const isOnDark = safeTone === 'ink'
 
-// Resolve auto-variant op basis van layer
 const safeVariant =
   cardLayoutVariant === 'auto' || !cardLayoutVariant
     ? safeLayerFilter === 'launch'
@@ -60,8 +58,6 @@ const safeVariant =
 
 const cases = await getCasesByLayer(queryLayer)
 const visibleCases = (maxItems ?? cases.length) > 0 ? cases.slice(0, maxItems ?? cases.length) : cases
-
-const gridClass = `project-grid__items project-grid__items--${safeVariant}`
 ---
 
 <Section
@@ -69,68 +65,47 @@ const gridClass = `project-grid__items project-grid__items--${safeVariant}`
   padding="main"
   container="main"
   anchorId={anchorId ?? undefined}
-  class="project-grid"
 >
   {(preClaim || heading || intro) && (
-    <SectionHeading
-      preClaim={preClaim}
-      heading={heading}
-      intro={intro}
-      level={2}
-    />
+    <SectionHeading preClaim={preClaim} heading={heading} intro={intro} level={2} onDark={isOnDark} />
   )}
 
   {visibleCases.length > 0 ? (
-    <div class={gridClass}>
+    <div class={`project-grid project-grid--${safeVariant}`}>
       {visibleCases.map((caseDoc: any) => (
         <ProjectCard case={caseDoc} variant={safeVariant} />
       ))}
     </div>
   ) : (
-    <p class="project-grid__empty">Nog geen cases in deze laag.</p>
+    <p class="lead">Nog geen cases in deze laag.</p>
   )}
 </Section>
 
 <style>
-  .project-grid__items {
-    display: grid;
-    gap: var(--sp-5);
+  .project-grid {
     margin-top: var(--sp-6);
   }
-
-  .project-grid__items--featured-60-40 {
-    grid-template-columns: 1fr;
+  .project-grid--featured-60-40 {
+    display: block;
   }
-
-  .project-grid__items--grid-3 {
+  .project-grid--grid-3 {
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-5);
   }
-
-  .project-grid__items--grid-2 {
+  .project-grid--grid-2 {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-5);
   }
-
-  .project-grid__items--list {
-    grid-template-columns: 1fr;
-    gap: 0;
+  .project-grid--list {
+    display: block;
   }
-
-  .project-grid__empty {
-    color: var(--fg-meta);
-    font-size: var(--fs-body-small);
-    margin-top: var(--sp-5);
-  }
-
   @media (max-width: 991px) {
-    .project-grid__items--grid-3 {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .project-grid--grid-3 { grid-template-columns: repeat(2, 1fr); }
   }
-
-  @media (max-width: 479px) {
-    .project-grid__items--grid-3,
-    .project-grid__items--grid-2 {
-      grid-template-columns: 1fr;
-    }
+  @media (max-width: 600px) {
+    .project-grid--grid-3,
+    .project-grid--grid-2 { grid-template-columns: 1fr; }
   }
 </style>

@@ -2,21 +2,16 @@
 /**
  * Footer — sitebreed.
  *
- * Spec: docs/06 §footer.
+ * Gebruikt enterprise-stijl classes (`.footer`, `.footer__grid`,
+ * `.footer__brand`, `.footer__col`, `.footer__legal`, `.newsletter`,
+ * `.nav__brand`, `.tr`).
  *
- * Layout:
- * - Top: 4-kolom grid (Company / Services / Resources / Legal) + newsletter
- * - Bottom: copyright + social-links + studio adres
- *
- * Newsletter submit-handler (Phase 3): POST naar /api/newsletter-subscribe
- * met JSON-body. Voor v1.5 is submit een no-op met visuele feedback.
- *
- * Footer nav-data komt uit Sanity navigation singleton (footerNav array).
- * Newsletter copy uit componentDefaults.newsletter.
+ * Layout: 4-koloms grid (brand+address+newsletter / 3× nav).
+ * Sanity-driven: footerNav komt uit navigation singleton, copy uit
+ * componentDefaults.newsletter, brand-info uit siteSettings.
  */
 import { getNavigation, getSiteSettings, getComponentDefaults } from '../../utils/sanity'
 import CmsLink from '../content/CmsLink.astro'
-import ThinkingRing from '../media/ThinkingRing.astro'
 
 const [nav, settings, defaults] = await Promise.all([
   getNavigation(),
@@ -31,76 +26,42 @@ const studioAddress = settings?.studioAddress ?? null
 const social = settings?.socialLinks ?? []
 const newsletter = defaults?.newsletter ?? null
 
-// Group footerNav items by an optional `column` field — fallback: all in one column.
-// (Sanity navigation schema might evolve to support columns in Phase 3.)
-const footerColumns = footerNav.length
-  ? [{ heading: null as string | null, items: footerNav }]
-  : []
+// Voor v1: alle footerNav-items in één kolom. Schema kan later kolom-veld toevoegen.
+const footerNavItems = footerNav
 ---
 
-<footer class="footer-primary" aria-label="Footer">
-  <div class="footer-primary__inner">
-    {/* ─── Top: brand + nav-columns + newsletter ─── */}
-    <div class="footer-primary__top">
-      {/* Brand block */}
-      <div class="footer-primary__brand">
-        <a href="/" class="footer-primary__wordmark" aria-label={`${siteName} — naar home`}>
-          <span class="footer-primary__wordmark-letter">
-            <ThinkingRing
-              size="inline"
-              tone="claude"
-              motion="cycle"
-              class="footer-primary__wordmark-ring"
-            />
-            <span class="footer-primary__wordmark-char">a</span>
-          </span><span>dd the Code</span>
+<footer class="footer footer-primary" aria-label="Footer">
+  <div class="container">
+    <div class="footer__grid">
+      {/* Brand kolom */}
+      <div class="footer__brand">
+        <a href="/" class="nav__brand" aria-label={`${siteName} — naar home`}>
+          <svg class="tr" viewBox="0 0 24 24" aria-hidden="true">
+            <circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"></circle>
+          </svg>
+          <b>{siteName}</b>
         </a>
-        {tagline && <p class="footer-primary__tagline">{tagline}</p>}
+        {tagline && <p class="footer__note">{tagline}</p>}
 
         {studioAddress && (
-          <address class="footer-primary__address">
-            {studioAddress.addressLine1 && <span>{studioAddress.addressLine1}</span>}
+          <address class="footer__note" style="font-style: normal;">
+            {studioAddress.addressLine1 && <div>{studioAddress.addressLine1}</div>}
             {(studioAddress.postalCode || studioAddress.city) && (
-              <span>
-                {studioAddress.postalCode} {studioAddress.city}
-              </span>
+              <div>{studioAddress.postalCode} {studioAddress.city}</div>
             )}
             {studioAddress.openingHours && (
-              <span class="footer-primary__address-meta">{studioAddress.openingHours}</span>
+              <div class="mono" style="margin-top: var(--sp-2);">{studioAddress.openingHours}</div>
             )}
           </address>
         )}
-      </div>
 
-      {/* Navigation columns */}
-      {footerColumns.length > 0 && (
-        <nav class="footer-primary__nav" aria-label="Footer navigatie">
-          {footerColumns.map((col) => (
-            <div class="footer-primary__nav-column">
-              {col.heading && <h3 class="footer-primary__nav-heading">{col.heading}</h3>}
-              <ul class="footer-primary__nav-list">
-                {col.items.map((item: any) => (
-                  <li>
-                    <CmsLink link={item.link} class="footer-primary__nav-link">
-                      {item.label}
-                    </CmsLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      )}
-
-      {/* Newsletter */}
-      {newsletter && (
-        <div class="footer-primary__newsletter">
-          {newsletter.intro && <p class="footer-primary__newsletter-intro">{newsletter.intro}</p>}
+        {newsletter && (
           <form
-            class="footer-primary__newsletter-form"
+            class="newsletter"
             data-newsletter-form
             data-source="footer"
             novalidate
+            style="margin-top: var(--sp-4);"
           >
             <label class="u-visually-hidden" for="footer-newsletter-email">
               Email-adres
@@ -111,59 +72,83 @@ const footerColumns = footerNav.length
               name="email"
               required
               autocomplete="email"
-              placeholder={newsletter.placeholder ?? 'jij@bedrijf.nl'}
-              class="footer-primary__newsletter-input"
+              placeholder={newsletter.placeholder ?? ''}
             />
-            <button type="submit" class="footer-primary__newsletter-submit">
+            <button type="submit" class="btn btn--primary">
               <span data-label-default>{newsletter.buttonLabel ?? 'Aanmelden'}</span>
               <span data-label-submitting hidden>
-                {newsletter.buttonLabelSubmitting ?? 'Aanmelden…'}
+                {newsletter.buttonLabelSubmitting ?? newsletter.buttonLabel ?? 'Aanmelden'}
               </span>
             </button>
           </form>
-          {newsletter.helperLine && (
-            <p class="footer-primary__newsletter-helper">{newsletter.helperLine}</p>
-          )}
-          <p
-            class="footer-primary__newsletter-feedback"
-            data-newsletter-feedback
-            aria-live="polite"
-            hidden
-          ></p>
+        )}
+        {newsletter?.helperLine && (
+          <p class="mono" style="margin-top: var(--sp-2); font-size: var(--fs-meta);">
+            {newsletter.helperLine}
+          </p>
+        )}
+        <p
+          class="footer__newsletter-feedback mono"
+          data-newsletter-feedback
+          aria-live="polite"
+          hidden
+          style="color: var(--atc-claude); margin-top: var(--sp-2);"
+        ></p>
+      </div>
+
+      {/* Nav kolom — alle footerNav links */}
+      {footerNavItems.length > 0 && (
+        <div class="footer__col">
+          <h5>Site</h5>
+          <ul>
+            {footerNavItems.map((item: any) => (
+              <li>
+                <CmsLink link={item.link}>{item.label}</CmsLink>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
+
+      {/* Social kolom */}
+      {social.length > 0 && (
+        <div class="footer__col">
+          <h5>Volg</h5>
+          <ul>
+            {social.map((s: any) => (
+              <li>
+                <a href={s.url} target="_blank" rel="noopener noreferrer">
+                  {s.platform}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Contact kolom */}
+      <div class="footer__col">
+        <h5>Contact</h5>
+        <ul>
+          {settings?.email && (
+            <li><a href={`mailto:${settings.email}`}>{settings.email}</a></li>
+          )}
+          {settings?.phone && (
+            <li><a href={`tel:${settings.phone.replace(/\s+/g, '')}`}>{settings.phone}</a></li>
+          )}
+        </ul>
+      </div>
     </div>
 
-    {/* ─── Bottom: copyright + social ─── */}
-    <div class="footer-primary__bottom">
-      <p class="footer-primary__copyright">
-        © {new Date().getFullYear()} {siteName}. Custom design, custom code.
-      </p>
-
-      {social.length > 0 && (
-        <ul class="footer-primary__social" aria-label="Social media">
-          {social.map((item: any) => (
-            <li>
-              <a
-                href={item.url}
-                class="footer-primary__social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${item.platform} (opent in nieuw tabblad)`}
-              >
-                {item.platform}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+    {/* Legal regel onderaan */}
+    <div class="footer__legal">
+      <span>© {new Date().getFullYear()} {siteName}. Custom design, custom code.</span>
+      <span>BTW · KVK informatie te vullen</span>
     </div>
   </div>
 </footer>
 
 <script>
-  // Newsletter form — submit handler (Phase 3 wire naar /api/newsletter-subscribe)
-  // Init-guard tegen dubbele binding bij View Transitions.
   function initNewsletterForms() {
     const forms = document.querySelectorAll<HTMLFormElement>('[data-newsletter-form]')
     forms.forEach((form) => {
@@ -190,7 +175,6 @@ const footerColumns = footerNav.length
           return
         }
 
-        // UI: submitting state
         labelDefault?.setAttribute('hidden', '')
         labelSubmitting?.removeAttribute('hidden')
         submit?.setAttribute('disabled', '')
@@ -233,263 +217,3 @@ const footerColumns = footerNav.length
   initNewsletterForms()
   document.addEventListener('astro:page-load', initNewsletterForms)
 </script>
-
-<style>
-  .footer-primary {
-    background: var(--atc-ink);
-    color: var(--fg-on-dark);
-    padding-block: var(--section-pad-large);
-    margin-top: var(--section-pad-main);
-  }
-
-  .footer-primary__inner {
-    max-width: var(--container-main);
-    margin-inline: auto;
-    padding-inline: var(--container-gutter);
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-7);
-  }
-
-  /* ─── Top grid ─────────────────────────────────────────── */
-  .footer-primary__top {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1.5fr;
-    gap: var(--sp-7);
-    align-items: start;
-  }
-
-  /* ─── Brand block ──────────────────────────────────────── */
-  .footer-primary__brand {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-4);
-  }
-
-  .footer-primary__wordmark {
-    display: inline-flex;
-    align-items: baseline;
-    font-family: var(--font-display);
-    font-size: 1.75rem;
-    line-height: 1;
-    letter-spacing: var(--ls-display);
-    color: var(--fg-on-dark);
-    text-decoration: none;
-  }
-  .footer-primary__wordmark:hover {
-    color: var(--atc-claude);
-    text-decoration: none;
-  }
-
-  .footer-primary__wordmark-letter {
-    display: inline-grid;
-    place-items: center;
-    position: relative;
-    width: 1.05em;
-    height: 1em;
-    margin-right: 0.05em;
-  }
-  .footer-primary__wordmark-ring {
-    position: absolute;
-    inset: -0.05em;
-    width: 1.1em;
-    height: 1.1em;
-  }
-  .footer-primary__wordmark-char {
-    position: relative;
-    font-size: 0.7em;
-    line-height: 1;
-  }
-
-  .footer-primary__tagline {
-    color: var(--atc-paper-70);
-    font-size: var(--fs-body-small);
-    line-height: var(--lh-body);
-    max-width: 28ch;
-  }
-
-  .footer-primary__address {
-    font-style: normal;
-    font-size: var(--fs-body-small);
-    line-height: 1.7;
-    color: var(--atc-paper-70);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .footer-primary__address-meta {
-    color: var(--atc-paper-10);
-    font-size: var(--fs-meta);
-    margin-top: var(--sp-2);
-  }
-
-  /* ─── Nav-columns ──────────────────────────────────────── */
-  .footer-primary__nav {
-    display: flex;
-    gap: var(--sp-7);
-    flex-wrap: wrap;
-  }
-
-  .footer-primary__nav-column {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-3);
-    min-width: 8rem;
-  }
-
-  .footer-primary__nav-heading {
-    font-family: var(--font-mono);
-    font-size: var(--fs-mono-small);
-    letter-spacing: var(--ls-mono-caps);
-    text-transform: uppercase;
-    color: var(--atc-paper-70);
-    margin: 0 0 var(--sp-2);
-  }
-
-  .footer-primary__nav-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-2);
-  }
-
-  .footer-primary__nav-link {
-    color: var(--fg-on-dark);
-    text-decoration: none;
-    font-size: var(--fs-body-small);
-    transition: color var(--dur-fast) var(--ease-out);
-  }
-  .footer-primary__nav-link:hover {
-    color: var(--atc-claude);
-    text-decoration: none;
-  }
-
-  /* ─── Newsletter ──────────────────────────────────────── */
-  .footer-primary__newsletter {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-3);
-  }
-
-  .footer-primary__newsletter-intro {
-    color: var(--fg-on-dark);
-    font-size: var(--fs-body-small);
-    line-height: var(--lh-body);
-  }
-
-  .footer-primary__newsletter-form {
-    display: flex;
-    gap: var(--sp-2);
-    border: 1px solid var(--atc-paper-10);
-    border-radius: var(--radius-main);
-    padding: var(--sp-2);
-    background: var(--atc-paper-10);
-  }
-
-  .footer-primary__newsletter-input {
-    flex: 1;
-    background: transparent;
-    border: 0;
-    color: var(--fg-on-dark);
-    font-family: var(--font-body);
-    font-size: var(--fs-body-small);
-    padding: var(--sp-2) var(--sp-3);
-    outline: none;
-  }
-  .footer-primary__newsletter-input::placeholder {
-    color: var(--atc-paper-70);
-    opacity: 0.6;
-  }
-
-  .footer-primary__newsletter-submit {
-    background: var(--atc-claude);
-    color: var(--atc-paper);
-    font-family: var(--font-body);
-    font-size: var(--fs-body-small);
-    font-weight: 500;
-    padding: var(--sp-2) var(--sp-4);
-    border-radius: var(--radius-small);
-    cursor: pointer;
-    transition: background var(--dur-fast) var(--ease-out);
-  }
-  .footer-primary__newsletter-submit:hover {
-    background: var(--atc-paper);
-    color: var(--atc-ink);
-  }
-  .footer-primary__newsletter-submit:disabled {
-    opacity: 0.5;
-    cursor: wait;
-  }
-
-  .footer-primary__newsletter-helper {
-    color: var(--atc-paper-70);
-    font-size: var(--fs-meta);
-  }
-
-  .footer-primary__newsletter-feedback {
-    color: var(--atc-claude);
-    font-size: var(--fs-body-small);
-    font-family: var(--font-mono);
-  }
-
-  /* ─── Bottom ──────────────────────────────────────────── */
-  .footer-primary__bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--sp-5);
-    padding-top: var(--sp-6);
-    border-top: 1px solid var(--atc-paper-10);
-    flex-wrap: wrap;
-  }
-
-  .footer-primary__copyright {
-    color: var(--atc-paper-70);
-    font-size: var(--fs-meta);
-    margin: 0;
-  }
-
-  .footer-primary__social {
-    display: flex;
-    gap: var(--sp-5);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .footer-primary__social-link {
-    color: var(--fg-on-dark);
-    font-size: var(--fs-body-small);
-    text-decoration: none;
-    transition: color var(--dur-fast) var(--ease-out);
-  }
-  .footer-primary__social-link:hover {
-    color: var(--atc-claude);
-    text-decoration: none;
-  }
-
-  /* ─── Mobile ──────────────────────────────────────────── */
-  @media (max-width: 991px) {
-    .footer-primary__top {
-      grid-template-columns: 1fr 1fr;
-    }
-    .footer-primary__newsletter {
-      grid-column: span 2;
-    }
-  }
-
-  @media (max-width: 767px) {
-    .footer-primary__top {
-      grid-template-columns: 1fr;
-    }
-    .footer-primary__newsletter {
-      grid-column: auto;
-    }
-    .footer-primary__bottom {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
-</style>

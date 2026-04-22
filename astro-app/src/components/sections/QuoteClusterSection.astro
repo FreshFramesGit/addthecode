@@ -1,9 +1,15 @@
 ---
 /**
- * QuoteClusterSection — 1 primary + max 2 secundaire citaten.
+ * QuoteClusterSection — `.quote` / `.quote--ink` enterprise pattern.
  *
- * Spec: docs/08 §5.5.
+ * Spec: docs/07a §6 + docs/08 §5.5.
  * Schema: quoteClusterBlock.
+ *
+ * Layout:
+ *   - Primary quote (FK Display Italic, h2-size, op donkere achtergrond)
+ *   - Optionele secundaire quotes (kleinere variant onder primary)
+ *
+ * Inline emphasis: render `*woord*` als <mark> (Claude underline) in primary.
  */
 
 import Section from '../layout/Section.astro'
@@ -32,139 +38,79 @@ const { preClaim, heading, primaryQuote, secondaryQuotes, tone, anchorId } = Ast
 
 const safeTone = tone ?? 'paper'
 const safeSecondaries = secondaryQuotes ?? []
+const isOnDark = safeTone === 'ink'
 
-function attribution(q: Quote): string {
-  return [q.name, q.role, q.company].filter(Boolean).join(' · ')
+function attributionParts(q: Quote) {
+  return [q.name ? { kind: 'name', value: q.name } : null, q.role, q.company]
+    .filter(Boolean)
 }
 
-function portraitUrl(q: Quote): string | null {
-  return q.portrait?.asset?._id
-    ? urlFor(q.portrait).width(80).height(80).format('webp').url()
-    : null
+/** Markeer `*woord*` met <mark> (Claude-orange underline). */
+function renderQuote(text: string) {
+  const parts: Array<{ type: 'text' | 'mark'; value: string }> = []
+  const regex = /\*([^*]+)\*/g
+  let lastIndex = 0
+  let match
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push({ type: 'text', value: text.slice(lastIndex, match.index) })
+    parts.push({ type: 'mark', value: match[1] })
+    lastIndex = regex.lastIndex
+  }
+  if (lastIndex < text.length) parts.push({ type: 'text', value: text.slice(lastIndex) })
+  return parts.length ? parts : [{ type: 'text', value: text }]
 }
 ---
 
 <Section
   tone={safeTone}
-  padding="main"
+  padding="small"
   container="main"
   anchorId={anchorId ?? undefined}
-  class="quote-cluster"
 >
   {(preClaim || heading) && (
-    <SectionHeading
-      preClaim={preClaim}
-      heading={heading}
-      level={2}
-    />
+    <SectionHeading preClaim={preClaim} heading={heading} level={2} onDark={isOnDark} />
   )}
 
   {primaryQuote && (
-    <blockquote class="quote-cluster__primary">
-      <p class="quote-cluster__primary-text">"{primaryQuote.quote}"</p>
-      <footer class="quote-cluster__attribution">
-        {portraitUrl(primaryQuote) && (
-          <img
-            src={portraitUrl(primaryQuote)!}
-            alt={primaryQuote.portrait?.alt ?? primaryQuote.name ?? ''}
-            loading="lazy"
-            width="48"
-            height="48"
-            class="quote-cluster__portrait"
-          />
-        )}
-        <cite class="quote-cluster__cite">{attribution(primaryQuote)}</cite>
-      </footer>
-    </blockquote>
+    <div class="quote quote--ink">
+      <div class="quote__body">
+        "{renderQuote(primaryQuote.quote ?? '').map((p) =>
+          p.type === 'mark' ? <mark>{p.value}</mark> : <span>{p.value}</span>
+        )}"
+      </div>
+      <div class="quote__attr">
+        {primaryQuote.name && <span><b>{primaryQuote.name}</b></span>}
+        {primaryQuote.role && <span>{primaryQuote.role}</span>}
+        {primaryQuote.company && <span>{primaryQuote.company}</span>}
+      </div>
+    </div>
   )}
 
   {safeSecondaries.length > 0 && (
     <div class="quote-cluster__secondaries">
       {safeSecondaries.map((q) => (
-        <blockquote class="quote-cluster__secondary">
-          <p class="quote-cluster__secondary-text">"{q.quote}"</p>
-          <footer class="quote-cluster__attribution">
-            <cite class="quote-cluster__cite">{attribution(q)}</cite>
-          </footer>
-        </blockquote>
+        <div class="quote">
+          <div class="quote__body" style="font-size: clamp(1.125rem, 1vw + 0.5rem, 1.375rem);">
+            "{q.quote}"
+          </div>
+          <div class="quote__attr">
+            {q.name && <span><b>{q.name}</b></span>}
+            {q.role && <span>{q.role}</span>}
+            {q.company && <span>{q.company}</span>}
+          </div>
+        </div>
       ))}
     </div>
   )}
 </Section>
 
 <style>
-  .quote-cluster__primary {
-    margin: var(--sp-6) 0 var(--sp-7);
-    padding: 0;
-    max-width: 64ch;
-  }
-
-  .quote-cluster__primary-text {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: var(--fs-h2);
-    line-height: var(--lh-heading);
-    letter-spacing: var(--ls-heading);
-    color: var(--fg-primary);
-    margin: 0;
-    text-wrap: balance;
-  }
-  :global(.tone-ink) .quote-cluster__primary-text {
-    color: var(--fg-on-dark);
-  }
-
-  .quote-cluster__attribution {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-    margin-top: var(--sp-4);
-  }
-
-  .quote-cluster__portrait {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-round);
-    object-fit: cover;
-  }
-
-  .quote-cluster__cite {
-    font-family: var(--font-mono);
-    font-size: var(--fs-mono-small);
-    letter-spacing: var(--ls-mono-caps);
-    text-transform: uppercase;
-    color: var(--fg-meta);
-    font-style: normal;
-  }
-  :global(.tone-ink) .quote-cluster__cite {
-    color: var(--atc-paper-70);
-  }
-
   .quote-cluster__secondaries {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--sp-6);
-    padding-top: var(--sp-5);
-    border-top: 1px solid var(--border-default);
+    gap: var(--sp-5);
+    margin-top: var(--sp-5);
   }
-  :global(.tone-ink) .quote-cluster__secondaries {
-    border-top-color: var(--atc-paper-10);
-  }
-
-  .quote-cluster__secondary {
-    margin: 0;
-  }
-
-  .quote-cluster__secondary-text {
-    font-family: var(--font-display);
-    font-size: var(--fs-h4);
-    line-height: var(--lh-heading);
-    color: var(--fg-secondary);
-    margin: 0;
-  }
-  :global(.tone-ink) .quote-cluster__secondary-text {
-    color: var(--atc-paper-70);
-  }
-
   @media (max-width: 767px) {
     .quote-cluster__secondaries {
       grid-template-columns: 1fr;

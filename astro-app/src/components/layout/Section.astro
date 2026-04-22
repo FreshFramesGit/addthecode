@@ -1,29 +1,29 @@
 ---
 /**
- * Section — wrapper voor pageBuilder-blocks.
+ * Section — wrapper rond pageBuilder-blocks.
  *
- * Spec: docs/03 §4.2 (sectie-padding ritmes), §4.3 (containers), §2.3 (tonale zones).
+ * Gebruikt enterprise-stijl classes uit `atc-components.css`:
+ *   .section, .section--small, .section--large, .section--top, .section--ink
+ *   .container, .container--wide, .container--narrow
  *
- * Universal Rules:
- * - tonale-zone classes: paper (default), ink (max 2× per pagina), claude (max 1×)
- * - sectie-padding ritme: none / small / main / large / page-top
- * - container width: small / main / full (binnen container-gutter)
- *
- * BEM: `.section`, `.section--tone-*`, `.section--padding-*`, `.section--container-*`
+ * Tone-prop maps naar enterprise:
+ *   paper  → standaard (geen modifier)
+ *   ink    → .section--ink (donkere zone)
+ *   claude → custom: oranje achtergrond (per docs/03 §2.3)
  */
 
 interface Props {
-  /** Tonale zone (background + text color). */
+  /** Tonale zone — paper (default), ink (donker), claude (oranje accent). */
   tone?: 'paper' | 'ink' | 'claude'
   /** Verticale padding-niveau. */
   padding?: 'none' | 'small' | 'main' | 'large' | 'page-top'
-  /** Inhouds-container breedte. */
-  container?: 'small' | 'main' | 'full'
-  /** Anchor-ID voor #hash linking. */
+  /** Container-breedte: main (default), wide (88rem), narrow (essay), full (geen container). */
+  container?: 'main' | 'wide' | 'narrow' | 'full'
+  /** Hash-anchor ID. */
   anchorId?: string
   /** Optionele aria-label. */
   ariaLabel?: string
-  /** Extra class voor hyper-specifieke component-styling. */
+  /** Extra class voor component-specifieke styling. */
   class?: string
 }
 
@@ -36,63 +36,56 @@ const {
   class: className = '',
 } = Astro.props
 
-const sectionClasses = [
-  'section',
-  `section--tone-${tone}`,
-  `section--padding-${padding}`,
-  `tone-${tone}`, // global helper class voor :where() child selectors
-  className,
-]
-  .filter(Boolean)
-  .join(' ')
+const sectionClasses = ['section']
+if (padding === 'small') sectionClasses.push('section--small')
+else if (padding === 'large') sectionClasses.push('section--large')
+else if (padding === 'page-top') sectionClasses.push('section--top')
+else if (padding === 'none') sectionClasses.push('section--none')
 
-const containerClasses = ['section__container', `section__container--${container}`].join(' ')
+if (tone === 'ink') sectionClasses.push('section--ink')
+else if (tone === 'claude') sectionClasses.push('section--claude')
+
+// Tonale-zone helper-class voor child selectors via :global(.tone-*)
+sectionClasses.push(`tone-${tone}`)
+
+if (className) sectionClasses.push(className)
+
+const containerClass =
+  container === 'full'
+    ? null
+    : container === 'wide'
+      ? 'container container--wide'
+      : container === 'narrow'
+        ? 'container container--narrow'
+        : 'container'
 ---
 
 <section
-  class={sectionClasses}
+  class={sectionClasses.join(' ')}
   id={anchorId}
   aria-label={ariaLabel}
 >
-  <div class={containerClasses}>
+  {containerClass ? (
+    <div class={containerClass}>
+      <slot />
+    </div>
+  ) : (
     <slot />
-  </div>
+  )}
 </section>
 
 <style>
-  .section {
-    width: 100%;
-    position: relative;
+  .section--none {
+    padding-block: 0;
   }
-
-  /* ─── Verticale padding (docs/03 §4.2) ───────────────── */
-  .section--padding-none { padding-block: 0; }
-  .section--padding-small { padding-block: var(--section-pad-small); }
-  .section--padding-main { padding-block: var(--section-pad-main); }
-  .section--padding-large { padding-block: var(--section-pad-large); }
-  .section--padding-page-top {
-    padding-top: var(--section-pad-top);
-    padding-bottom: var(--section-pad-large);
+  .section--claude {
+    background: var(--atc-claude);
+    color: var(--atc-ink);
   }
-
-  /* ─── Container (docs/03 §4.3) ───────────────────────── */
-  .section__container {
-    width: 100%;
-    margin-inline: auto;
-    padding-inline: var(--container-gutter);
-  }
-  .section__container--small { max-width: var(--container-small); }
-  .section__container--main { max-width: var(--container-main); }
-  .section__container--full { max-width: var(--container-full); padding-inline: 0; }
-
-  /* Mobile: padding kleiner */
-  @media (max-width: 767px) {
-    .section--padding-small { padding-block: calc(var(--section-pad-small) * 0.6); }
-    .section--padding-main { padding-block: calc(var(--section-pad-main) * 0.55); }
-    .section--padding-large { padding-block: calc(var(--section-pad-large) * 0.5); }
-    .section--padding-page-top {
-      padding-top: calc(var(--section-pad-top) * 0.5);
-      padding-bottom: calc(var(--section-pad-large) * 0.5);
-    }
+  .section--claude h1,
+  .section--claude h2,
+  .section--claude h3,
+  .section--claude h4 {
+    color: var(--atc-ink);
   }
 </style>

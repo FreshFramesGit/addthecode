@@ -1,24 +1,18 @@
 ---
 /**
- * HeroHomeSection — Hero variant C (drie-delig).
+ * HeroHomeSection — Hero variant C 3-delig in enterprise styling.
  *
- * Spec: docs/07a §1, docs/08 §2.1.
- * Schema: heroHomeBlock.
+ * Spec: docs/07a §1 (3-delige merk-belofte: "Custom design. / Custom code. /
+ * AI-versnelde bouw."), enterprise.html `.hero` pattern.
  *
  * Layout:
- * - Pre-claim (optioneel mono-label)
- * - 3 headline-regels (FK Display Italic, groot)
- * - Sub-claim (optioneel)
- * - Body-text (optioneel)
- * - 1-2 CTA's
- * - Optionele Thinking Ring (md size, hero-corner)
- *
- * Universal Rule #1: alle visible text uit Sanity props (`??` fallbacks alleen
- * voor `null` waardes).
+ *   .hero > .container--wide > .hero__grid
+ *     LEFT col: .hero__meta (chips uit preClaim) + .hero__title (3 regels)
+ *              + .hero__lede + .hero__ctas (.btn--primary + .btn--ghost)
+ *     RIGHT col: optionele Thinking Ring xl (geen artefact-panel zoals
+ *                enterprise — dat is enterprise-pagina specifiek)
  */
 
-import Section from '../layout/Section.astro'
-import PreClaim from '../content/PreClaim.astro'
 import CmsLink from '../content/CmsLink.astro'
 import ThinkingRing from '../media/ThinkingRing.astro'
 
@@ -52,231 +46,98 @@ const {
   anchorId,
 } = Astro.props
 
-const safeTone = tone ?? 'paper'
 const safeShowRing = showThinkingRing ?? true
 const safeCtas = ctas ?? []
 const parts = headlineParts ?? []
+
+// Pre-claim → chips. Splits op " · " voor multi-chip rendering.
+const chips = preClaim
+  ? preClaim
+      .replace(/^◌\s*/, '')
+      .split('·')
+      .map((s) => s.trim())
+      .filter(Boolean)
+  : []
+
+// Variant → btn-class
+function btnClass(variant: string | null | undefined): string {
+  if (variant === 'secondary') return 'btn btn--ghost'
+  if (variant === 'tertiary') return 'btn btn--ghost'
+  return 'btn btn--primary'
+}
 ---
 
-<Section
-  tone={safeTone}
-  padding="page-top"
-  container="main"
-  anchorId={anchorId ?? undefined}
-  ariaLabel="Welkom bij Add the Code"
-  class="hero-home"
+<section
+  class={`hero ${tone === 'ink' ? 'section--ink' : ''}`}
+  id={anchorId ?? undefined}
+  aria-label="Welkom bij Add the Code"
 >
-  <div class="hero-home__layout">
-    <div class="hero-home__content">
-      {preClaim && (
-        <PreClaim text={preClaim} showThinkingRing={true} class="hero-home__pre" />
-      )}
+  <div class="container container--wide">
+    <div class="hero__grid">
+      <div>
+        {chips.length > 0 && (
+          <div class="hero__meta">
+            {chips.map((c) => <span class="chip">◌ {c}</span>)}
+          </div>
+        )}
 
-      {parts.length > 0 && (
-        <h1 class="hero-home__headline">
-          {parts.map((part, i) => (
-            <span class="hero-home__headline-part">{part}</span>
-          ))}
-        </h1>
-      )}
+        {parts.length > 0 && (
+          <h1 class="hero__title hero__title--stacked">
+            {parts.map((part, i) => (
+              <span class="hero__title-part">{part}</span>
+            ))}
+          </h1>
+        )}
 
-      {subClaim && <p class="hero-home__sub-claim">{subClaim}</p>}
+        {subClaim && <p class="hero__lede">{subClaim}</p>}
 
-      {bodyText && <p class="hero-home__body-text">{bodyText}</p>}
+        {bodyText && <p class="hero__lede" style="margin-top: var(--sp-3);">{bodyText}</p>}
 
-      {safeCtas.length > 0 && (
-        <div class="hero-home__ctas">
-          {safeCtas.map((cta) => (
-            <CmsLink
-              link={cta.link}
-              class={`hero-home__cta hero-home__cta--${cta.variant ?? 'primary'}`}
-            >
-              {cta.variant === 'primary' && (
-                <ThinkingRing
-                  size="inline"
-                  tone="paper"
-                  motion="hover-rotate"
-                  class="hero-home__cta-ring"
-                />
-              )}
-              <span>{cta.label ?? ''}</span>
-            </CmsLink>
-          ))}
-        </div>
+        {safeCtas.length > 0 && (
+          <div class="hero__ctas">
+            {safeCtas.map((cta) => (
+              <CmsLink link={cta.link} class={btnClass(cta.variant)}>
+                {cta.variant !== 'tertiary' && cta.variant !== 'secondary' && (
+                  <svg class="tr" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"></circle>
+                  </svg>
+                )}
+                <span>{cta.label}</span>
+                <span class="btn__arrow" aria-hidden="true">→</span>
+              </CmsLink>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {safeShowRing && (
+        <aside class="hero__artefact" aria-hidden="true">
+          <div class="hero__artefact-label">
+            <span>motif / ◌</span>
+            <span>thinking-ring</span>
+          </div>
+          <div style="display: grid; place-items: center; min-height: 220px;">
+            <ThinkingRing size="xl" tone="claude" motion="cycle" />
+          </div>
+          <div class="hero__artefact-foot">
+            <span>SIGNATURE</span>
+            <span>4S BREATH</span>
+          </div>
+        </aside>
       )}
     </div>
-
-    {safeShowRing && (
-      <aside class="hero-home__ring-wrapper" aria-hidden="true">
-        <ThinkingRing size="xl" tone={safeTone === 'ink' ? 'claude' : 'claude'} motion="cycle" />
-      </aside>
-    )}
   </div>
-</Section>
+</section>
 
 <style>
-  .hero-home__layout {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: var(--sp-7);
-    align-items: center;
-  }
-
-  .hero-home__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-5);
-    max-width: 24ch;
-  }
-
-  .hero-home__pre {
-    /* PreClaim heeft eigen styling — alleen positionering hier */
-  }
-
-  .hero-home__headline {
+  /* 3-delige headline: stacked layout (één regel per part) */
+  .hero__title--stacked {
     display: flex;
     flex-direction: column;
     gap: 0;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    font-size: var(--fs-display);
-    line-height: var(--lh-display);
-    letter-spacing: var(--ls-display);
-    color: var(--fg-primary);
-    margin: 0;
-    text-wrap: balance;
   }
-
-  .hero-home__headline-part {
+  .hero__title-part {
     display: block;
-  }
-
-  /* Op donkere zones (.tone-ink): tekst wit */
-  :global(.tone-ink) .hero-home__headline {
-    color: var(--fg-on-dark);
-  }
-
-  .hero-home__sub-claim {
-    font-size: var(--fs-lead);
-    line-height: var(--lh-lead);
-    color: var(--fg-secondary);
-    max-width: 36ch;
-    margin: var(--sp-3) 0 0;
-  }
-  :global(.tone-ink) .hero-home__sub-claim {
-    color: var(--atc-paper-70);
-  }
-
-  .hero-home__body-text {
-    font-size: var(--fs-body);
-    line-height: var(--lh-body);
-    color: var(--fg-secondary);
-    max-width: 50ch;
-  }
-
-  .hero-home__ctas {
-    display: flex;
-    gap: var(--sp-4);
-    flex-wrap: wrap;
-    margin-top: var(--sp-3);
-  }
-
-  /* CTA-buttons: 3 varianten */
-  .hero-home__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    padding: var(--sp-3) var(--sp-5);
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    font-weight: 500;
-    text-decoration: none;
-    border-radius: var(--radius-main);
-    transition:
-      background var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
-  }
-
-  .hero-home__cta--primary {
-    background: var(--atc-ink);
-    color: var(--atc-paper);
-  }
-  .hero-home__cta--primary:hover {
-    background: var(--atc-claude);
-    text-decoration: none;
-  }
-
-  .hero-home__cta--secondary {
-    background: transparent;
-    color: var(--fg-primary);
-    border: 1px solid var(--border-default);
-  }
-  .hero-home__cta--secondary:hover {
-    background: var(--bg-quiet);
-    text-decoration: none;
-  }
-
-  .hero-home__cta--tertiary {
-    background: transparent;
-    color: var(--link-hover);
-    padding: var(--sp-2) 0;
-    text-decoration: underline;
-    text-decoration-color: var(--atc-mid-gray);
-    text-underline-offset: 0.2em;
-  }
-  .hero-home__cta--tertiary:hover {
-    text-decoration-color: var(--link-hover);
-  }
-
-  :global(.tone-ink) .hero-home__cta--primary {
-    background: var(--atc-paper);
-    color: var(--atc-ink);
-  }
-  :global(.tone-ink) .hero-home__cta--secondary {
-    color: var(--fg-on-dark);
-    border-color: var(--atc-paper-10);
-  }
-
-  .hero-home__cta-ring {
-    color: inherit;
-  }
-
-  /* Thinking Ring rechts (alleen desktop) */
-  .hero-home__ring-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-  /* ─── Tablet ──────────────────────────────────────────── */
-  @media (max-width: 991px) {
-    .hero-home__content {
-      max-width: 28ch;
-    }
-    .hero-home__ring-wrapper :global(svg) {
-      width: 180px;
-      height: 180px;
-    }
-  }
-
-  /* ─── Mobile ──────────────────────────────────────────── */
-  @media (max-width: 767px) {
-    .hero-home__layout {
-      grid-template-columns: 1fr;
-      gap: var(--sp-6);
-    }
-    .hero-home__content {
-      max-width: 100%;
-    }
-    .hero-home__ring-wrapper {
-      justify-content: flex-start;
-      order: -1;
-    }
-    .hero-home__ring-wrapper :global(svg) {
-      width: 120px;
-      height: 120px;
-    }
+    font-style: italic;
   }
 </style>
