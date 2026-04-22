@@ -102,7 +102,11 @@ const visualEditingEnabled =
   </head>
   <body>
     {!hideNav && <Nav />}
-    {!hideNav && <div class="nav-spacer" aria-hidden="true"></div>}
+    {/*
+      Geen .nav-spacer meer: enterprise .nav is `position: sticky` (niet
+      fixed), dus content schuift natuurlijk onder de nav. Spacer was
+      nodig bij `position: fixed` — Universal Rule #6 voldaan via sticky.
+    */}
 
     <main class="main-content">
       <slot />

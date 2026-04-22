@@ -175,11 +175,16 @@
   --sp-7:   3rem;      /* 48px — large compositional pause */
   --sp-8:   5rem;      /* 80px — hero stack, section ceiling */
 
-  /* Section verticals (docs/03 §4.2) */
+  /* Section verticals (docs/03 §4.2)
+     --section-pad-top kwam uit `colors_and_type.css` met 10rem (160px).
+     Bron geeft "first-after-nav only" maar gebruikt 'm in praktijk niet
+     (enterprise.html .hero gebruikt eigen padding sp-8 + section-pad-large).
+     Verlaagd naar 6rem zodat hero niet onnodig wegdrijft.
+     Overschrijven per-page mogelijk via Section padding="large" of eigen CSS. */
   --section-pad-small:    4rem;
   --section-pad-main:     6rem;
   --section-pad-large:    8rem;
-  --section-pad-top:      10rem;   /* alleen first-after-nav */
+  --section-pad-top:      6rem;
 
   /* Containers (docs/03 §4.3) */
   --container-small:      42rem;

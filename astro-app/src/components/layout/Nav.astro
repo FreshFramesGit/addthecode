@@ -60,10 +60,22 @@ const ctaLink = primaryCta?.buttonLink ?? null
     <nav class="nav__links" id="nav-primary-menu" data-nav-menu aria-label="Primary">
       {mainNav.map((item: any) => {
         const hasChildren = item.children?.length > 0
+        if (!hasChildren) {
+          return <CmsLink link={item.link}>{item.label}</CmsLink>
+        }
         return (
-          <CmsLink link={item.link} class={hasChildren ? 'has-caret' : ''}>
-            {item.label}
-          </CmsLink>
+          <div class="nav__item nav__item--has-children">
+            <CmsLink link={item.link} class="has-caret">
+              {item.label}
+            </CmsLink>
+            <ul class="nav__submenu" aria-label={`${item.label} submenu`}>
+              {item.children.map((child: any) => (
+                <li>
+                  <CmsLink link={child.link}>{child.label}</CmsLink>
+                </li>
+              ))}
+            </ul>
+          </div>
         )
       })}
     </nav>
@@ -105,6 +117,58 @@ const ctaLink = primaryCta?.buttonLink ?? null
 </script>
 
 <style>
+  /* Submenu — desktop hover/focus reveal */
+  .nav__item--has-children {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+  .nav__submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 12rem;
+    margin: 0;
+    padding: var(--sp-3);
+    background: var(--atc-paper);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+    box-shadow: var(--shadow-resting);
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out),
+      visibility 0s linear var(--dur-fast);
+    z-index: 60;
+  }
+  .nav__item--has-children:hover .nav__submenu,
+  .nav__item--has-children:focus-within .nav__submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
+  .nav__submenu li {
+    margin: 0;
+  }
+  .nav__submenu a {
+    display: block;
+    padding: var(--sp-2) var(--sp-3);
+    font-size: var(--fs-body-small);
+    color: var(--fg-primary);
+    text-decoration: none;
+    border-radius: var(--radius-small);
+    white-space: nowrap;
+  }
+  .nav__submenu a:hover {
+    background: var(--atc-light-gray);
+    color: var(--atc-claude);
+    text-decoration: none;
+  }
+
   /* Hamburger (mobile only) — overrides voor enterprise .nav */
   .nav__hamburger {
     display: none;
@@ -153,6 +217,28 @@ const ctaLink = primaryCta?.buttonLink ?? null
     .nav__links a {
       font-family: var(--font-display);
       font-size: var(--fs-h3);
+    }
+    /* Mobile: submenu inline (geen dropdown) */
+    .nav__item--has-children {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--sp-2);
+    }
+    .nav__submenu {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      border: 0;
+      padding: 0 0 0 var(--sp-5);
+      background: transparent;
+    }
+    .nav__submenu a {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      padding: var(--sp-2) 0;
     }
     .nav__right {
       display: none;
