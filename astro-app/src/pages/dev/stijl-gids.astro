@@ -1,0 +1,845 @@
+---
+/**
+ * /dev/stijl-gids — Add the Code style guide.
+ *
+ * Levende reference-pagina voor alle tokens, typography, layout-primitives,
+ * buttons, chips, section-patterns, cards, hero, quote, refrein, en
+ * ThinkingRing motion-modes.
+ *
+ * Doel:
+ * - Visuele check op het design-systeem in productie
+ * - Snelle reference voor klassen tijdens dev/design
+ * - Onboarding voor nieuwe collaborators
+ * - Vervangt de losse `reference/design files/addthecode/*.html` files
+ *   met een echte route in de site (geen out-of-sync markup)
+ *
+ * Pagina is `noindex` en niet in sitemap. Static prerender — geen Sanity-data
+ * nodig (dit is dev-tooling, geen editor-content).
+ *
+ * URL: /dev/stijl-gids
+ */
+
+import Layout from '../../layouts/Layout.astro'
+import ThinkingRing from '../../components/media/ThinkingRing.astro'
+
+export const prerender = true
+---
+
+<Layout
+  title="Stijl-gids — Add the Code (intern)"
+  noindex={true}
+  hideFooter={false}
+>
+  {/* Sub-nav: jump-links */}
+  <aside class="sg-toc" aria-label="Inhoudsopgave">
+    <div class="container">
+      <nav class="sg-toc__nav">
+        <a href="#tokens">Tokens</a>
+        <a href="#typografie">Typografie</a>
+        <a href="#layout">Layout</a>
+        <a href="#buttons">Buttons</a>
+        <a href="#chips">Chips</a>
+        <a href="#section-head">Section-head</a>
+        <a href="#hero">Hero</a>
+        <a href="#cards">Cards</a>
+        <a href="#quote">Quote</a>
+        <a href="#refrein">Refrein</a>
+        <a href="#newsletter">Newsletter</a>
+        <a href="#thinking-ring">Thinking Ring</a>
+      </nav>
+    </div>
+  </aside>
+
+  {/* ─── Intro ─── */}
+  <section class="section section--small">
+    <div class="container">
+      <span class="kicker">
+        <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+        <span>Stijl-gids · v1 · intern</span>
+      </span>
+      <h1 style="font-size: clamp(2.5rem, 5vw + 0.5rem, 4rem); margin: var(--sp-4) 0 var(--sp-3); font-style: italic;">
+        Het design-systeem op één pagina.
+      </h1>
+      <p class="lead">
+        Alle tokens, type-stijlen, layout-primitives en componenten die op addthecode.nl voorkomen.
+        Vervangt de losse HTML-files in <code class="sg-code">/reference/design files/addthecode/</code>
+        — wat hier staat, is wat de site gebruikt.
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Tokens ─── */}
+  <section class="section" id="tokens">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 01 · Tokens</span>
+        </div>
+        <h2>Kleur, spacing, radius, motion — <em>alles uit tokens.css</em>.</h2>
+      </div>
+
+      <h3 class="sg-h3">Brand kleuren</h3>
+      <div class="sg-swatches">
+        {[
+          { name: 'Ink', token: '--atc-ink', hex: '#141413' },
+          { name: 'Paper', token: '--atc-paper', hex: '#faf9f5' },
+          { name: 'Claude', token: '--atc-claude', hex: '#d97757' },
+          { name: 'Signal', token: '--atc-signal', hex: '#2491c4' },
+          { name: 'Spark', token: '--atc-spark', hex: '#fbca10' },
+          { name: 'Mid Gray', token: '--atc-mid-gray', hex: '#b0aea5' },
+          { name: 'Light Gray', token: '--atc-light-gray', hex: '#e8e6dc' },
+        ].map((c) => (
+          <div class="sg-swatch">
+            <div class="sg-swatch__chip" style={`background: ${c.hex}; ${['#faf9f5', '#e8e6dc', '#fbca10'].includes(c.hex) ? 'border: 1px solid var(--border-default);' : ''}`}></div>
+            <div class="sg-swatch__meta">
+              <strong>{c.name}</strong>
+              <code>{c.token}</code>
+              <code>{c.hex}</code>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Semantic kleuren</h3>
+      <div class="sg-swatches">
+        {[
+          { name: 'fg-primary', token: '--fg-primary', value: 'Ink' },
+          { name: 'fg-secondary', token: '--fg-secondary', value: 'Ink 70%' },
+          { name: 'fg-meta', token: '--fg-meta', value: 'Ink 60%' },
+          { name: 'fg-on-dark', token: '--fg-on-dark', value: 'Paper' },
+          { name: 'bg-primary', token: '--bg-primary', value: 'Paper' },
+          { name: 'bg-dark', token: '--bg-dark', value: 'Ink' },
+          { name: 'border-default', token: '--border-default', value: 'Ink 15%' },
+          { name: 'border-focus', token: '--border-focus', value: 'Signal' },
+          { name: 'link-default', token: '--link-default', value: 'Ink' },
+          { name: 'link-hover', token: '--link-hover', value: 'Signal' },
+        ].map((c) => (
+          <div class="sg-swatch sg-swatch--semantic">
+            <code>{c.token}</code>
+            <span style="color: var(--fg-meta); font-size: var(--fs-mono-small);">→ {c.value}</span>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Spacing schaal</h3>
+      <div class="sg-spacing">
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => {
+          const px = [4, 8, 12, 16, 24, 32, 48, 80][n - 1]
+          return (
+            <div class="sg-spacing__row">
+              <code class="sg-spacing__token">--sp-{n}</code>
+              <span class="sg-spacing__bar" style={`width: ${px}px;`}></span>
+              <span class="sg-spacing__val">{px}px</span>
+            </div>
+          )
+        })}
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Section padding</h3>
+      <div class="sg-spacing">
+        {[
+          { token: '--section-pad-small', val: '4rem (64px)' },
+          { token: '--section-pad-main', val: '6rem (96px)' },
+          { token: '--section-pad-large', val: '8rem (128px)' },
+          { token: '--section-pad-top', val: '6rem (96px) — first-after-nav' },
+        ].map((s) => (
+          <div class="sg-spacing__row">
+            <code class="sg-spacing__token">{s.token}</code>
+            <span class="sg-spacing__val">{s.val}</span>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Radius</h3>
+      <div class="sg-spacing">
+        {[
+          { token: '--radius-small', val: '4px' },
+          { token: '--radius-main', val: '10px' },
+          { token: '--radius-round', val: '999px' },
+        ].map((r) => (
+          <div class="sg-spacing__row">
+            <code class="sg-spacing__token">{r.token}</code>
+            <span class="sg-spacing__val">{r.val}</span>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Motion timing</h3>
+      <div class="sg-spacing">
+        {[
+          { token: '--dur-instant', val: '80ms — tap' },
+          { token: '--dur-fast', val: '180ms — color/focus' },
+          { token: '--dur-normal', val: '300ms — hover/morph' },
+          { token: '--dur-slow', val: '500ms — page transitions' },
+          { token: '--dur-ring-cycle', val: '4s — Thinking Ring breath' },
+        ].map((d) => (
+          <div class="sg-spacing__row">
+            <code class="sg-spacing__token">{d.token}</code>
+            <span class="sg-spacing__val">{d.val}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ─── Typografie ─── */}
+  <section class="section" id="typografie">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 02 · Typografie</span>
+        </div>
+        <h2>Display = FK Display Italic <em>voor statements</em>, body = SuisseIntl, mono = JetBrains.</h2>
+      </div>
+
+      <h3 class="sg-h3">Heading-tags (raw, geen utility-class)</h3>
+      <div class="sg-stack">
+        <h1 style="margin: 0;">H1 — Custom design. Custom code.</h1>
+        <h2 style="margin: 0;">H2 — Hier komt een sectie-opener.</h2>
+        <h3 style="margin: 0;">H3 — Sub-sectie of card-titel.</h3>
+        <h4 style="margin: 0;">H4 — Grote label of blok-titel.</h4>
+        <h5 style="margin: 0;">H5 — Lead-paragraph niveau (Suisse).</h5>
+        <h6 style="margin: 0;">H6 — Microcopy-heading (Suisse).</h6>
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Italic emphasis (FK Display Italic mid-zin)</h3>
+      <p style="font-family: var(--font-display); font-size: var(--fs-h2); line-height: var(--lh-heading); margin: 0;">
+        We bouwen <em>systemen</em>, geen redesigns.
+      </p>
+      <p class="mono" style="margin-top: var(--sp-2);">
+        Markup: <code class="sg-code">&lt;em&gt;systemen&lt;/em&gt;</code>
+      </p>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Body</h3>
+      <p style="margin: 0; max-width: 56ch;">
+        Default body in SuisseIntl Regular, 1rem, line-height 1.55. Tekst-wrap pretty.
+        Inline <em>italic</em> en <strong>bold</strong> en <code>inline code</code> mogelijk.
+      </p>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Lead</h3>
+      <p class="lead">
+        <code class="sg-code">.lead</code> — fs-lead, lh-lead, fg-secondary, max-width 42ch.
+        Voor pitch- en sub-hero-paragrafen.
+      </p>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Mono / kicker</h3>
+      <p class="mono">
+        <code class="sg-code">.mono</code> — JetBrains Mono fallback, mono-small, ls-mono-caps, uppercase, fg-meta.
+      </p>
+      <span class="kicker" style="margin-top: var(--sp-3);">
+        <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+        <span><code class="sg-code">.kicker</code> — mono met inline Thinking Ring</span>
+      </span>
+    </div>
+  </section>
+
+  {/* ─── Layout ─── */}
+  <section class="section" id="layout">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 03 · Layout primitives</span>
+        </div>
+        <h2>Container, section, en padding-classes <em>uit atc-components.css</em>.</h2>
+      </div>
+
+      <h3 class="sg-h3">Containers</h3>
+      <ul class="sg-list">
+        <li><code>.container</code> — max-width <code>--container-main</code> (72rem)</li>
+        <li><code>.container--wide</code> — max-width 88rem</li>
+        <li><code>.container--narrow</code> — max-width <code>--container-small</code> (42rem)</li>
+        <li>Geen container = full-bleed</li>
+      </ul>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Section padding</h3>
+      <ul class="sg-list">
+        <li><code>.section</code> — padding-block <code>--section-pad-main</code></li>
+        <li><code>.section--small</code> — <code>--section-pad-small</code></li>
+        <li><code>.section--large</code> — <code>--section-pad-large</code></li>
+        <li><code>.section--top</code> — padding-top <code>--section-pad-top</code> (first-after-nav)</li>
+        <li><code>.section--ink</code> — donkere achtergrond + paper-tekst</li>
+      </ul>
+    </div>
+  </section>
+
+  {/* ─── Buttons ─── */}
+  <section class="section" id="buttons">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 04 · Buttons</span>
+        </div>
+        <h2>Vier varianten, optioneel met <em>Thinking Ring</em> en arrow.</h2>
+      </div>
+
+      <h3 class="sg-h3">Primary</h3>
+      <div class="sg-row">
+        <a class="btn btn--primary" href="#">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span>Plan een gesprek</span>
+          <span class="btn__arrow">→</span>
+        </a>
+        <a class="btn btn--primary" href="#">
+          <span>Zonder ring</span>
+          <span class="btn__arrow">→</span>
+        </a>
+        <a class="btn btn--primary" href="#"><span>Naked</span></a>
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);"><code class="sg-code">.btn .btn--primary</code></p>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-6);">Ghost</h3>
+      <div class="sg-row">
+        <a class="btn btn--ghost" href="#">
+          <span>Bekijk drie cases</span>
+          <span class="btn__arrow">→</span>
+        </a>
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);"><code class="sg-code">.btn .btn--ghost</code></p>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-6);">On-dark / Ghost-on-dark</h3>
+      <div class="section--ink" style="padding: var(--sp-5); border-radius: var(--radius-main);">
+        <div class="sg-row">
+          <a class="btn btn--on-dark" href="#">
+            <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+            <span>Plan een gesprek</span>
+            <span class="btn__arrow">→</span>
+          </a>
+          <a class="btn btn--ghost-on-dark" href="#">
+            <span>Of bekijk werk</span>
+            <span class="btn__arrow">→</span>
+          </a>
+        </div>
+        <p class="mono mono--on-dark" style="margin-top: var(--sp-3);">
+          <code class="sg-code">.btn--on-dark</code> · <code class="sg-code">.btn--ghost-on-dark</code>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ─── Chips ─── */}
+  <section class="section" id="chips">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 05 · Chips</span>
+        </div>
+        <h2>Mono-uppercase tags <em>met varianten</em> voor context.</h2>
+      </div>
+      <div class="sg-row">
+        <span class="chip">◌ Standaard</span>
+        <span class="chip chip--solid">Solid</span>
+        <span class="chip chip--claude">Claude</span>
+        <span class="chip chip--signal">Signal</span>
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);">
+        <code class="sg-code">.chip</code> · <code class="sg-code">.chip--solid</code> · <code class="sg-code">.chip--claude</code> · <code class="sg-code">.chip--signal</code>
+      </p>
+
+      <div class="section--ink" style="padding: var(--sp-5); margin-top: var(--sp-4); border-radius: var(--radius-main);">
+        <span class="chip chip--on-dark">◌ On dark</span>
+        <p class="mono mono--on-dark" style="margin-top: var(--sp-3);">
+          <code class="sg-code">.chip--on-dark</code>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ─── Section-head pattern ─── */}
+  <section class="section" id="section-head">
+    <div class="container">
+      <div class="sg-card">
+        <div class="section-head" style="margin: 0;">
+          <div class="section-head__intro">
+            <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+            <span class="mono">Wat je krijgt</span>
+          </div>
+          <h2>We ontwerpen enterprise-websites die <em>modulair, schaalbaar en door je marketingteam</em> te beheren zijn.</h2>
+          <p class="lead">Optionele lead-tekst onder de heading. fg-secondary, max-width 42ch.</p>
+        </div>
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);">
+        Markup: <code class="sg-code">.section-head &gt; .section-head__intro (.tr + .mono) + h2 (met &lt;em&gt;) + .lead</code>
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Hero pattern ─── */}
+  <section class="section" id="hero">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 07 · Hero</span>
+        </div>
+        <h2>Mini-demo van <em>.hero__grid</em> met chips, italic title en CTAs.</h2>
+      </div>
+
+      <div class="sg-card">
+        <div class="hero__grid">
+          <div>
+            <div class="hero__meta">
+              <span class="chip">◌ Demo</span>
+              <span class="chip">Astro · Sanity</span>
+            </div>
+            <h1 class="hero__title">Custom design. <em>Custom code.</em> AI-versnelde bouw.</h1>
+            <p class="hero__lede">Sub-claim — fs-lede, lh-lede, fg-secondary, max-width 44ch.</p>
+            <div class="hero__ctas">
+              <a class="btn btn--primary" href="#">
+                <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+                <span>Primary</span>
+                <span class="btn__arrow">→</span>
+              </a>
+              <a class="btn btn--ghost" href="#">
+                <span>Ghost</span>
+                <span class="btn__arrow">→</span>
+              </a>
+            </div>
+          </div>
+          <aside class="hero__artefact" aria-hidden="true">
+            <div class="hero__artefact-label">
+              <span>artefact</span>
+              <span>demo</span>
+            </div>
+            <div style="display:grid; place-items:center; min-height: 200px;">
+              <ThinkingRing size="xl" tone="claude" motion="cycle" />
+            </div>
+            <div class="hero__artefact-foot">
+              <span>SIGNATURE</span>
+              <span>4S</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ─── Card patterns ─── */}
+  <section class="section" id="cards">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 08 · Card patterns</span>
+        </div>
+        <h2>Promise, Benefits, Metric, FCard — <em>vier card-archetypes</em>.</h2>
+      </div>
+
+      <h3 class="sg-h3">Promise (3-koloms gridded met dividers)</h3>
+      <div class="promise">
+        {[
+          { num: '01 · Architect', title: 'Systemen, *geen* redesigns.', pitch: 'Korte pitch over wat dit pattern doet.', tag: 'Astro · Sanity' },
+          { num: '02 · Redesign', title: 'Volledig <em>op maat</em>, done-for-you.', pitch: 'Beschrijf wat de service inhoudt.', tag: 'Beeldtaal · CRO' },
+          { num: '03 · Handover', title: 'Skills die je team <em>blijft gebruiken</em>.', pitch: 'Geen dev-tickets na oplevering.', tag: 'Library · Skills' },
+        ].map((p) => (
+          <article class="promise__item">
+            <span class="promise__num">{p.num}</span>
+            <h3 class="promise__title" set:html={p.title.replace(/\*([^*]+)\*/g, '<em>$1</em>')}></h3>
+            <p class="promise__pitch">{p.pitch}</p>
+            <span class="promise__tag">{p.tag}</span>
+          </article>
+        ))}
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);">
+        <code class="sg-code">.promise &gt; .promise__item &gt; .promise__num + .promise__title (em) + .promise__pitch + .promise__tag</code>
+      </p>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Benefits (3-col, top-border)</h3>
+      <div class="benefits">
+        {[
+          { num: '01', title: 'Schaalt met je groei', pitch: 'Geen plugin-onderhoud, geen rebuild bij elke groeisprong.' },
+          { num: '02', title: 'Opnieuw of migreren', pitch: 'From-scratch of migratie, zonder downtime, zonder SEO-verlies.' },
+          { num: '03', title: 'In-house launchen', pitch: 'Je team maakt branded pages — uren, niet weken.' },
+        ].map((b) => (
+          <article class="benefit">
+            <span class="benefit__num">{b.num}</span>
+            <h3 class="benefit__title">{b.title}</h3>
+            <p class="benefit__pitch">{b.pitch}</p>
+          </article>
+        ))}
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);">
+        <code class="sg-code">.benefits &gt; .benefit &gt; .benefit__num + .benefit__title + .benefit__pitch</code>
+      </p>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Metrics (3-col, side-borders)</h3>
+      <div class="metrics">
+        {[
+          { val: '3 mnd', desc: 'Enterprise platform live, inclusief data-migratie.', case: 'LAAG 01 · BELL' },
+          { val: '4 000+', desc: 'CMS-items gemigreerd, drie talen, één bron.', case: 'LAAG 02 · NDA' },
+          { val: '<em>5×</em> sneller', desc: 'Marketing ships updates — van ticket naar eigen-regie.', case: 'LAAG 03 · HERITAGE' },
+        ].map((m) => (
+          <div class="metric">
+            <span class="metric__val" set:html={m.val}></span>
+            <span class="metric__desc">{m.desc}</span>
+            <span class="metric__case">{m.case}</span>
+          </div>
+        ))}
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);">
+        <code class="sg-code">.metrics &gt; .metric &gt; .metric__val (em) + .metric__desc + .metric__case</code>
+      </p>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">FCard (3-col feature card)</h3>
+      <div class="fgrid">
+        {[
+          { num: '01', title: 'Modulair', pitch: 'Componenten die opnieuw te gebruiken zijn.', tag: 'Astro · Sanity' },
+          { num: '02', title: 'Snel', pitch: 'Edge-rendered, statisch waar mogelijk.', tag: 'Vercel · CDN' },
+          { num: '03', title: 'Eigen', pitch: 'Code in je eigen repo, geen vendor-lock.', tag: 'Open source' },
+        ].map((f) => (
+          <article class="fcard">
+            <span class="fcard__num">{f.num}</span>
+            <h3 class="fcard__title">{f.title}</h3>
+            <p class="fcard__pitch">{f.pitch}</p>
+            <span class="fcard__tag">{f.tag}</span>
+          </article>
+        ))}
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);">
+        <code class="sg-code">.fgrid &gt; .fcard &gt; .fcard__num + .fcard__title + .fcard__pitch + .fcard__tag</code>
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Quote ─── */}
+  <section class="section" id="quote">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 09 · Quote</span>
+        </div>
+        <h2>Twee varianten: <em>plain</em> en <em>ink</em> (donker).</h2>
+      </div>
+
+      <h3 class="sg-h3">Plain quote</h3>
+      <div class="quote">
+        <div class="quote__body">
+          "Sample quote — Italic FK Display, max-width 56ch, line-height 1.3."
+        </div>
+        <div class="quote__attr">
+          <span><b>Sample Naam</b></span>
+          <span>Functie, Bedrijf</span>
+          <span>LAAG 03 · HERITAGE</span>
+        </div>
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Ink quote (met &lt;mark&gt; emphasis)</h3>
+      <div class="quote quote--ink">
+        <div class="quote__body">
+          "Je kunt ze écht vertrouwen met complex werk — ze zijn <mark>top-notch in hun vak</mark> en we kunnen ze alleen maar aanbevelen."
+        </div>
+        <div class="quote__attr">
+          <span><b>Arnaud Barbezat</b></span>
+          <span>Int'l Marketing Manager</span>
+          <span>LAAG 03 · HERITAGE</span>
+        </div>
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);">
+        <code class="sg-code">.quote</code> · <code class="sg-code">.quote--ink</code> + <code class="sg-code">&lt;mark&gt;</code> = Claude underline
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Refrein ─── */}
+  <section class="section" id="refrein">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 10 · Refrein</span>
+        </div>
+        <h2>Sitebreed CTA-blok <em>met watermark Ring</em>.</h2>
+      </div>
+
+      <div class="refrein">
+        <h3>Klaar om weer met eigen code te bouwen?</h3>
+        <a class="btn btn--on-dark" href="#">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span>Plan een gesprek</span>
+          <span class="btn__arrow">→</span>
+        </a>
+        <div class="refrein__watermark" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="44" pathLength="68"
+                    fill="none" stroke="currentColor" stroke-width="1.2"
+                    stroke-dasharray="55 13" stroke-linecap="round"
+                    transform="rotate(20 50 50)" />
+          </svg>
+        </div>
+      </div>
+      <p class="mono" style="margin-top: var(--sp-3);">
+        <code class="sg-code">.refrein &gt; h3 + .btn--on-dark + .refrein__watermark</code>
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Newsletter ─── */}
+  <section class="section" id="newsletter">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 11 · Newsletter form</span>
+        </div>
+        <h2>Compact email-subscribe pattern <em>met focus state</em>.</h2>
+      </div>
+
+      <form class="newsletter" onsubmit="event.preventDefault();" novalidate>
+        <input type="email" placeholder="jij@bedrijf.nl" />
+        <button type="submit" class="btn btn--primary">
+          <span>Aanmelden</span>
+          <span class="btn__arrow">→</span>
+        </button>
+      </form>
+      <p class="mono" style="margin-top: var(--sp-3);">
+        <code class="sg-code">.newsletter &gt; input + .btn--primary</code>
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Thinking Ring ─── */}
+  <section class="section" id="thinking-ring">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-head__intro">
+          <svg class="tr" viewBox="0 0 24 24"><circle class="tr__circle" cx="12" cy="12" r="10" pathLength="70"/></svg>
+          <span class="mono">§ 12 · Thinking Ring</span>
+        </div>
+        <h2>Signature motif — <em>5 maten, 4 motion-modes</em>.</h2>
+      </div>
+
+      <h3 class="sg-h3">Maten</h3>
+      <div class="sg-rings">
+        {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((size) => (
+          <div class="sg-ring-cell">
+            <ThinkingRing size={size} tone="claude" motion="cycle" />
+            <code>{size}</code>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Motion modes</h3>
+      <div class="sg-rings">
+        <div class="sg-ring-cell">
+          <ThinkingRing size="md" tone="claude" motion="cycle" />
+          <code>cycle (default)</code>
+        </div>
+        <div class="sg-ring-cell">
+          <ThinkingRing size="md" tone="claude" motion="static" />
+          <code>static (canoniek 80%)</code>
+        </div>
+        <div class="sg-ring-cell">
+          <a href="#" class="has-ring-hover" style="display:grid; place-items:center; gap:var(--sp-2); text-decoration:none; color:inherit;">
+            <ThinkingRing size="md" tone="claude" motion="hover-rotate" />
+            <code>hover-rotate (hover hier)</code>
+          </a>
+        </div>
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Tones</h3>
+      <div class="sg-rings">
+        <div class="sg-ring-cell">
+          <ThinkingRing size="md" tone="claude" motion="cycle" />
+          <code>claude (default)</code>
+        </div>
+        <div class="sg-ring-cell">
+          <ThinkingRing size="md" tone="ink" motion="cycle" />
+          <code>ink</code>
+        </div>
+        <div class="sg-ring-cell" style="background: var(--atc-ink); padding: var(--sp-3); border-radius: var(--radius-main);">
+          <ThinkingRing size="md" tone="paper" motion="cycle" />
+          <code style="color: var(--atc-paper);">paper (op donker)</code>
+        </div>
+      </div>
+
+      <h3 class="sg-h3" style="margin-top: var(--sp-7);">Inline (in tekst)</h3>
+      <p style="font-size: var(--fs-h3); font-family: var(--font-display); margin: 0;">
+        Een zin met <ThinkingRing size="inline" tone="claude" motion="cycle" /> ring inline.
+      </p>
+      <p class="mono" style="margin-top: var(--sp-2);">
+        <code class="sg-code">&lt;ThinkingRing size="inline" tone="claude" motion="cycle" /&gt;</code>
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* ─── Style guide eigen styling ──────────────────────────── */
+
+  .sg-toc {
+    position: sticky;
+    top: 64px;
+    z-index: 40;
+    background: var(--atc-paper);
+    border-bottom: 1px solid var(--border-default);
+    padding: var(--sp-3) 0;
+  }
+  .sg-toc__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3) var(--sp-5);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+  }
+  .sg-toc__nav a {
+    color: var(--fg-meta);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .sg-toc__nav a:hover {
+    color: var(--atc-claude);
+  }
+
+  .sg-h3 {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    color: var(--fg-meta);
+    margin: 0 0 var(--sp-3);
+    font-weight: 400;
+  }
+
+  .sg-code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    background: var(--atc-light-gray);
+    padding: 2px 6px;
+    border-radius: var(--radius-small);
+    color: var(--atc-ink);
+  }
+
+  .sg-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  .sg-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    align-items: center;
+  }
+
+  .sg-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    font-size: var(--fs-body);
+  }
+  .sg-list li {
+    padding: var(--sp-2) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .sg-card {
+    padding: var(--sp-6);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+    background: var(--atc-paper);
+  }
+
+  /* ─── Swatches ──────────────────────────────────────────── */
+  .sg-swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: var(--sp-4);
+  }
+  .sg-swatch {
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+    overflow: hidden;
+    background: var(--atc-paper);
+  }
+  .sg-swatch__chip {
+    height: 80px;
+  }
+  .sg-swatch__meta {
+    padding: var(--sp-3);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: var(--fs-body-small);
+  }
+  .sg-swatch__meta strong {
+    font-weight: 500;
+  }
+  .sg-swatch__meta code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--fg-meta);
+  }
+  .sg-swatch--semantic {
+    padding: var(--sp-3);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* ─── Spacing rows ──────────────────────────────────────── */
+  .sg-spacing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .sg-spacing__row {
+    display: grid;
+    grid-template-columns: 8rem 1fr 4rem;
+    gap: var(--sp-3);
+    align-items: center;
+    padding: var(--sp-2) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .sg-spacing__token {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--atc-claude);
+  }
+  .sg-spacing__bar {
+    display: inline-block;
+    height: 8px;
+    background: var(--atc-claude);
+    border-radius: var(--radius-small);
+  }
+  .sg-spacing__val {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--fg-meta);
+    text-align: right;
+  }
+
+  /* ─── Thinking Ring grid ────────────────────────────────── */
+  .sg-rings {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--sp-5);
+    align-items: end;
+  }
+  .sg-ring-cell {
+    display: grid;
+    place-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-4);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-main);
+    background: var(--atc-paper);
+    min-height: 12rem;
+  }
+  .sg-ring-cell code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-small);
+    color: var(--fg-meta);
+    text-align: center;
+  }
+</style>
