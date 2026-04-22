@@ -4,8 +4,8 @@ import { HelpCircleIcon } from '@sanity/icons'
 /**
  * FAQ Block — vraag-antwoord sectie.
  *
- * Spec: docs/07j §5 (contact: 3 vragen), services-pagina's optioneel.
- * Genereert FAQPage JSON-LD voor SEO als `enableJsonLd: true`.
+ * Spec: docs/07j §5 (contact), home + services voor AEO-vragen.
+ * Genereert FAQPage JSON-LD voor SEO/AEO als `enableJsonLd: true`.
  */
 export const faqBlock = defineType({
   name: 'faqBlock',
@@ -46,7 +46,7 @@ export const faqBlock = defineType({
       title: 'Genereer FAQPage JSON-LD',
       type: 'boolean',
       initialValue: true,
-      description: 'Voor SEO/AEO. Aanbevolen aan op contact en services-pagina\'s.',
+      description: 'Voor SEO/AEO. Aanbevolen aan op home, contact en services-pagina\'s.',
     }),
     defineField({
       name: 'tone',

@@ -27,7 +27,7 @@ const safeTone = tone ?? 'paper'
 const safeCoreOnly = coreOnly ?? true
 const safeShowQuotes = showQuotes ?? true
 
-const members = await getTeamMembers(safeCoreOnly)
+const members = await getTeamMembers(safeCoreOnly, Astro.cookies)
 ---
 
 <Section

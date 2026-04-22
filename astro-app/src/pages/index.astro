@@ -4,8 +4,8 @@ import PageBuilder from "../components/PageBuilder.astro";
 import JsonLd from "../components/seo/JsonLd.astro";
 import { getHomePage, getSiteSettings } from "../utils/sanity";
 
-const page = await getHomePage();
-const settings = await getSiteSettings();
+const page = await getHomePage(Astro.cookies);
+const settings = await getSiteSettings(Astro.cookies);
 
 const seo = page?.seo ?? {};
 const blocks = page?.content ?? [];

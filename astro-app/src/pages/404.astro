@@ -14,7 +14,7 @@ import { getNotFoundPage } from "../utils/sanity";
  * 404 (browser-default behavior).
  */
 
-const page = await getNotFoundPage();
+const page = await getNotFoundPage(Astro.cookies);
 
 const heading = page?.heading ?? null;
 const body = page?.body;

@@ -444,7 +444,23 @@ export default defineConfig({
     }),
     presentationTool({
       resolve: {locations},
-      previewUrl: process.env.SANITY_STUDIO_PREVIEW_URL || 'http://localhost:4321',
+      /**
+       * Visual Editing draft-mode contract:
+       *  - `initial` = de root van de Astro-frontend (iframe-bron)
+       *  - `previewMode.enable` = pad naar de draft-mode-API in de frontend
+       *    (`astro-app/src/pages/api/draft-mode/enable.ts`). Studio doet bij
+       *    openen van de Presentation Tool een GET met validation-secret —
+       *    de route zet daarna de `perspectiveCookie` zodat `loadQuery`
+       *    drafts + stega ophaalt.
+       *
+       * Volgens https://www.sanity.io/docs/visual-editing/astro-visual-editing
+       */
+      previewUrl: {
+        initial: process.env.SANITY_STUDIO_PREVIEW_URL || 'http://localhost:4321',
+        previewMode: {
+          enable: '/api/draft-mode/enable',
+        },
+      },
     }),
     visionTool(),
     media(),

@@ -10,7 +10,7 @@ import { getOfflinePage } from '../utils/sanity'
  * Zie 404.astro voor het pattern.
  */
 
-const page = await getOfflinePage()
+const page = await getOfflinePage(Astro.cookies)
 
 const heading = page?.heading ?? null
 const body = page?.body

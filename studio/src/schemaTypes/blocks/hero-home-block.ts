@@ -48,6 +48,14 @@ export const heroHomeBlock = defineType({
       description: 'Één of twee zinnen onder de headline — zet de belofte in context.',
     }),
     defineField({
+      name: 'bodyText',
+      title: 'Hero body (optioneel)',
+      type: 'text',
+      rows: 3,
+      description:
+        'Extra alinea onder de sub-claim. Gebruik dit voor expliciete positioning, fit of ownership-copy op de home.',
+    }),
+    defineField({
       name: 'ctas',
       title: 'CTAs (max 2)',
       type: 'array',

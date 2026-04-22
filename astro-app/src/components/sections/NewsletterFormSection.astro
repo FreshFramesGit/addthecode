@@ -35,7 +35,7 @@ const {
 const safeTone = tone ?? 'paper'
 const safeSource = source ?? 'other'
 
-const defaults = await getComponentDefaults()
+const defaults = await getComponentDefaults(Astro.cookies)
 const newsletter = defaults?.newsletter ?? null
 
 const intro = overrideIntro ?? newsletter?.intro ?? null

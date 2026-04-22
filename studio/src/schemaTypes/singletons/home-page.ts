@@ -20,7 +20,8 @@ export const homePage = defineType({
       title: 'Page sections',
       type: 'pageBuilder',
       group: 'content',
-      description: 'Add sections and drag them into the desired order.',
+      description:
+        'Voeg secties toe en sleep ze in de gewenste volgorde. Voorgestelde flow: hero-home → pitch-opening → service-triptych → project-grid → principles → quote-cluster → pitch-opening (approach) → faq → essay-grid → cta-refrein.',
     }),
   ],
   preview: {

@@ -29,7 +29,7 @@ const { overrideHeading, overrideSteps, tone, anchorId } = Astro.props
 
 const safeTone = tone ?? 'paper'
 
-const defaults = await getComponentDefaults()
+const defaults = await getComponentDefaults(Astro.cookies)
 const expectations = defaults?.expectationSteps ?? null
 
 const heading = overrideHeading ?? expectations?.heading ?? null

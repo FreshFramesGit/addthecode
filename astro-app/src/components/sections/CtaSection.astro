@@ -26,7 +26,7 @@ interface Props {
   [key: string]: any;
 }
 
-const defaults = await getComponentDefaults();
+const defaults = await getComponentDefaults(Astro.cookies);
 const d = defaults?.cta;
 
 // 2-layer fallback: props → componentDefaults. Geen hardcoded fallback (Rule #1).

@@ -9012,6 +9012,13 @@
           },
           "optional": true
         },
+        "bodyText": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
         "ctas": {
           "type": "objectAttribute",
           "value": {

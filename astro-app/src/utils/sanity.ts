@@ -1,5 +1,17 @@
+import type { AstroCookies } from "astro";
 import { defineQuery } from "groq";
 import { loadQuery } from "./load-query";
+import { getDraftModeProps } from "../sanity/lib/draft-mode";
+
+/**
+ * Helper: spread `getDraftModeProps(cookies)` into loadQuery options
+ * when cookies zijn meegegeven. Routes / endpoints / build-time
+ * scripts (sitemap, robots, llms) geven geen cookies door en zien
+ * altijd published content.
+ */
+function withDraft(cookies?: AstroCookies) {
+  return cookies ? getDraftModeProps(cookies) : {};
+}
 
 // ─── Reusable GROQ Fragments ──────────────────────────────
 
@@ -89,8 +101,8 @@ const SITE_SETTINGS_QUERY = defineQuery(`
   }
 `);
 
-export async function getSiteSettings() {
-  const { data } = await loadQuery({ query: SITE_SETTINGS_QUERY });
+export async function getSiteSettings(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: SITE_SETTINGS_QUERY, ...withDraft(cookies) });
   return data;
 }
 
@@ -134,8 +146,8 @@ const COMPONENT_DEFAULTS_QUERY = defineQuery(`
   }
 `);
 
-export async function getComponentDefaults() {
-  const { data } = await loadQuery({ query: COMPONENT_DEFAULTS_QUERY });
+export async function getComponentDefaults(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: COMPONENT_DEFAULTS_QUERY, ...withDraft(cookies) });
   return data;
 }
 
@@ -161,8 +173,8 @@ const NAVIGATION_QUERY = defineQuery(`
   }
 `);
 
-export async function getNavigation() {
-  const { data } = await loadQuery({ query: NAVIGATION_QUERY });
+export async function getNavigation(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: NAVIGATION_QUERY, ...withDraft(cookies) });
   return data;
 }
 
@@ -511,40 +523,40 @@ const SERVICE_AUTOMATE_PAGE_QUERY = singletonPageQuery('serviceAutomatePage');
 const ACADEMY_INDEX_PAGE_QUERY = singletonPageQuery('academyIndexPage');
 const CONTACT_PAGE_QUERY = singletonPageQuery('contactPage');
 
-export async function getHomePage() {
-  const { data } = await loadQuery({ query: HOME_PAGE_QUERY });
+export async function getHomePage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: HOME_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
-export async function getWorkIndexPage() {
-  const { data } = await loadQuery({ query: WORK_INDEX_PAGE_QUERY });
+export async function getWorkIndexPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: WORK_INDEX_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
-export async function getTeamPage() {
-  const { data } = await loadQuery({ query: TEAM_PAGE_QUERY });
+export async function getTeamPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: TEAM_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
-export async function getApproachPage() {
-  const { data } = await loadQuery({ query: APPROACH_PAGE_QUERY });
+export async function getApproachPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: APPROACH_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
-export async function getServiceDesignPage() {
-  const { data } = await loadQuery({ query: SERVICE_DESIGN_PAGE_QUERY });
+export async function getServiceDesignPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: SERVICE_DESIGN_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
-export async function getServiceBuildPage() {
-  const { data } = await loadQuery({ query: SERVICE_BUILD_PAGE_QUERY });
+export async function getServiceBuildPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: SERVICE_BUILD_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
-export async function getServiceAutomatePage() {
-  const { data } = await loadQuery({ query: SERVICE_AUTOMATE_PAGE_QUERY });
+export async function getServiceAutomatePage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: SERVICE_AUTOMATE_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
-export async function getAcademyIndexPage() {
-  const { data } = await loadQuery({ query: ACADEMY_INDEX_PAGE_QUERY });
+export async function getAcademyIndexPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: ACADEMY_INDEX_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
-export async function getContactPage() {
-  const { data } = await loadQuery({ query: CONTACT_PAGE_QUERY });
+export async function getContactPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: CONTACT_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
 
@@ -558,8 +570,8 @@ const PAGE_BY_SLUG_QUERY = defineQuery(`
   }
 `);
 
-export async function getPageBySlug(slug: string) {
-  const { data } = await loadQuery({ query: PAGE_BY_SLUG_QUERY, params: { slug } });
+export async function getPageBySlug(slug: string, cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: PAGE_BY_SLUG_QUERY, params: { slug }, ...withDraft(cookies) });
   return data;
 }
 
@@ -575,8 +587,8 @@ const NOT_FOUND_PAGE_QUERY = defineQuery(`
   }
 `);
 
-export async function getNotFoundPage() {
-  const { data } = await loadQuery({ query: NOT_FOUND_PAGE_QUERY });
+export async function getNotFoundPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: NOT_FOUND_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
 
@@ -590,8 +602,8 @@ const ERROR_PAGE_QUERY = defineQuery(`
   }
 `);
 
-export async function getErrorPage() {
-  const { data } = await loadQuery({ query: ERROR_PAGE_QUERY });
+export async function getErrorPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: ERROR_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
 
@@ -605,8 +617,8 @@ const OFFLINE_PAGE_QUERY = defineQuery(`
   }
 `);
 
-export async function getOfflinePage() {
-  const { data } = await loadQuery({ query: OFFLINE_PAGE_QUERY });
+export async function getOfflinePage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: OFFLINE_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
 
@@ -620,8 +632,8 @@ const THANK_YOU_PAGE_QUERY = defineQuery(`
   }
 `);
 
-export async function getThankYouPage() {
-  const { data } = await loadQuery({ query: THANK_YOU_PAGE_QUERY });
+export async function getThankYouPage(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: THANK_YOU_PAGE_QUERY, ...withDraft(cookies) });
   return data;
 }
 
@@ -673,8 +685,11 @@ const CASES_BY_LAYER_QUERY = defineQuery(`
   *[_type == "case" && status == "live" && ($layer == "all" || layer == $layer)] | order(period.start desc) ${CASE_CARD_FRAGMENT}
 `);
 
-export async function getCasesByLayer(layer: 'launch' | 'in-flight' | 'heritage' | 'all' = 'all') {
-  const { data } = await loadQuery({ query: CASES_BY_LAYER_QUERY, params: { layer } });
+export async function getCasesByLayer(
+  layer: 'launch' | 'in-flight' | 'heritage' | 'all' = 'all',
+  cookies?: AstroCookies,
+) {
+  const { data } = await loadQuery({ query: CASES_BY_LAYER_QUERY, params: { layer }, ...withDraft(cookies) });
   return data ?? [];
 }
 
@@ -682,8 +697,8 @@ const CASE_BY_SLUG_QUERY = defineQuery(`
   *[_type == "case" && slug.current == $slug][0] ${CASE_DETAIL_FRAGMENT}
 `);
 
-export async function getCaseBySlug(slug: string) {
-  const { data } = await loadQuery({ query: CASE_BY_SLUG_QUERY, params: { slug } });
+export async function getCaseBySlug(slug: string, cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: CASE_BY_SLUG_QUERY, params: { slug }, ...withDraft(cookies) });
   return data;
 }
 
@@ -742,8 +757,11 @@ const ESSAYS_QUERY = defineQuery(`
   *[_type == "essay" && status == "live" && ($category == "all" || category == $category)] | order(publishedAt desc) ${ESSAY_CARD_FRAGMENT}
 `);
 
-export async function getEssays(category: 'all' | 'principle' | 'practice' | 'analyse' = 'all') {
-  const { data } = await loadQuery({ query: ESSAYS_QUERY, params: { category } });
+export async function getEssays(
+  category: 'all' | 'principle' | 'practice' | 'analyse' = 'all',
+  cookies?: AstroCookies,
+) {
+  const { data } = await loadQuery({ query: ESSAYS_QUERY, params: { category }, ...withDraft(cookies) });
   return data ?? [];
 }
 
@@ -751,8 +769,8 @@ const FEATURED_ESSAYS_QUERY = defineQuery(`
   *[_type == "essay" && status == "live" && featured == true] | order(publishedAt desc) ${ESSAY_CARD_FRAGMENT}
 `);
 
-export async function getFeaturedEssays() {
-  const { data } = await loadQuery({ query: FEATURED_ESSAYS_QUERY });
+export async function getFeaturedEssays(cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: FEATURED_ESSAYS_QUERY, ...withDraft(cookies) });
   return data ?? [];
 }
 
@@ -760,8 +778,8 @@ const ESSAY_BY_SLUG_QUERY = defineQuery(`
   *[_type == "essay" && slug.current == $slug][0] ${ESSAY_DETAIL_FRAGMENT}
 `);
 
-export async function getEssayBySlug(slug: string) {
-  const { data } = await loadQuery({ query: ESSAY_BY_SLUG_QUERY, params: { slug } });
+export async function getEssayBySlug(slug: string, cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: ESSAY_BY_SLUG_QUERY, params: { slug }, ...withDraft(cookies) });
   return data;
 }
 
@@ -796,8 +814,8 @@ const TEAM_MEMBERS_QUERY = defineQuery(`
   *[_type == "teamMember" && ($coreOnly == false || isCore == true)] | order(displayOrder asc) ${TEAM_MEMBER_FRAGMENT}
 `);
 
-export async function getTeamMembers(coreOnly: boolean = false) {
-  const { data } = await loadQuery({ query: TEAM_MEMBERS_QUERY, params: { coreOnly } });
+export async function getTeamMembers(coreOnly: boolean = false, cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: TEAM_MEMBERS_QUERY, params: { coreOnly }, ...withDraft(cookies) });
   return data ?? [];
 }
 
@@ -805,8 +823,8 @@ const TEAM_MEMBER_BY_SLUG_QUERY = defineQuery(`
   *[_type == "teamMember" && slug.current == $slug][0] ${TEAM_MEMBER_FRAGMENT}
 `);
 
-export async function getTeamMemberBySlug(slug: string) {
-  const { data } = await loadQuery({ query: TEAM_MEMBER_BY_SLUG_QUERY, params: { slug } });
+export async function getTeamMemberBySlug(slug: string, cookies?: AstroCookies) {
+  const { data } = await loadQuery({ query: TEAM_MEMBER_BY_SLUG_QUERY, params: { slug }, ...withDraft(cookies) });
   return data;
 }
 
@@ -826,9 +844,10 @@ const RECOGNITION_QUERY = defineQuery(`
 `);
 
 export async function getRecognition(
-  category: 'all' | 'award' | 'talk' | 'partner' | 'client' = 'all'
+  category: 'all' | 'award' | 'talk' | 'partner' | 'client' = 'all',
+  cookies?: AstroCookies,
 ) {
-  const { data } = await loadQuery({ query: RECOGNITION_QUERY, params: { category } });
+  const { data } = await loadQuery({ query: RECOGNITION_QUERY, params: { category }, ...withDraft(cookies) });
   return data ?? [];
 }
 

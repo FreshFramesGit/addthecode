@@ -1,9 +1,11 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import { perspectiveCookieName } from "@sanity/preview-url-secret/constants";
 import Seo from "../components/seo/Seo.astro";
 import Nav from "../components/layout/Nav.astro";
 import Footer from "../components/layout/Footer.astro";
-import { VisualEditing } from "@sanity/astro/visual-editing";
+import SanityVisualEditing from "../components/SanityVisualEditing";
+import DisableDraftMode from "../components/DisableDraftMode";
 import { getSiteSettings } from "../utils/sanity";
 import { getBaseUrl } from "../utils/site-url";
 import "../styles/global.css";
@@ -27,8 +29,10 @@ interface Props extends SeoProps {
   hideFooter?: boolean;
 }
 
-// Fetch siteSettings for defaults — cached per request by Sanity client
-const settings = await getSiteSettings();
+// Fetch siteSettings for defaults — cached per request by Sanity client.
+// Geef Astro.cookies door zodat we tijdens Visual Editing draft-content
+// in nav/footer zien (bv. siteName-changes).
+const settings = await getSiteSettings(Astro.cookies);
 
 const {
   title,
@@ -61,8 +65,17 @@ const seoProps: SeoProps = {
   baseUrl,
 };
 
-const visualEditingEnabled =
-  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
+/**
+ * Draft-mode-gate is per-request via cookie (Sanity best-practice).
+ *
+ * - Geen cookie → published content, geen overlays, geen stega
+ * - Cookie aanwezig → draft + click-to-edit overlays + perspective sync
+ *
+ * De cookie wordt gezet door /api/draft-mode/enable (door Studio's
+ * Presentation Tool aangeroepen) en gewist door /api/draft-mode/disable
+ * (de floating button onderin).
+ */
+const draftMode = Astro.cookies.has(perspectiveCookieName);
 ---
 
 <!doctype html>
@@ -113,6 +126,12 @@ const visualEditingEnabled =
     </main>
 
     {!hideFooter && <Footer />}
-    <VisualEditing enabled={visualEditingEnabled} />
+
+    {draftMode && (
+      <>
+        <SanityVisualEditing client:only="react" />
+        <DisableDraftMode client:only="react" />
+      </>
+    )}
   </body>
 </html>

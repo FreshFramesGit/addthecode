@@ -45,9 +45,9 @@ const isOnDark = safeTone === 'ink'
 
 let essays: any[] = []
 if (safeCategory === 'featured') {
-  essays = await getFeaturedEssays()
+  essays = await getFeaturedEssays(Astro.cookies)
 } else {
-  essays = await getEssays(safeCategory)
+  essays = await getEssays(safeCategory, Astro.cookies)
 }
 
 let ordered = essays

@@ -7,12 +7,12 @@ import { getSiteSettings } from "../../utils/sanity";
 import { getBaseUrl } from "../../utils/site-url";
 
 interface Props {
-  type: "LocalBusiness" | "CreativeWork" | "Service" | "FAQPage" | "BreadcrumbList";
+  type: "Organization" | "LocalBusiness" | "CreativeWork" | "Service" | "FAQPage" | "BreadcrumbList";
   data?: Record<string, any>;
 }
 
 const { type, data = {} } = Astro.props;
-const settings = await getSiteSettings();
+const settings = await getSiteSettings(Astro.cookies);
 
 const SITE_URL = getBaseUrl(settings, Astro.url.origin);
 const orgName = settings?.siteName ?? "My Site";
@@ -20,6 +20,27 @@ const orgDescription = settings?.siteDescription ?? "";
 const orgPhone = settings?.phone ?? "";
 const orgEmail = settings?.email ?? "";
 const orgAddress = settings?.address ?? "";
+const socialLinks = settings?.socialLinks ?? [];
+
+// ─── Organization (homepage / global identity) ──────────────
+function buildOrganization() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: orgName,
+    url: SITE_URL,
+    description: orgDescription,
+    ...(orgPhone && { telephone: orgPhone.replace(/\s/g, '') }),
+    ...(orgEmail && { email: orgEmail }),
+    ...(socialLinks.length > 0 && {
+      sameAs: socialLinks
+        .map((item: Record<string, any>) => item?.url)
+        .filter(Boolean),
+    }),
+    ...data,
+  };
+}
 
 // ─── LocalBusiness (homepage) ───────────────────────────────
 function buildLocalBusiness() {
@@ -84,6 +105,7 @@ function buildBreadcrumbs() {
 }
 
 const builders: Record<string, () => Record<string, any>> = {
+  Organization: buildOrganization,
   LocalBusiness: buildLocalBusiness,
   CreativeWork: buildCreativeWork,
   Service: buildService,

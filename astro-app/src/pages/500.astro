@@ -10,7 +10,7 @@ import { getErrorPage } from '../utils/sanity'
  * Zie 404.astro voor het pattern.
  */
 
-const page = await getErrorPage()
+const page = await getErrorPage(Astro.cookies)
 
 const heading = page?.heading ?? null
 const body = page?.body

@@ -10,7 +10,7 @@ if (!resolvedSlug) {
   return Astro.redirect("/");
 }
 
-const page = await getPageBySlug(resolvedSlug);
+const page = await getPageBySlug(resolvedSlug, Astro.cookies);
 
 if (!page) {
   return new Response(null, { status: 404, statusText: "Not found" });

@@ -3,8 +3,8 @@ import Layout from '../../layouts/Layout.astro'
 import PageBuilder from '../../components/PageBuilder.astro'
 import { getWorkIndexPage, getSiteSettings } from '../../utils/sanity'
 
-const page = await getWorkIndexPage()
-const settings = await getSiteSettings()
+const page = await getWorkIndexPage(Astro.cookies)
+const settings = await getSiteSettings(Astro.cookies)
 
 const seo = page?.seo ?? {}
 const blocks = page?.content ?? []

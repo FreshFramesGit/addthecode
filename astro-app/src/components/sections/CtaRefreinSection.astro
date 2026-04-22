@@ -32,7 +32,7 @@ const {
 
 const safePageKey = pageKey ?? 'primary'
 
-const defaults = await getComponentDefaults()
+const defaults = await getComponentDefaults(Astro.cookies)
 const ctaRefreins: any[] = defaults?.ctaRefreins ?? []
 const matched = ctaRefreins.find((c) => c.key === safePageKey) ?? ctaRefreins[0] ?? null
 

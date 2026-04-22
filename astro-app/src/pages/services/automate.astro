@@ -1,13 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro'
 import PageBuilder from '../../components/PageBuilder.astro'
+import JsonLd from '../../components/seo/JsonLd.astro'
 import { getServiceAutomatePage, getSiteSettings } from '../../utils/sanity'
 
-const page = await getServiceAutomatePage()
-const settings = await getSiteSettings()
+const page = await getServiceAutomatePage(Astro.cookies)
+const settings = await getSiteSettings(Astro.cookies)
 
 const seo = page?.seo ?? {}
 const blocks = page?.content ?? []
+const heroBlock = blocks.find((block: any) => block._type === 'heroStandardBlock')
 ---
 
 <Layout
@@ -15,5 +17,20 @@ const blocks = page?.content ?? []
   siteName={settings?.siteName}
   ogImage={seo?.ogImageUrl ?? settings?.defaultSeo?.ogImageUrl}
 >
+  <Fragment slot="head">
+    <JsonLd
+      type="Service"
+      data={{
+        name: heroBlock?.heading ?? 'Automate — Add the Code',
+        description:
+          heroBlock?.subheading ??
+          seo?.description ??
+          settings?.siteDescription,
+        serviceType: 'Automate',
+        areaServed: 'NL',
+      }}
+    />
+  </Fragment>
+
   <PageBuilder blocks={blocks} />
 </Layout>

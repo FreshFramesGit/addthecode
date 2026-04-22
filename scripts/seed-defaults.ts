@@ -766,6 +766,37 @@ function buildServiceDesignContent() {
       tone: 'paper',
     },
     {
+      _key: 'service-design-faq',
+      _type: 'faqBlock',
+      enabled: true,
+      heading: 'Drie vragen die op Design vaak vooraf komen',
+      enableJsonLd: true,
+      items: [
+        {
+          _key: 'design-faq-brand',
+          question: 'Kunnen jullie ook op een bestaand merk voortbouwen?',
+          answer: portableTextBody(
+            'Ja. Vaak is dat zelfs de beste route. We hoeven niet altijd te rebranden; regelmatig verfijnen we een bestaand merk zodat het digitaal consistenter, scherper en beter overdraagbaar wordt.'
+          ),
+        },
+        {
+          _key: 'design-faq-rebrand',
+          question: 'Is Design bij jullie alleen een rebrand-traject?',
+          answer: portableTextBody(
+            'Nee. Design kan bij ons ook een systeemslag zijn: componenten, interactie, informatie-architectuur en de vertaling van merk naar werkend patroon — zonder dat het logo of de naam hoeft te veranderen.'
+          ),
+        },
+        {
+          _key: 'design-faq-separate',
+          question: 'Kunnen jullie Design los van Build doen?',
+          answer: portableTextBody(
+            'Ja, als er al een technisch team of partner is die de bouw overneemt. We leveren dan tokens, richting en referentie-pagina’s op een manier die code-ready is. Samen met Build blijft wel onze voorkeursroute.'
+          ),
+        },
+      ],
+      tone: 'paper',
+    },
+    {
       _key: 'service-design-cta',
       _type: 'ctaRefreinBlock',
       enabled: true,
@@ -971,6 +1002,37 @@ function buildServiceBuildContent() {
       tone: 'paper',
     },
     {
+      _key: 'service-build-faq',
+      _type: 'faqBlock',
+      enabled: true,
+      heading: 'Drie vragen die op Build vaak vooraf komen',
+      enableJsonLd: true,
+      items: [
+        {
+          _key: 'build-faq-stack',
+          question: 'Werken jullie alleen met Astro, Sanity, Supabase en Vercel?',
+          answer: portableTextBody(
+            'Nee. Dat is onze voorkeursstack omdat hij open, snel en onderhoudbaar is. Maar als jouw situatie vraagt om voortbouwen op een bestaande stack, kijken we eerst wat er al goed staat.'
+          ),
+        },
+        {
+          _key: 'build-faq-ownership',
+          question: 'Wat bedoelen jullie met code die je zelf bezit?',
+          answer: portableTextBody(
+            'Dat de repository, accounts, hosting en documentatie van jou blijven. Wij leveren niet alleen iets werkends op, maar ook de overdracht waarmee je team zonder ons of zonder platform-lock-in verder kan.'
+          ),
+        },
+        {
+          _key: 'build-faq-migration',
+          question: 'Kunnen jullie ook een bestaande no-code of legacy-site herbouwen?',
+          answer: portableTextBody(
+            'Ja. Dat is vaak precies de reden dat Build relevant wordt: wanneer de bestaande laag zijn werk heeft gedaan, maar nu remt op performance, modellering, eigendom of uitbreidbaarheid.'
+          ),
+        },
+      ],
+      tone: 'paper',
+    },
+    {
       _key: 'service-build-cta',
       _type: 'ctaRefreinBlock',
       enabled: true,
@@ -1105,6 +1167,37 @@ function buildServiceAutomateContent() {
         },
       ],
       layoutVariant: 'grid-2',
+      tone: 'paper',
+    },
+    {
+      _key: 'service-automate-faq',
+      _type: 'faqBlock',
+      enabled: true,
+      heading: 'Drie vragen die op Automate vaak vooraf komen',
+      enableJsonLd: true,
+      items: [
+        {
+          _key: 'automate-faq-size',
+          question: 'Wanneer is Automate te klein voor maatwerk?',
+          answer: portableTextBody(
+            'Als de schaal nog klein is en een goede spreadsheet de werkelijkheid prima draagt. We bouwen niet om het bouwen; maatwerk wordt pas logisch zodra de huidige laag structureel tijd, overzicht of betrouwbaarheid kost.'
+          ),
+        },
+        {
+          _key: 'automate-faq-ai-decisions',
+          question: 'Betekent Automate dat AI beslissingen neemt?',
+          answer: portableTextBody(
+            'Nee. In onze tools is AI een actor die voorstelt, samenvat of voorbereidt. De beslisser blijft een mens. Die grens leggen we expliciet vast in het model en de interface.'
+          ),
+        },
+        {
+          _key: 'automate-faq-scan',
+          question: 'Kunnen jullie eerst alleen een scan of eerste sanering doen?',
+          answer: portableTextBody(
+            'Ja. We kunnen starten met een korte analyse van het huidige proces, de data en de knelpunten. Dat maakt snel zichtbaar of een volledige build zinvol is, of dat een kleinere interventie genoeg is.'
+          ),
+        },
+      ],
       tone: 'paper',
     },
     {
@@ -1466,6 +1559,36 @@ async function seedSiteSettings() {
       visitingNote:
         'Op afspraak — loop niet zomaar binnen, dan zitten we meestal in iets wat we niet kunnen onderbreken.',
     },
+    llmsTxt: `# Add the Code
+
+Add the Code is a Dutch custom-code studio based in Breda.
+We design and build custom websites, platforms, and internal tools for brands and teams that need more than templates or no-code platforms.
+
+## Positioning
+- Custom design + custom code
+- AI-assisted implementation, human-led architecture
+- Open standards: Astro, Sanity, Supabase, Vercel
+- No platform lock-in
+- Structured content and durable data models
+- Not an AI-first agency
+- Not a no-code studio
+
+## Best fit
+- Brands with multiple audiences or complex content structures
+- Teams that need their own stack and data model
+- Projects where performance, maintainability, and ownership matter
+- Internal tools and automations where spreadsheets or fragile scripts are breaking down
+
+## Services
+- Design: brand-led digital systems, interaction systems, data-aware UX
+- Build: custom Astro/Sanity websites and platforms
+- Automate: data-model cleanups, internal tools, and skill delivery
+
+## Contact
+- Email: hello@addthecode.nl
+- Founder: Alex de Graaf
+- Studio: Nieuwe Prinsenkade 4, 4811 VC Breda, Netherlands
+`,
     enableSitemap: true,
     // ⚠ TODO Phase 4: defaultSeo, favicon, webclip, globalCanonicalUrl, GSC ID
   })
@@ -2128,7 +2251,7 @@ async function seedSupportingEssays() {
 // ─── 8. Home Page ────────────────────────────────────────────
 
 async function seedHomePage() {
-  console.log('▸ Home Page (hero variant C + 9 secties per docs/07a)…')
+  console.log('▸ Home Page (hero variant C + FAQ/AEO laag, 10 secties totaal)…')
 
   const blocks = [
     // ─── 1. Hero (variant C, 3-delig) ───
@@ -2136,14 +2259,16 @@ async function seedHomePage() {
       _key: 'hero-home',
       _type: 'heroHomeBlock',
       enabled: true,
-      preClaim: '◌ Fresh Frames · sinds 2017 · Breda',
+      preClaim: '◌ Custom code studio · Breda · sinds 2017',
       headlineParts: [
         'Custom design.',
         'Custom code.',
         'AI-versnelde bouw.',
       ],
       subClaim:
-        'We bouwen merk-eigen websites en web-apps die weer van jou zijn — door ambacht aan code te koppelen, niet door templates te configureren.',
+        'Voor merken en teams die meer nodig hebben dan een template of no-code-platform bouwen we custom websites en web-apps die weer van jou zijn — met AI als versneller, niet als identiteit.',
+      bodyText:
+        'Je krijgt eigen code, een data-model dat bij je werkelijkheid past en een stack zonder platform-lock-in. Wij gebruiken AI om sneller te bouwen; architectuur, smaak en kwaliteit blijven mensenwerk.',
       ctas: [
         {
           _key: 'cta-primary',
@@ -2170,10 +2295,13 @@ async function seedHomePage() {
       preClaim: '◌ Wat we doen',
       body: [
         portableTextParagraph([
-          { text: 'Wij maken sites en apps waarin elk detail een keuze is. Geen ' },
-          { text: 'templates die je merk afzwakken', italic: true },
+          { text: 'No-code was jaren het logische antwoord op een economisch probleem: ' },
+          { text: 'custom bouwen was te duur voor wat het opleverde', italic: true },
+          { text: '. Die rekensom is veranderd.' },
+        ]),
+        portableTextParagraph([
           {
-            text: ', geen frameworks die de structuur dicteren. We tekenen, we coderen, en we laten AI ons werk versnellen — zonder de regie weg te geven.',
+            text: 'Voor teams met een echt data-model, meerdere publieken, integraties of ownership-vragen bouwen wij een systeem dat langer meegaat dan een template. AI helpt ons sneller leveren; de regie op architectuur, merk en kwaliteit blijft bij mensen.',
           },
         ]),
       ],
@@ -2333,7 +2461,63 @@ async function seedHomePage() {
       tone: 'paper',
     },
 
-    // ─── 8. Essays-teaser ───
+    // ─── 8. Homepage FAQ / AEO ───
+    {
+      _key: 'home-faq',
+      _type: 'faqBlock',
+      enabled: true,
+      preClaim: '◌ Vragen die vaak vooraf spelen',
+      heading: 'Zes vragen waarmee mensen — en AI-systemen — meestal beginnen',
+      anchorId: 'faq',
+      enableJsonLd: true,
+      items: [
+        {
+          _key: 'home-faq-what',
+          question: 'Wat is Add the Code precies?',
+          answer: portableTextBody(
+            'Add the Code is een Nederlandse studio voor custom design en custom code. We ontwerpen en bouwen merk-eigen websites, platforms en interne systemen voor teams die meer nodig hebben dan een template of no-code-platform.'
+          ),
+        },
+        {
+          _key: 'home-faq-fit',
+          question: 'Voor wie is custom-met-AI bedoeld?',
+          answer: portableTextBody(
+            'Voor merken en teams die een echt data-model, meerdere publieken, integraties of langetermijn-eigendom nodig hebben. Als je site meer moet zijn dan een campagnepagina, wordt custom vaak logisch.'
+          ),
+        },
+        {
+          _key: 'home-faq-custom-vs-nocode',
+          question: 'Wanneer kies je custom boven no-code?',
+          answer: portableTextBody(
+            'Zodra templates je merk of model gaan begrenzen: meerdere contenttypes, segmentatie, performance-eisen, vendor-lock-in-risico of features die niet netjes in een builder passen. Voor simpele landingspagina’s kan no-code nog steeds prima zijn.'
+          ),
+        },
+        {
+          _key: 'home-faq-ai-role',
+          question: 'Wat doet AI bij jullie wel en niet?',
+          answer: portableTextBody(
+            'AI helpt ons bij schema-verkenning, implementatie, tests en documentatie. Discovery-interviews, merkbeslissingen, architectuurkeuzes en klantcommunicatie blijven bij mensen.'
+          ),
+        },
+        {
+          _key: 'home-faq-collab',
+          question: 'Werken jullie ook met bestaande teams, leveranciers of stacks?',
+          answer: portableTextBody(
+            'Ja. We kunnen als lead-studio werken, maar ook naast een intern team of bestaande leverancier. En als een deel van de stack al goed staat, bouwen we daar liever verantwoord op voort dan alles te vervangen.'
+          ),
+        },
+        {
+          _key: 'home-faq-deliverables',
+          question: 'Wat blijft er na oplevering van ons?',
+          answer: portableTextBody(
+            'De code, het contentmodel, de documentatie en de skill-set waarmee je team zelf verder kan. Dus geen afhankelijkheid van een platform of van een eeuwige retainer om door te bouwen.'
+          ),
+        },
+      ],
+      tone: 'paper',
+    },
+
+    // ─── 9. Essays-teaser ───
     {
       _key: 'essays',
       _type: 'essayGridBlock',
@@ -2347,7 +2531,7 @@ async function seedHomePage() {
       tone: 'paper',
     },
 
-    // ─── 9. CTA-refrein (primary) ───
+    // ─── 10. CTA-refrein (primary) ───
     {
       _key: 'cta-refrein',
       _type: 'ctaRefreinBlock',

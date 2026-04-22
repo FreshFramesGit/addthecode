@@ -22,7 +22,12 @@
 import Layout from '../../layouts/Layout.astro'
 import ThinkingRing from '../../components/media/ThinkingRing.astro'
 
-export const prerender = true
+/**
+ * Server-rendered: Layout.astro leest `Astro.cookies` voor de
+ * draft-mode-gate. Prerender is uit zodat de cookie-check werkt
+ * in dev en productie. SEO maakt niet uit (noindex via Layout).
+ */
+export const prerender = false
 ---
 
 <Layout

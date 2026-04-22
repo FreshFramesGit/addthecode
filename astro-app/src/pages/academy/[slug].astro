@@ -12,8 +12,8 @@ import { getEssayBySlug, getSiteSettings } from '../../utils/sanity'
 export const prerender = false
 
 const { slug } = Astro.params
-const essay = slug ? await getEssayBySlug(slug) : null
-const settings = await getSiteSettings()
+const essay = slug ? await getEssayBySlug(slug, Astro.cookies) : null
+const settings = await getSiteSettings(Astro.cookies)
 
 if (!essay) {
   return Astro.redirect('/404')
