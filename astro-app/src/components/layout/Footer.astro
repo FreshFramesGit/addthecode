@@ -28,6 +28,10 @@ const newsletter = defaults?.newsletter ?? null
 
 // Voor v1: alle footerNav-items in één kolom. Schema kan later kolom-veld toevoegen.
 const footerNavItems = footerNav
+
+// Cookie-instellingen link tonen wanneer GTM aan staat (zelfde gate als banner)
+const gtmId = import.meta.env.PUBLIC_GTM_CONTAINER_ID || ''
+const gtmEnabled = /^GTM-[A-Z0-9]+$/i.test(gtmId)
 ---
 
 <footer class="footer footer-primary" aria-label="Footer">
@@ -144,9 +148,64 @@ const footerNavItems = footerNav
     <div class="footer__legal">
       <span>© {new Date().getFullYear()} {siteName}. Custom design, custom code.</span>
       <span>BTW · KVK informatie te vullen</span>
+      {gtmEnabled && (
+        <button
+          type="button"
+          class="footer__legal-link"
+          data-cookie-settings
+        >
+          Cookie-instellingen
+        </button>
+      )}
     </div>
   </div>
 </footer>
+
+{gtmEnabled && (
+  <script>
+    /**
+     * Cookie-instellingen knop: dispatch custom event waar
+     * CookieConsent.astro op luistert. Wist de cookie en toont
+     * de banner opnieuw.
+     */
+    function initCookieSettingsLink() {
+      const buttons = document.querySelectorAll<HTMLButtonElement>('[data-cookie-settings]')
+      buttons.forEach((btn) => {
+        if (btn.dataset.bound === 'true') return
+        btn.dataset.bound = 'true'
+        btn.addEventListener('click', () => {
+          window.dispatchEvent(new CustomEvent('atc:open-cookie-settings'))
+        })
+      })
+    }
+    initCookieSettingsLink()
+    document.addEventListener('astro:page-load', initCookieSettingsLink)
+  </script>
+)}
+
+<style>
+  .footer__legal-link {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: rgba(250, 249, 245, 0.3);
+    text-underline-offset: 3px;
+    transition: text-decoration-color var(--dur-fast) var(--ease-out);
+  }
+  .footer__legal-link:hover {
+    text-decoration-color: var(--atc-claude);
+  }
+  .footer__legal-link:focus-visible {
+    outline: 2px solid var(--atc-claude);
+    outline-offset: 2px;
+    border-radius: var(--radius-small);
+  }
+</style>
 
 <script>
   function initNewsletterForms() {

@@ -1,0 +1,248 @@
+---
+/**
+ * Cookie consent banner — Add the Code
+ *
+ * Doel: AVG/GDPR-compliant consent voor Google Tag Manager + GA4.
+ *
+ * Flow:
+ *  1. Layout.astro init Consent Mode v2 met alle storage 'denied'
+ *  2. GTM laadt direct, maar GA4 (en andere tags) wachten op consent
+ *  3. Bezoeker ziet deze banner (rechtsonder, ~320px)
+ *     - Akkoord → gtag('consent','update',{...granted}) + cookie 'atc-consent=accepted'
+ *     - Liever niet → cookie 'atc-consent=declined' (Consent Mode blijft denied)
+ *  4. Cookie ge-set → banner verbergt (no re-show)
+ *  5. Footer-link "Cookie-instellingen" wist cookie → banner re-appears
+ *
+ * Cookie:
+ *  - Naam: `atc-consent`
+ *  - Waarde: 'accepted' | 'declined'
+ *  - Lifetime: 365 dagen
+ *  - SameSite=Lax (first-party, sufficient voor onze flow)
+ *  - Path=/
+ *
+ * Niet-tracking cookies (functional/security in Consent Mode default 'granted')
+ * blijven werken — dit gaat alleen over analytics_storage + ad_storage.
+ */
+---
+
+<aside class="cc" id="cc-banner" hidden>
+  <p class="cc__body">
+    We gebruiken cookies voor anonieme bezoek-statistieken via Google Analytics.
+    <span class="cc__quiet">Geen tracking, geen ads, geen doorverkoop.</span>
+  </p>
+  <div class="cc__actions">
+    <button class="btn btn--primary cc__btn" type="button" data-cc-action="accept">
+      <span>Akkoord</span>
+    </button>
+    <button class="btn btn--ghost cc__btn cc__btn--ghost" type="button" data-cc-action="decline">
+      <span>Liever niet</span>
+    </button>
+  </div>
+  <a href="/privacy" class="cc__more">Lees ons privacybeleid →</a>
+</aside>
+
+<script>
+  /**
+   * Init-guard: voorkom dubbele listeners bij Astro View Transitions.
+   * Pattern volgens Universal Rule #14 — script kan meerdere keren laden.
+   */
+  function initCookieConsent() {
+    const banner = document.getElementById('cc-banner')
+    if (!banner || banner.dataset.initDone === '1') return
+    banner.dataset.initDone = '1'
+
+    const COOKIE_NAME = 'atc-consent'
+    const COOKIE_MAX_AGE = 60 * 60 * 24 * 365 // 365 dagen in seconden
+
+    function getConsent(): string | null {
+      const m = document.cookie.match(new RegExp('(?:^|; )' + COOKIE_NAME + '=([^;]*)'))
+      return m ? decodeURIComponent(m[1]) : null
+    }
+
+    function setConsent(value: 'accepted' | 'declined') {
+      const secure = location.protocol === 'https:' ? '; Secure' : ''
+      document.cookie = `${COOKIE_NAME}=${value}; Max-Age=${COOKIE_MAX_AGE}; Path=/; SameSite=Lax${secure}`
+    }
+
+    function gtag(...args: unknown[]) {
+      ;(window as any).dataLayer = (window as any).dataLayer || []
+      ;(window as any).dataLayer.push(args)
+    }
+
+    function applyConsent(value: 'accepted' | 'declined') {
+      const granted = value === 'accepted' ? 'granted' : 'denied'
+      gtag('consent', 'update', {
+        ad_storage: granted,
+        analytics_storage: granted,
+        ad_user_data: granted,
+        ad_personalization: granted,
+      })
+    }
+
+    function hide() {
+      banner.hidden = true
+    }
+
+    function show() {
+      banner.hidden = false
+    }
+
+    // Initial state — toon banner als nog geen keuze gemaakt
+    const existing = getConsent()
+    if (existing === 'accepted' || existing === 'declined') {
+      // Reapply Consent Mode op page-load zodat keuze persist over navigaties
+      applyConsent(existing as 'accepted' | 'declined')
+      hide()
+    } else {
+      show()
+    }
+
+    banner.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement
+      const btn = target.closest('[data-cc-action]') as HTMLElement | null
+      if (!btn) return
+      const action = btn.dataset.ccAction
+      if (action === 'accept') {
+        setConsent('accepted')
+        applyConsent('accepted')
+        hide()
+      } else if (action === 'decline') {
+        setConsent('declined')
+        applyConsent('declined')
+        hide()
+      }
+    })
+
+    // Listen voor "Cookie-instellingen" link in footer (custom event)
+    window.addEventListener('atc:open-cookie-settings', () => {
+      // Wis cookie en toon banner opnieuw
+      document.cookie = `${COOKIE_NAME}=; Max-Age=0; Path=/; SameSite=Lax`
+      show()
+    })
+  }
+
+  // Astro View Transitions support — runs on initial load + after-swap
+  initCookieConsent()
+  document.addEventListener('astro:page-load', initCookieConsent)
+</script>
+
+<style>
+  /* ─── Cookie consent banner ──────────────────────────────────
+     Bottom-right toast, ~320px breed, Ink-tone — matched de site.
+     Mobiel: full-width onderaan met margin.
+     ──────────────────────────────────────────────────────────── */
+  .cc {
+    position: fixed;
+    bottom: var(--sp-4);
+    right: var(--sp-4);
+    z-index: 100;
+    width: min(20rem, calc(100vw - var(--sp-4) * 2));
+    padding: var(--sp-4) var(--sp-4) var(--sp-3);
+    background: var(--atc-ink);
+    color: var(--atc-paper);
+    border-radius: var(--radius-main);
+    box-shadow: 0 8px 32px rgba(20, 20, 19, 0.25), 0 2px 8px rgba(20, 20, 19, 0.15);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    animation: cc-slide-in var(--dur-normal) var(--ease-out);
+  }
+  .cc[hidden] {
+    display: none;
+  }
+
+  @keyframes cc-slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cc { animation: none; }
+  }
+
+  .cc__body {
+    margin: 0;
+    color: var(--atc-paper);
+  }
+  .cc__quiet {
+    color: rgba(250, 249, 245, 0.7);
+    display: block;
+    margin-top: var(--sp-1);
+    font-size: var(--fs-mono-small);
+  }
+
+  .cc__actions {
+    display: flex;
+    gap: var(--sp-2);
+    flex-wrap: wrap;
+  }
+
+  /* Override .btn padding voor compactere knoppen in de banner */
+  .cc__btn {
+    flex: 1;
+    min-width: 0;
+    padding: var(--sp-2) var(--sp-3);
+    font-size: var(--fs-mono-small);
+    background: var(--atc-paper);
+    color: var(--atc-ink);
+    border: 1px solid var(--atc-paper);
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    text-align: center;
+    font-family: var(--font-mono);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .cc__btn:hover {
+    background: var(--atc-claude);
+    border-color: var(--atc-claude);
+    color: var(--atc-paper);
+  }
+  .cc__btn:focus-visible {
+    outline: 2px solid var(--atc-claude);
+    outline-offset: 2px;
+  }
+  .cc__btn--ghost {
+    background: transparent;
+    color: var(--atc-paper);
+    border-color: rgba(250, 249, 245, 0.3);
+  }
+  .cc__btn--ghost:hover {
+    background: rgba(250, 249, 245, 0.1);
+    border-color: var(--atc-paper);
+    color: var(--atc-paper);
+  }
+
+  .cc__more {
+    color: rgba(250, 249, 245, 0.6);
+    font-size: var(--fs-mono-small);
+    font-family: var(--font-mono);
+    letter-spacing: var(--ls-mono-caps);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .cc__more:hover {
+    color: var(--atc-claude);
+  }
+
+  /* Mobiel: full-width onderaan */
+  @media (max-width: 480px) {
+    .cc {
+      left: var(--sp-3);
+      right: var(--sp-3);
+      bottom: var(--sp-3);
+      width: auto;
+    }
+  }
+</style>

@@ -6,9 +6,14 @@ import Nav from "../components/layout/Nav.astro";
 import Footer from "../components/layout/Footer.astro";
 import SanityVisualEditing from "../components/SanityVisualEditing";
 import DisableDraftMode from "../components/DisableDraftMode";
+import CookieConsent from "../components/CookieConsent.astro";
 import { getSiteSettings } from "../utils/sanity";
 import { getBaseUrl } from "../utils/site-url";
 import "../styles/global.css";
+
+// GTM container ID — env-driven, leeg = geen tracking. Alleen voor Add the Code.
+const gtmId = import.meta.env.PUBLIC_GTM_CONTAINER_ID || "";
+const gtmEnabled = /^GTM-[A-Z0-9]+$/i.test(gtmId);
 
 type SeoProps = {
   title?: string | null;
@@ -111,9 +116,58 @@ const draftMode = Astro.cookies.has(perspectiveCookieName);
     <Seo {...seoProps} />
     <slot name="head" />
 
-    {/* TODO Phase 4: tracking-keuze door Alex (open: GA4/GTM, Plausible, Vercel-analytics, of niets) */}
+    {/*
+      ─── Google Tag Manager + Consent Mode v2 ──────────────────
+      Volgens https://developers.google.com/tag-platform/security/guides/consent
+      en GDPR/AVG (NL):
+       1. Consent Mode init met alle storage 'denied' VÓÓR GTM laadt
+       2. GTM laadt direct, maar tags die respect_consent honoreren wachten
+       3. CookieConsent component (onderaan body) doet `consent update` na accept
+      Geen GTM = geen Consent Mode init nodig (geen tracking actief).
+    */}
+    {gtmEnabled && (
+      <>
+        <script is:inline>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          // Default: alles denied tot bezoeker akkoord geeft
+          gtag('consent', 'default', {
+            ad_storage: 'denied',
+            analytics_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            functionality_storage: 'granted',
+            security_storage: 'granted',
+            wait_for_update: 500,
+          });
+          // Region-override: voor NL/EU zijn we standaard streng. Buiten EU
+          // mogen analytics_storage default 'granted', maar dat kunnen we
+          // later afstellen als we internationaal lanceren.
+        </script>
+        <script is:inline define:vars={{ gtmId }}>
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer',gtmId);
+        </script>
+      </>
+    )}
   </head>
   <body>
+    {/* GTM noscript — moet eerste element in <body> zijn voor users met JS uit */}
+    {gtmEnabled && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"
+          title="Google Tag Manager"
+        />
+      </noscript>
+    )}
+
     {!hideNav && <Nav />}
     {/*
       Geen .nav-spacer meer: enterprise .nav is `position: sticky` (niet
@@ -126,6 +180,9 @@ const draftMode = Astro.cookies.has(perspectiveCookieName);
     </main>
 
     {!hideFooter && <Footer />}
+
+    {/* Cookie consent banner — alleen tonen wanneer GTM aan staat én niet in draft-mode */}
+    {gtmEnabled && !draftMode && <CookieConsent />}
 
     {draftMode && (
       <>
