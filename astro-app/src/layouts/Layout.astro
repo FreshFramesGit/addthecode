@@ -111,7 +111,7 @@ const draftMode = Astro.cookies.has(perspectiveCookieName);
     <Seo {...seoProps} />
     <slot name="head" />
 
-    {/* TODO Phase 4: tracking-keuze (Plausible aanbevolen, geen GA4) */}
+    {/* TODO Phase 4: tracking-keuze door Alex (open: GA4/GTM, Plausible, Vercel-analytics, of niets) */}
   </head>
   <body>
     {!hideNav && <Nav />}
