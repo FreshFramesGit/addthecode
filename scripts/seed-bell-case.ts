@@ -425,53 +425,17 @@ async function seedBellCase() {
     {
       _key: 'artifacts',
       _type: 'artifactGalleryBlock',
-      // DISABLED tot echte Bell-screenshots beschikbaar zijn. Schema vereist
-      // image per item — 6 placeholder-items met image:null breken publish.
-      // Alex: zet enabled:true zodra de PNG/WebP uploads in Sanity klaar zijn.
+      // DISABLED + items leeg tot echte Bell-screenshots beschikbaar zijn.
+      // Schema vereist image per item — items met image:null breken publish
+      // ondanks `enabled:false` (Sanity-validatie loopt voor alle docs ongeacht
+      // render-state). Alex: voeg items toe in Studio mét image, zet daarna
+      // enabled:true. Captions/titels staan in docs/07h §8 voor referentie.
       enabled: false,
       preClaim: '◌ Artefacten uit het proces',
       heading: 'Zes artefacten die de diepte van het werk laten zien.',
       intro:
-        'Geen mood-board — werkelijke artefacten uit het bouwproces. Editor: vervang placeholder-images door de echte stills (zie docs/07h §8).',
-      items: [
-        {
-          _key: 'art-1',
-          image: null,
-          title: 'Sanity audience-slice-schema (JSON)',
-          caption: 'Het schema dat één show in drie publieken vertaalt.',
-        },
-        {
-          _key: 'art-2',
-          image: null,
-          title: 'Sync-laag flow-diagram',
-          caption: 'Hoe Eventbrite-updates landen in Sanity en drie builds triggeren.',
-        },
-        {
-          _key: 'art-3',
-          image: null,
-          title: 'Audience-rule-tabel',
-          caption:
-            'Per audience de regels voor welke events zichtbaar zijn en in welke taal.',
-        },
-        {
-          _key: 'art-4',
-          image: null,
-          title: 'Skill-card: publiceer show',
-          caption: 'De eerste skill die Bell\'s team zelf bedient.',
-        },
-        {
-          _key: 'art-5',
-          image: null,
-          title: 'Deploy-pijplijn',
-          caption: 'Drie Vercel-projects, één monorepo, één commit.',
-        },
-        {
-          _key: 'art-6',
-          image: null,
-          title: 'Component-kit preview',
-          caption: 'Gedeelde componenten tussen de drie sites.',
-        },
-      ],
+        'Geen mood-board — werkelijke artefacten uit het bouwproces. Editor: voeg items toe in Studio (Bell-screenshots uploaden, captions plaatsen).',
+      items: [],
       layoutVariant: 'grid-3',
       tone: 'paper',
     },
