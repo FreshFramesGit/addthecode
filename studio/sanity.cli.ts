@@ -10,6 +10,7 @@ export default defineCliConfig({
   },
   studioHost: process.env.SANITY_STUDIO_STUDIO_HOST || '',
   deployment: {
+    appId: 'dbshxl32gziv4o2kq7kgj2l0',
     autoUpdates: true,
   },
   /**

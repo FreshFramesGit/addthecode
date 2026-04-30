@@ -2424,6 +2424,7 @@ async function seedHomePage() {
       },
       secondaryQuotes: [
         {
+          _key: 'sec-quote-bell',
           quote:
             'De CMS-tijd is met 85% gedaald. Wat een uur kostte is nu in tien minuten klaar.',
           name: 'TBD — Bell Hammerson',
@@ -2431,6 +2432,7 @@ async function seedHomePage() {
           company: 'Bell Hammerson',
         },
         {
+          _key: 'sec-quote-uvn',
           quote:
             'AI versnelt hun code-flow op een manier die je niet als trucage voelt — alles blijft onderhoudbaar.',
           name: 'TBD — Universiteit van Nederland',
