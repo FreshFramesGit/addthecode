@@ -197,6 +197,12 @@ const safeRequireCompany = requireCompany ?? false
             feedback.hidden = false
             feedback.classList.add('contact-form__feedback--success')
           }
+          // Analytics — track contact submit (Consent Mode regelt of het naar GA4 doorvalt)
+          ;(window as unknown as { dataLayer?: unknown[] }).dataLayer?.push({
+            event: 'contact_form_submit',
+            contact_topic: typeof payload.topic === 'string' ? payload.topic : 'unknown',
+            has_company: Boolean(payload.company),
+          })
           form.reset()
         } catch (err) {
           if (feedback) {

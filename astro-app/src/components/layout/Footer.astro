@@ -256,6 +256,11 @@ const gtmEnabled = /^GTM-[A-Z0-9]+$/i.test(gtmId)
               '◌ Ingeschreven. De volgende essay verschijnt binnen ±30 dagen in je inbox.'
             feedback.hidden = false
           }
+          // Analytics — track newsletter signup (Consent Mode regelt doorval)
+          ;(window as unknown as { dataLayer?: unknown[] }).dataLayer?.push({
+            event: 'newsletter_signup',
+            signup_source: source,
+          })
           form.reset()
         } catch (err) {
           if (feedback) {

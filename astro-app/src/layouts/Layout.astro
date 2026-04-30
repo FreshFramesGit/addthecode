@@ -184,6 +184,41 @@ const draftMode = Astro.cookies.has(perspectiveCookieName);
     {/* Cookie consent banner — alleen tonen wanneer GTM aan staat én niet in draft-mode */}
     {gtmEnabled && !draftMode && <CookieConsent />}
 
+    {/* Analytics: sitebreed CTA-click tracking voor primary buttons + nav-CTAs */}
+    {gtmEnabled && (
+      <script is:inline>
+        (function () {
+          function getCtaLabel(el) {
+            // Pak zichtbare button-tekst (zonder arrow/icon)
+            const span = el.querySelector('span:not(.btn__arrow):not(.tr)')
+            if (span) return span.textContent?.trim() ?? ''
+            return (el.textContent ?? '').replace(/[→→]/g, '').trim()
+          }
+
+          function trackCtaClick(e) {
+            const target = e.target.closest('a.btn, button.btn')
+            if (!target) return
+            // Alleen primary + on-dark CTAs tracken — ghost = secondary navigation
+            if (
+              !target.classList.contains('btn--primary') &&
+              !target.classList.contains('btn--on-dark')
+            )
+              return
+            const label = getCtaLabel(target)
+            if (!label) return
+            window.dataLayer = window.dataLayer || []
+            window.dataLayer.push({
+              event: 'cta_click',
+              cta_label: label,
+              cta_location: window.location.pathname,
+            })
+          }
+
+          document.addEventListener('click', trackCtaClick)
+        })()
+      </script>
+    )}
+
     {draftMode && (
       <>
         <SanityVisualEditing client:only="react" />

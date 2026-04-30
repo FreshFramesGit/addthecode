@@ -39,4 +39,26 @@ const hasExplicitCtaRefrein = blocks.some((b: any) => b._type === 'ctaRefreinBlo
   {!hasExplicitCtaRefrein && (
     <CtaRefreinSection pageKey="case-detail" tone="claude" />
   )}
+
+  {/* Analytics: case_view event met case-meta */}
+  <script
+    is:inline
+    define:vars={{
+      caseSlug: caseDoc?.slug ?? '',
+      caseLayer: caseDoc?.layer ?? 'unknown',
+      caseClient: caseDoc?.client ?? 'unknown',
+    }}
+  >
+    function pushCaseView() {
+      window.dataLayer = window.dataLayer || []
+      window.dataLayer.push({
+        event: 'case_view',
+        case_slug: caseSlug,
+        case_layer: caseLayer,
+        case_client: caseClient,
+      })
+    }
+    pushCaseView()
+    document.addEventListener('astro:page-load', pushCaseView)
+  </script>
 </Layout>

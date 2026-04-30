@@ -51,6 +51,40 @@ const related = essay?.relatedEssays ?? []
   )}
 
   <CtaRefreinSection pageKey="essay-detail" tone="claude" />
+
+  {/* Analytics: essay_read_complete event op 75% scroll */}
+  <script
+    is:inline
+    define:vars={{
+      essaySlug: essay?.slug ?? '',
+      essayCategory: essay?.category ?? 'unknown',
+    }}
+  >
+    function initEssayScrollTracking() {
+      if (window.__essayReadFired) return
+      const onScroll = () => {
+        if (window.__essayReadFired) return
+        const scrolled = window.scrollY + window.innerHeight
+        const docHeight = document.documentElement.scrollHeight
+        if (scrolled / docHeight >= 0.75) {
+          window.__essayReadFired = true
+          window.dataLayer = window.dataLayer || []
+          window.dataLayer.push({
+            event: 'essay_read_complete',
+            essay_slug: essaySlug,
+            essay_category: essayCategory,
+          })
+          window.removeEventListener('scroll', onScroll)
+        }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true })
+    }
+    initEssayScrollTracking()
+    document.addEventListener('astro:page-load', () => {
+      window.__essayReadFired = false
+      initEssayScrollTracking()
+    })
+  </script>
 </Layout>
 
 <style>
