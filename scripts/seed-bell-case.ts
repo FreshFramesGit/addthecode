@@ -425,7 +425,10 @@ async function seedBellCase() {
     {
       _key: 'artifacts',
       _type: 'artifactGalleryBlock',
-      enabled: true,
+      // DISABLED tot echte Bell-screenshots beschikbaar zijn. Schema vereist
+      // image per item — 6 placeholder-items met image:null breken publish.
+      // Alex: zet enabled:true zodra de PNG/WebP uploads in Sanity klaar zijn.
+      enabled: false,
       preClaim: '◌ Artefacten uit het proces',
       heading: 'Zes artefacten die de diepte van het werk laten zien.',
       intro:
