@@ -189,10 +189,13 @@ const draftMode = Astro.cookies.has(perspectiveCookieName);
       <script is:inline>
         (function () {
           function getCtaLabel(el) {
-            // Pak zichtbare button-tekst (zonder arrow/icon)
-            const span = el.querySelector('span:not(.btn__arrow):not(.tr)')
-            if (span) return span.textContent?.trim() ?? ''
-            return (el.textContent ?? '').replace(/[→→]/g, '').trim()
+            // Clone het element, strip arrow/ring/svg, dan textContent.
+            // Werkt voor alle DOM-structuren (span/svg/inline mix).
+            const clone = el.cloneNode(true)
+            clone.querySelectorAll('.btn__arrow, .tr, svg').forEach(function (n) {
+              n.remove()
+            })
+            return (clone.textContent || '').trim().replace(/\s+/g, ' ')
           }
 
           function trackCtaClick(e) {
