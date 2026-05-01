@@ -9,6 +9,7 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
+    "deploy:prod": "SANITY_STUDIO_PREVIEW_URL=https://www.addthecode.nl sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
     "typegen": "sanity schema extract && sanity typegen generate"
   },
