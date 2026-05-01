@@ -40,7 +40,7 @@ const hasExplicitCtaRefrein = blocks.some((b: any) => b._type === 'ctaRefreinBlo
     <CtaRefreinSection pageKey="case-detail" tone="claude" />
   )}
 
-  {/* Analytics: case_view event met case-meta */}
+  {/* Analytics: case_view event — idempotent per slug om dubbel-fire bij initial-load + astro:page-load te voorkomen */}
   <script
     is:inline
     define:vars={{
@@ -50,6 +50,8 @@ const hasExplicitCtaRefrein = blocks.some((b: any) => b._type === 'ctaRefreinBlo
     }}
   >
     function pushCaseView() {
+      if (window.__lastCaseViewSlug === caseSlug) return
+      window.__lastCaseViewSlug = caseSlug
       window.dataLayer = window.dataLayer || []
       window.dataLayer.push({
         event: 'case_view',
