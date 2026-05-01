@@ -128,8 +128,13 @@ const draftMode = Astro.cookies.has(perspectiveCookieName);
     {gtmEnabled && (
       <>
         <script is:inline>
+          // Single source of truth voor gtag: globaal op window zodat
+          // CookieConsent + andere components 'm kunnen aanroepen.
+          // KRITIEK: gebruikt `arguments` (Arguments-pseudo-array) i.p.v.
+          // rest-params Array — GTM's gtag-listener herkent alleen het
+          // Arguments-pattern voor consent update calls.
           window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
+          window.gtag = function gtag(){ window.dataLayer.push(arguments); };
           // Default: alles denied tot bezoeker akkoord geeft
           gtag('consent', 'default', {
             ad_storage: 'denied',

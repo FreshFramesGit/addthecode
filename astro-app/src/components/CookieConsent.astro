@@ -64,19 +64,28 @@
       document.cookie = `${COOKIE_NAME}=${value}; Max-Age=${COOKIE_MAX_AGE}; Path=/; SameSite=Lax${secure}`
     }
 
-    function gtag(...args: unknown[]) {
-      ;(window as any).dataLayer = (window as any).dataLayer || []
-      ;(window as any).dataLayer.push(args)
-    }
-
     function applyConsent(value: 'accepted' | 'declined') {
       const granted = value === 'accepted' ? 'granted' : 'denied'
-      gtag('consent', 'update', {
-        ad_storage: granted,
-        analytics_storage: granted,
-        ad_user_data: granted,
-        ad_personalization: granted,
-      })
+      // Use globale window.gtag (defined in Layout.astro) — die gebruikt het
+      // juiste Arguments-pseudo-array pattern dat GTM's consent-listener
+      // herkent. Eigen gtag-wrapper met rest-params (...args) → echte Array
+      // → GTM ziet 'm niet als consent-call → "100% denied" Container Quality.
+      const w = window as unknown as { gtag?: (...args: unknown[]) => void; dataLayer?: unknown[] }
+      if (typeof w.gtag === 'function') {
+        w.gtag('consent', 'update', {
+          ad_storage: granted,
+          analytics_storage: granted,
+          ad_user_data: granted,
+          ad_personalization: granted,
+        })
+      } else {
+        // Fallback voor edge-case waar Layout's inline-script nog niet draaide
+        w.dataLayer = w.dataLayer || []
+        w.dataLayer.push({
+          event: 'consent_update_fallback',
+          consent_state: granted,
+        })
+      }
     }
 
     function hide() {
